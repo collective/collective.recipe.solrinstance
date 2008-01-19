@@ -31,7 +31,7 @@ class Recipe(object):
 
         options['address'] = options.get('address','').strip()
         options['port'] = options.get('port', '').strip()
-        options['path'] = options.get('path', '/').strip()
+        options['basepath'] = options.get('basepath', '/').strip()
         options['solr-location'] = options.get('solr-location', '').strip()
 
         options['jetty-destination'] = options.get(

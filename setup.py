@@ -7,12 +7,8 @@ from setuptools import setup, find_packages
 
 version = '0.1'
 
-README = os.path.join(os.path.dirname(__file__),
-                      'collective',
-                      'recipe',
-                      'solrinstance', 'docs', 'README.txt')
-
-long_description = open(README).read() + '\n\n'
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 entry_point = 'collective.recipe.solrinstance:Recipe'
 
@@ -21,11 +17,31 @@ entry_points = {"zc.buildout": ["default = %s" % entry_point]}
 setup(name='collective.recipe.solrinstance',
       version=version,
       description="zc.buildout to configure a solr instance",
-      long_description=long_description,
+      long_description= (
+        read('README.txt')
+        + '\n' +
+        read('CHANGES.txt')
+        + '\n' +
+        'Detailed Documentation\n'
+        '**********************\n'
+        + '\n' +
+        read('collective','recipe','solrinstance','README.txt')
+        + '\n' +
+        'Contributors\n' 
+        '***********************\n'
+        + '\n' +
+        read('CONTRIBUTORS.txt')
+        + '\n' +
+        'Download\n'
+        '***********************\n'
+        ),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
+        'Framework :: Buildout',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Zope Public License',
+        'Topic :: Software Development :: Build Tools',
+        'Topic :: Software Development :: Libraries :: Python Modules',
         ],
       keywords='',
       author='Kai Lautaportti',
