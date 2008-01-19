@@ -6,9 +6,7 @@ import zc.buildout
 import iw.recipe.template
 import os
 
-from sets import Set
-
-INDEX_TYPES = Set(['text', 'text_ws', 'keyword', 'date', 'string'])
+INDEX_TYPES = set(['text', 'text_ws', 'keyword', 'date', 'string'])
 INDEX_ATTRIBUTES = {'name' : '',
                     'type' : '',
                     'copyfield' : [],
@@ -20,7 +18,7 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'indexed' : 'true',
                     'stored' : 'true',
                     'keepinzope' : 'true'}
-TRUE_VALUES = Set(['yes', 'true', '1', 'on'])
+TRUE_VALUES = set(['yes', 'true', '1', 'on'])
 TEMPLATE_DIR = os.path.dirname(__file__)
 
 class Recipe(object):
@@ -46,7 +44,6 @@ class Recipe(object):
             'schema-destination',
             os.path.join(options['solr-location'], 'example', 'solr', 'conf'))
 
-
     def parse_index(self):
         """Parses the index definitions from the options."""
         indeces = []
@@ -61,7 +58,7 @@ class Recipe(object):
                 else:
                     entry[attr] = value
 
-            if not Set(entry.keys()).issubset(Set(INDEX_ATTRIBUTES.keys())):
+            if not set(entry.keys()).issubset(set(INDEX_ATTRIBUTES.keys())):
                 raise zc.buildout.UserError(
                     'Invalid index attribute(s). Allowed attributes are %s' % (', '.join(INDEX_ATTRIBUTES.keys()))) 
 
@@ -113,13 +110,30 @@ class Recipe(object):
             kwargs).install()
 
     def create_bin_scripts(self):
-        pass
+        """ Create a runner for our solr instance """
+        bintarget = self.buildout['buildout']['bin-directory']
+        target = os.path.join(bintarget, self.name)
+
+        python = self.buildout['buildout']['python']
+        executable = self.buildout[python]['executable']
+
+        f = open(target, 'wt')
+        print >> f, "#!%s\n" % executable
+        print >> f, "import os"
+        print >> f, "os.chdir('%s')" % os.path.join(
+                self.buildout['buildout']['directory'],
+                self.options['solr-location'], 'example')
+        print >> f, "os.system('java -jar start.jar')"
+        os.chmod(target, 0755)
+        self.options.created(target)
 
     def install(self):
         """installer"""
 
-        solr_data = os.path.join(self.buildout['buildout']['directory'], 'var', 'solr', 'data')
-        solr_log = os.path.join(self.buildout['buildout']['directory'], 'var', 'solr', 'log')
+        solr_data = os.path.join(
+                self.buildout['buildout']['directory'], 'var', 'solr', 'data')
+        solr_log = os.path.join(
+                self.buildout['buildout']['directory'], 'var', 'solr', 'log')
 
         for path in solr_data, solr_log:
             if not os.path.exists(path):
@@ -140,6 +154,8 @@ class Recipe(object):
             source='%s/templates/schema.xml.tmpl' % TEMPLATE_DIR,
             destination=self.options['schema-destination'],
             indeces=self.parse_index())
+
+        self.create_bin_scripts()
 
         # returns installed files
         return tuple()
