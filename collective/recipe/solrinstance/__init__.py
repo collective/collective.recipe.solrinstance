@@ -11,6 +11,7 @@ from sets import Set
 INDEX_TYPES = Set(['text', 'text_ws', 'keyword', 'date', 'string'])
 INDEX_ATTRIBUTES = {'name' : '',
                     'type' : '',
+                    'copyfield' : [],
                     'sortable' : 'false',
                     'auto' : 'false',
                     'omitnorms' : 'false',
@@ -52,7 +53,13 @@ class Recipe(object):
         names = []
 
         for line in self.options['index'].strip().splitlines():
-            entry = dict(item.split(':')[:2] for item in line.split()) 
+            entry = {}
+            for item in line.split():
+                attr, value = item.split(':')[:2]
+                if attr == 'copyfield':
+                    entry.setdefault(attr, []).append(value)
+                else:
+                    entry[attr] = value
 
             if not Set(entry.keys()).issubset(Set(INDEX_ATTRIBUTES.keys())):
                 raise zc.buildout.UserError(
@@ -68,15 +75,20 @@ class Recipe(object):
 
             for key in INDEX_ATTRIBUTES:
                 value = entry.get(key, INDEX_ATTRIBUTES[key])
-                if value.strip() in TRUE_VALUES:
-                    value = 'true'
-                else:
-                    value = 'false'
-                    
-                if key not in ('name', 'type'):
+
+                if key == 'copyfield':
+                    entry[key] = [{'source':entry['name'], 'dest':val}
+                                  for val in value]
+                elif key == 'name':
                     entry[key] = value
-                if key != 'name':
-                    entry[key] = entry[key].lower()
+                elif key == 'type':
+                    entry[key] = value.lower()
+                else:
+                    if value.strip() in TRUE_VALUES:
+                        value = 'true'
+                    else:
+                        value = 'false' 
+                    entry[key] = value
 
             indeces.append(entry)
 
