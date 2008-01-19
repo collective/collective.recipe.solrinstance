@@ -37,9 +37,10 @@ setup(name='collective.recipe.solrinstance',
       include_package_data=True,
       zip_safe=False,
       install_requires=['setuptools',
-                        'zope.testing',
+                        'iw.recipe.template',
                         'zc.buildout'
                         # -*- Extra requirements: -*-
                         ],
+      tests_require=['zope.testing'],
       entry_points=entry_points,
       )
