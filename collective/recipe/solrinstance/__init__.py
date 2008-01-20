@@ -6,6 +6,7 @@ import zc.buildout
 import iw.recipe.template
 import shutil
 import os
+import sys
 
 INDEX_TYPES = set(['text', 'text_ws', 'keyword', 'date', 'string'])
 INDEX_ATTRIBUTES = {'name' : '',
@@ -118,13 +119,15 @@ class Recipe(object):
 
         python = self.buildout['buildout']['python']
         executable = self.buildout[python]['executable']
+        solr_path = os.path.join(self.buildout['buildout']['directory'],
+                                 self.part_dir)
+        if sys.platform == 'win32':
+            sorl_path = sorl_path.replace('\\', '\\\\')
 
         f = open(target, 'wt')
         print >> f, "#!%s\n" % executable
         print >> f, "import os"
-        print >> f, "os.chdir('%s')" % os.path.join(
-                self.buildout['buildout']['directory'],
-                self.part_dir)
+        print >> f, "os.chdir('%s')" % sorl_path
         print >> f, "os.system('java -jar start.jar')"
         os.chmod(target, 0755)
 
