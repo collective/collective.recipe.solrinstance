@@ -4,6 +4,7 @@
 import logging
 import zc.buildout
 import iw.recipe.template
+import shutil
 import os
 
 INDEX_TYPES = set(['text', 'text_ws', 'keyword', 'date', 'string'])
@@ -26,6 +27,7 @@ class Recipe(object):
 
     def __init__(self, buildout, name, options):
         self.name, self.options, self.buildout = name, options, buildout
+        self.part_dir = os.path.join(buildout['buildout']['parts-directory'], name)
 
         options['address'] = options.get('address','').strip()
         options['port'] = options.get('port', '').strip()
@@ -34,15 +36,15 @@ class Recipe(object):
 
         options['jetty-destination'] = options.get(
             'jetty-destination',
-            os.path.join(options['solr-location'], 'example', 'etc'))
+            os.path.join(self.part_dir, 'etc'))
 
         options['config-destination'] = options.get(
             'config-destination',
-            os.path.join(options['solr-location'], 'example', 'solr', 'conf'))
+            os.path.join(self.part_dir, 'solr', 'conf'))
 
         options['schema-destination'] = options.get(
             'schema-destination',
-            os.path.join(options['solr-location'], 'example', 'solr', 'conf'))
+            os.path.join(self.part_dir, 'solr', 'conf'))
 
     def parse_index(self):
         """Parses the index definitions from the options."""
@@ -122,18 +124,27 @@ class Recipe(object):
         print >> f, "import os"
         print >> f, "os.chdir('%s')" % os.path.join(
                 self.buildout['buildout']['directory'],
-                self.options['solr-location'], 'example')
+                self.part_dir)
         print >> f, "os.system('java -jar start.jar')"
         os.chmod(target, 0755)
-        self.options.created(target)
+
+        return [target]
 
     def install(self):
         """installer"""
+        parts = [self.part_dir]
+
+        if os.path.exists(self.part_dir):
+            raise zc.buildout.UserError(
+                'Target directory %s already exists. Please remove it.' % self.part_dir)
+
+        # Copy the instance files
+        shutil.copytree(os.path.join(self.options['solr-location'], 'example'), self.part_dir)
 
         solr_data = os.path.join(
-                self.buildout['buildout']['directory'], 'var', 'solr', 'data')
+                self.buildout['buildout']['directory'], 'var', 'solr', self.name, 'data')
         solr_log = os.path.join(
-                self.buildout['buildout']['directory'], 'var', 'solr', 'log')
+                self.buildout['buildout']['directory'], 'var', 'solr', self.name, 'log')
 
         for path in solr_data, solr_log:
             if not os.path.exists(path):
@@ -155,10 +166,10 @@ class Recipe(object):
             destination=self.options['schema-destination'],
             indeces=self.parse_index())
 
-        self.create_bin_scripts()
+        parts.extend(self.create_bin_scripts())
 
         # returns installed files
-        return tuple()
+        return parts
 
     def update(self):
         """updater"""
