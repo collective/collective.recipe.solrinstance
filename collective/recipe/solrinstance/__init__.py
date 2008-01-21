@@ -122,12 +122,12 @@ class Recipe(object):
         solr_path = os.path.join(self.buildout['buildout']['directory'],
                                  self.part_dir)
         if sys.platform == 'win32':
-            sorl_path = sorl_path.replace('\\', '\\\\')
+            solr_path = solr_path.replace('\\', '\\\\')
 
         f = open(target, 'wt')
         print >> f, "#!%s\n" % executable
         print >> f, "import os"
-        print >> f, "os.chdir('%s')" % sorl_path
+        print >> f, "os.chdir('%s')" % solr_path
         print >> f, "os.system('java -jar start.jar')"
         os.chmod(target, 0755)
 
