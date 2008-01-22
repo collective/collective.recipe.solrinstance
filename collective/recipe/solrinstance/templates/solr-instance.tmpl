@@ -47,6 +47,7 @@ def status():
 
 if sys.argv[1] == 'start':
     start(True)
+    sys.exit()
 if sys.argv[1] == 'fg':
     start(False)
 elif sys.argv[1] == 'stop':

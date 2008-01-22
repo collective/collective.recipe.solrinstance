@@ -48,7 +48,7 @@ class Recipe(object):
             os.path.join(self.part_dir, 'solr', 'conf'))
 
         try:
-            num_results = int(options.get('max-num-results').strip(), 10)
+            num_results = int(options.get('max-num-results', '').strip(), 10)
             if num_results < 1:
                 raise ValueError
             options['max-num-results'] = str(num_results)
