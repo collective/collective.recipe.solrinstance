@@ -1,0 +1,65 @@
+from subprocess import Popen, call
+import sys, os
+from signal import SIGHUP
+
+if len(sys.argv) != 2:
+    print "please run with  %s start|stop|purge|status|fg" % __file__
+    sys.exit()
+
+PID_FILE = '$options.pidfile'
+SOLR_DIR = '$options.solrdir'
+
+def start(daemonize=True):
+    pid = Popen(['java', '-jar', 'start.jar'], cwd=SOLR_DIR).pid
+    if not(daemonize):
+        return os.waitpid(pid, 0)
+    else:
+        f = open(PID_FILE, 'wb')
+        f.write(str(pid))
+        f.close()
+
+def stop():
+    try:
+        f = open(PID_FILE)
+        pid = f.read().strip()
+        f.close()
+        os.kill(int(pid), SIGHUP)
+        os.unlink(PID_FILE)
+        print "Solr stopped successfully."
+    except (IOError, OSError):
+        print "Error occured: Solr probably not stopped ..."
+
+def purge():
+    if status() > 0:
+        postdir = os.path.join(SOLR_DIR, 'exampledocs')
+        call(['java', '-Ddata=args' ,'-jar', 'post.jar', '<delete><query>*:*</query></delete>'], cwd=postdir)
+    else:
+        print "Solr not running. Index can't be purged."
+
+def status():
+    try:
+        f = open(PID_FILE)
+        pid = f.read().strip()
+        f.close()
+        return pid
+    except (IOError, OSError):
+        return -1
+
+if sys.argv[1] == 'start':
+    start(True)
+if sys.argv[1] == 'fg':
+    start(False)
+elif sys.argv[1] == 'stop':
+    stop()
+elif sys.argv[1] == 'purge':
+    purge()
+elif sys.argv[1] == 'status':
+    pid = status()
+    if pid > 0:
+        print "Solr running with PID: ", pid
+    else:
+        print "Solr not running."
+else:
+    print ("illegal option: please run with "
+           "%s start|stop|status|purge|fg" % __file__)
+

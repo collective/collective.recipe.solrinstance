@@ -57,6 +57,9 @@ setup(name='collective.recipe.solrinstance',
                         'zc.buildout'
                         # -*- Extra requirements: -*-
                         ],
-      tests_require=['zope.testing'],
+      tests_require=['zope.testing',
+                     'iw.recipe.template',
+                    ],
+      test_suite = 'collective.recipe.solrinstance.tests.test_docs.test_suite',
       entry_points=entry_points,
       )

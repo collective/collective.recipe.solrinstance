@@ -121,26 +121,14 @@ class Recipe(object):
             'schema.xml',
             kwargs).install()
 
-    def create_bin_scripts(self):
+    def create_bin_scripts(self, **kwargs):
         """ Create a runner for our solr instance """
-        bintarget = self.buildout['buildout']['bin-directory']
-        target = os.path.join(bintarget, self.name)
+        iw.recipe.template.Script(
+                self.buildout,
+                'solr-instance',
+                kwargs
+                ).install()
 
-        python = self.buildout['buildout']['python']
-        executable = self.buildout[python]['executable']
-        solr_path = os.path.join(self.buildout['buildout']['directory'],
-                                 self.part_dir)
-        if sys.platform == 'win32':
-            solr_path = solr_path.replace('\\', '\\\\')
-
-        f = open(target, 'wt')
-        print >> f, "#!%s\n" % executable
-        print >> f, "import os"
-        print >> f, "os.chdir('%s')" % solr_path
-        print >> f, "os.system('java -jar start.jar')"
-        os.chmod(target, 0755)
-
-        return [target]
 
     def install(self):
         """installer"""
@@ -153,10 +141,11 @@ class Recipe(object):
         # Copy the instance files
         shutil.copytree(os.path.join(self.options['solr-location'], 'example'), self.part_dir)
 
-        solr_data = os.path.join(
-                self.buildout['buildout']['directory'], 'var', 'solr', self.name, 'data')
-        solr_log = os.path.join(
-                self.buildout['buildout']['directory'], 'var', 'solr', self.name, 'log')
+        solr_var = os.path.join(
+                self.buildout['buildout']['directory'], 'var', 'solr')
+
+        solr_data = os.path.join(solr_var, 'data')
+        solr_log = os.path.join(solr_var, 'log')
 
         for path in solr_data, solr_log:
             if not os.path.exists(path):
@@ -179,7 +168,13 @@ class Recipe(object):
             destination=self.options['schema-destination'],
             indeces=self.parse_index())
 
-        parts.extend(self.create_bin_scripts())
+        self.create_bin_scripts(
+            source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
+            pidfile=os.path.join(solr_var, 'solr.pid'),
+            # work around a bug in iw.recipe.template
+            destination=self.buildout['buildout']['bin-directory'],
+            solrdir=os.path.join(self.options['solr-location'], 'example')
+            )
 
         # returns installed files
         return parts
