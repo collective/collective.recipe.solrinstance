@@ -47,6 +47,15 @@ class Recipe(object):
             'schema-destination',
             os.path.join(self.part_dir, 'solr', 'conf'))
 
+        try:
+            num_results = int(options.get('max-num-results').strip(), 10)
+            if num_results < 1:
+                raise ValueError
+            options['max-num-results'] = str(num_results)
+        except (ValueError, TypeError):
+            raise zc.buildout.UserError(
+                'Please use a positive integer for the number of default results')
+
     def parse_index(self):
         """Parses the index definitions from the options."""
         indeces = []
@@ -162,7 +171,8 @@ class Recipe(object):
         self.generate_solr_conf(
             source='%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR,
             datadir=solr_data,
-            destination=self.options['config-destination'])
+            destination=self.options['config-destination'],
+            rows=self.options['max-num-results'])
 
         self.generate_solr_schema(
             source='%s/templates/schema.xml.tmpl' % TEMPLATE_DIR,

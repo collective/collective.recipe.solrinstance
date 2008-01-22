@@ -34,8 +34,10 @@ jetty-destination
     will be generated. Defaults to the Solr default location.
     
 index
-
     Configures the different types of index fields provided by the
     Solr instance. Each field is configured on a separated line. Each
     line contains a white-space separated list of ``[key]:[value]``
     pairs which define the index.
+
+max-num-results
+    The maximum number of results the Solr server returns. Defaults to 10.
