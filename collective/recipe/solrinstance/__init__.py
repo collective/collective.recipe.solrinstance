@@ -173,8 +173,7 @@ class Recipe(object):
             pidfile=os.path.join(solr_var, 'solr.pid'),
             # work around a bug in iw.recipe.template
             destination=self.buildout['buildout']['bin-directory'],
-            solrdir=os.path.join(self.options['solr-location'], 'example')
-            )
+            solrdir=self.part_dir)
 
         # returns installed files
         return parts

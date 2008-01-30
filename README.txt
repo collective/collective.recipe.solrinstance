@@ -12,7 +12,7 @@ search, caching, replication, and a web administration interface
 SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.solrinstance/
 
 .. _Solr : http://lucene.apache.org/solr/
-.. _Lucene : http://lucene.apache.org/java/docs/index.html 
+.. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 Simple example
 ==============
@@ -25,15 +25,15 @@ extracted in the parts directory.
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
     ... [buildout]
-    ... parts = solrinstance
+    ... parts = solr
     ...
-    ... [solrinstance]
+    ... [solr]
     ... recipe = collective.recipe.solrinstance
     ... index = name:Title type:text copyfield:default_field
-    ... 
+    ...
     ... """)
 
-Create the default structructe. We assume the solr distribution was
+Create the default structure. We assume the solr distribution was
 downloaded before.
 
     >>> os.makedirs(join(sample_buildout, 'example', 'etc'))
@@ -48,7 +48,7 @@ downloaded before.
 Ok, let's run the buildout:
 
     >>> print system(buildout)
-    Installing solrinstance.
+    Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
@@ -64,6 +64,6 @@ Check, if the run script is here and the template substitution worked
    from signal import SIGHUP
    <BLANKLINE>
    ...
-   SOLR_DIR = 'example'
+   SOLR_DIR = '.../parts/solr'
    <BLANKLINE>
    ...
