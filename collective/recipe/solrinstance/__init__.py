@@ -20,6 +20,12 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'indexed' : 'true',
                     'stored' : 'true',
                     'keepinzope' : 'true'}
+ZOPE_CONF = """\
+   <product-config solr>
+       address %(host)s:%(port)s
+       basepath %(basepath)s
+   </product-config>
+"""
 TRUE_VALUES = set(['yes', 'true', '1', 'on'])
 TEMPLATE_DIR = os.path.dirname(__file__)
 
@@ -30,10 +36,11 @@ class Recipe(object):
         self.name, self.options, self.buildout = name, options, buildout
         self.part_dir = os.path.join(buildout['buildout']['parts-directory'], name)
 
-        options['host'] = options.get('host','').strip()
-        options['port'] = options.get('port', '').strip()
-        options['basepath'] = options.get('basepath', '/').strip()
+        options['host'] = options.get('host','localhost').strip()
+        options['port'] = options.get('port', '8983').strip()
+        options['basepath'] = options.get('basepath', '/solr').strip()
         options['solr-location'] = options.get('solr-location', '').strip()
+        options['zope-conf'] = options.get('zope-conf', ZOPE_CONF % options).strip()
 
         options['jetty-destination'] = options.get(
             'jetty-destination',

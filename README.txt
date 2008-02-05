@@ -60,10 +60,8 @@ Check if the run script is here and the template substitution worked::
     from subprocess import Popen, call
     import sys, os
     from signal import SIGHUP
-    <BLANKLINE>
     ...
     SOLR_DIR = '.../parts/solr'
-    <BLANKLINE>
     ...
 
 Also check that the XML files are where we expect them to be::
@@ -110,3 +108,13 @@ And make sure the substitution worked for all files.
     ...
     <int name="rows">99</int>
     ...
+
+Finally, check that the zope-conf snippet was correctly generated::
+
+    >>> cat(sample_buildout, '.installed.cfg')
+    [buildout]
+    ...
+    zope-conf = <product-config solr>
+                ...address 127.0.0.1:1234
+                ...basepath /solr
+             ...</product-config>

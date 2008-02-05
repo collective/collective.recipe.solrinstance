@@ -4,14 +4,15 @@ Supported options
 The recipe supports the following options:
 
 solr-location
-    Path to the location of the Solr installation. This
-    should be the top-level installation directory.
+    Path to the location of the Solr installation. This should be
+    the top-level installation directory.
 
 host
     Name or IP address of the Solr server, e.g. some.server.com.
+    Defaults to 'localhost'.
 
 port
-    Server port.
+    Server port. Defaults to 8983.
 
 basepath
     Base path to the Solr service on the server. The final URL to the
@@ -19,7 +20,7 @@ basepath
 
        ``$host:$port/$basepath``
 
-    to which the actual commands will be appended.
+    to which the actual commands will be appended. Defaults to '/solr'.
 
 config-destination
     Optional override for the directory where the ``solrconfig.xml``
@@ -41,3 +42,12 @@ index
 
 max-num-results
     The maximum number of results the Solr server returns. Defaults to 10.
+
+zope-conf
+    Optional override for the configuration snippet that is generated to
+    be included in zope.conf by other recipes. Defaults to:
+
+        <product-config solr>
+            address ${part:host}:${part:port}
+            basepath ${part:basepath}
+        </product-config>
