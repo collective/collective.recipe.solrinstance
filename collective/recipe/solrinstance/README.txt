@@ -40,6 +40,14 @@ index
     line contains a white-space separated list of ``[key]:[value]``
     pairs which define the index.
 
+filter
+    Configure the additional filters for each index type. Each filter
+    is configured on a separated line. Each line contains a
+    ``index params`` pair, where ``ìndex`` is one of the existing
+    index types and ``params`` contains ``[key]:[value]`` items to
+    configure the filter. Check the available filters in Solr's
+    docs: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
+
 max-num-results
     The maximum number of results the Solr server returns. Defaults to 10.
 

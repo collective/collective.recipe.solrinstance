@@ -35,6 +35,9 @@ extracted in the parts directory::
     ... index =
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ... filter =
+    ...     text class:solr.ISOLatin1AccentFilterFactory
+    ...     text_ws class:Baz foo:bar
     ... """)
 
 Create the default structure. We assume the solr distribution was
@@ -89,6 +92,10 @@ And make sure the substitution worked for all files.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <filter class="Baz" foo="bar" />
+    ...
+    <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
     <field name="uid" type="string" indexed="true" stored="true" required="true"/>
     <field name="Foo" type="text" indexed="true"

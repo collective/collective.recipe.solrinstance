@@ -63,11 +63,26 @@ class Recipe(object):
             raise zc.buildout.UserError(
                 'Please use a positive integer for the number of default results')
 
+    def parse_filter(self):
+        """Parses the filter definitions from the options."""
+        filters = {}
+        for index in INDEX_TYPES:
+            filters[index] = []
+        for line in self.options['filter'].strip().splitlines():
+            index, params = line.split(' ', 1)
+            if index.lower() not in INDEX_TYPES:
+                raise zc.buildout.UserError('Invalid index type: %s' % index)
+            entry = []
+            for pair in params.split():
+                key, value = pair.split(':')[:2]
+                entry.append((key, value))
+            filters[index].append(entry)
+        return filters
+
     def parse_index(self):
         """Parses the index definitions from the options."""
         indeces = []
         names = []
-
         for line in self.options['index'].strip().splitlines():
             entry = {}
             for item in line.split():
@@ -171,6 +186,7 @@ class Recipe(object):
         self.generate_solr_schema(
             source='%s/templates/schema.xml.tmpl' % TEMPLATE_DIR,
             destination=self.options['schema-destination'],
+            filters=self.parse_filter(),
             indeces=self.parse_index())
 
         self.create_bin_scripts(
