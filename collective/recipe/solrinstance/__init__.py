@@ -70,13 +70,13 @@ class Recipe(object):
             filters[index] = []
         for line in self.options['filter'].strip().splitlines():
             index, params = line.split(' ', 1)
+            parsed = params.split(' ', 1)
+            klass, extra = parsed[0], ''
+            if len(parsed) > 1:
+                extra = parsed[1]
             if index.lower() not in INDEX_TYPES:
                 raise zc.buildout.UserError('Invalid index type: %s' % index)
-            entry = []
-            for pair in params.split():
-                key, value = pair.split(':')[:2]
-                entry.append((key, value))
-            filters[index].append(entry)
+            filters[index].append({'class': klass, 'extra': extra})
         return filters
 
     def parse_index(self):

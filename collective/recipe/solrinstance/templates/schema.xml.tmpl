@@ -135,11 +135,7 @@
       <analyzer>
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         #for $filter in $options.filters.text_ws
-        <filter
-        #for $key, $value in $filter
-                $key="$value"
-        #end for
-                />
+        <filter class="$filter.class" $filter.extra/>
         #end for
       </analyzer>
     </fieldType>
@@ -163,11 +159,7 @@
         <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
         #for $filter in $options.filters.text
-        <filter
-        #for $key, $value in $filter
-                $key="$value"
-        #end for
-                />
+        <filter class="$filter.class" $filter.extra/>
         #end for
       </analyzer>
       <analyzer type="query">
@@ -179,11 +171,7 @@
         <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
         <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
         #for $filter in $options.filters.text
-        <filter
-        #for $key, $value in $filter
-                $key="$value"
-        #end for
-                />
+        <filter class="$filter.class" $filter.extra/>
         #end for
       </analyzer>
     </fieldType>
