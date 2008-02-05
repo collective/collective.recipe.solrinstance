@@ -17,8 +17,8 @@
 -->
 
 <config>
-  <!-- Set this to 'false' if you want solr to continue working after it has 
-       encountered an severe configuration error.  In a production environment, 
+  <!-- Set this to 'false' if you want solr to continue working after it has
+       encountered an severe configuration error.  In a production environment,
        you may want solr to keep working even if one handler is mis-configured.
 
        You may also set this to false using by setting the system property:
@@ -50,7 +50,7 @@
     <maxMergeDocs>2147483647</maxMergeDocs>
     <maxFieldLength>10000</maxFieldLength>
 
-    <!-- If true, unlock any held write or commit locks on startup. 
+    <!-- If true, unlock any held write or commit locks on startup.
          This defeats the locking mechanism that allows multiple
          processes to safely access a lucene index, and should be
          used with care. -->
@@ -65,8 +65,8 @@
          org.apache.solr.(search|update|request|core|analysis)
      -->
 
-    <!-- autocommit pending docs if certain criteria are met 
-    <autoCommit> 
+    <!-- autocommit pending docs if certain criteria are met
+    <autoCommit>
       <maxDocs>10000</maxDocs>
       <maxTime>1000</maxTime>
     </autoCommit>
@@ -89,7 +89,7 @@
     </listener>
     -->
     <!-- A postOptimize event is fired only after every optimize command, useful
-         in conjunction with index distribution to only distribute optimized indicies 
+         in conjunction with index distribution to only distribute optimized indicies
     <listener event="postOptimize" class="solr.RunExecutableListener">
       <str name="exe">snapshooter</str>
       <str name="dir">solr/bin</str>
@@ -106,7 +106,7 @@
         queries.  An exception is thrown if exceeded.  -->
     <maxBooleanClauses>1024</maxBooleanClauses>
 
-    
+
     <!-- Cache used by SolrIndexSearcher for filters (DocSets),
          unordered sets of *all* documents that match a query.
          When a new searcher is opened, its caches may be prepopulated
@@ -233,7 +233,7 @@
 
   </query>
 
-  <!-- 
+  <!--
     Let the dispatch filter handler /select?qt=XXX
     handleSelect=true will use consistent error handling for /select and /update
     handleSelect=false will use solr1.1 style error formatting
@@ -242,8 +242,8 @@
     <!--Make sure your system has some authentication before enabling remote streaming!  -->
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
   </requestDispatcher>
-  
-      
+
+
   <!-- requestHandler plugins... incoming queries will be dispatched to the
      correct handler based on the qt (query type) param matching the
      name of registered handlers.
@@ -255,7 +255,7 @@
      <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">${$options.rows or 10}</int>
-       <!-- 
+       <!--
        <int name="rows">10</int>
        <str name="fl">*</str>
        <str name="version">2.1</str>
@@ -264,7 +264,7 @@
   </requestHandler>
 
   <!-- DisMaxRequestHandler allows easy searching across multiple fields
-       for simple user-entered phrases. 
+       for simple user-entered phrases.
        see http://wiki.apache.org/solr/DisMaxRequestHandler
    -->
   <requestHandler name="dismax" class="solr.DisMaxRequestHandler" >
@@ -343,7 +343,7 @@
       <str name="facet.query">price:[500 TO *]</str>
     </lst>
   </requestHandler>
-  
+
   <requestHandler name="instock" class="solr.DisMaxRequestHandler" >
     <!-- for legacy reasons, DisMaxRequestHandler will assume all init
          params are "defaults" if you don't explicitly specify any defaults.
@@ -371,28 +371,28 @@
        <int name="suggestionCount">1</int>
        <float name="accuracy">0.5</float>
      </lst>
-     
+
      <!-- Main init params for handler -->
-     
+
      <!-- The directory where your SpellChecker Index should live.   -->
      <!-- May be absolute, or relative to the Solr "dataDir" directory. -->
      <!-- If this option is not specified, a RAM directory will be used -->
      <str name="spellcheckerIndexDir">spell</str>
-     
+
      <!-- the field in your schema that you want to be able to build -->
      <!-- your spell index on. This should be a field that uses a very -->
      <!-- simple FieldType without a lot of Analysis (ie: string) -->
      <str name="termSourceField">word</str>
-     
+
    </requestHandler>
 
-  
-  <!-- Update request handler.  
-  
-       Note: Since solr1.1 requestHandlers requires a valid content type header if posted in 
+
+  <!-- Update request handler.
+
+       Note: Since solr1.1 requestHandlers requires a valid content type header if posted in
        the body. For example, curl now requires: -H 'Content-type:text/xml; charset=utf-8'
        The response format differs from solr1.1 formatting and returns a standard error code.
-       
+
        To enable solr1.1 behavior, remove the /update handler or change its path
     -->
   <requestHandler name="/update" class="solr.XmlUpdateRequestHandler" />
@@ -407,7 +407,7 @@
   <requestHandler name="/admin/plugins"    class="org.apache.solr.handler.admin.PluginInfoHandler" />
   <requestHandler name="/admin/threads"    class="org.apache.solr.handler.admin.ThreadDumpHandler" />
   <requestHandler name="/admin/properties" class="org.apache.solr.handler.admin.PropertiesRequestHandler" />
-  
+
   <!-- Echo the request contents back to the client -->
   <requestHandler name="/debug/dump" class="solr.DumpRequestHandler" >
     <lst name="defaults">
@@ -415,11 +415,11 @@
      <str name="echoHandler">true</str>
     </lst>
   </requestHandler>
-  
+
   <!-- queryResponseWriter plugins... query responses will be written using the
     writer specified by the 'wt' request parameter matching the name of a registered
     writer.
-    The "standard" writer is the default and will be used if 'wt' is not specified 
+    The "standard" writer is the default and will be used if 'wt' is not specified
     in the request. XMLResponseWriter will be used if nothing is specified here.
     The json, python, and ruby writers are also available by default.
 
@@ -433,13 +433,13 @@
 
   <!-- XSLT response writer transforms the XML output by any xslt file found
        in Solr's conf/xslt directory.  Changes to xslt files are checked for
-       every xsltCacheLifetimeSeconds.  
+       every xsltCacheLifetimeSeconds.
    -->
   <queryResponseWriter name="xslt" class="org.apache.solr.request.XSLTResponseWriter">
     <int name="xsltCacheLifetimeSeconds">5</int>
-  </queryResponseWriter> 
-    
-  <!-- config for the admin interface --> 
+  </queryResponseWriter>
+
+  <!-- config for the admin interface -->
   <admin>
     <defaultQuery>solr</defaultQuery>
     <gettableFiles>solrconfig.xml schema.xml admin-extra.html</gettableFiles>

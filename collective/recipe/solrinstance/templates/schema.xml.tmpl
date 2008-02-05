@@ -16,10 +16,10 @@
  limitations under the License.
 -->
 
-<!--  
+<!--
  This is the Solr schema file. This file should be named "schema.xml" and
  should be in the conf directory under the solr home
- (i.e. ./solr/conf/schema.xml by default) 
+ (i.e. ./solr/conf/schema.xml by default)
  or located where the classloader for the Solr webapp can find it.
 
  This example schema is the recommended starting point for users.
@@ -46,7 +46,7 @@
        org.apache.solr.analysis package.
     -->
 
-    <!-- The StrField type is not analyzed, but indexed/stored verbatim.  
+    <!-- The StrField type is not analyzed, but indexed/stored verbatim.
        - StrField and TextField support an optional compressThreshold which
        limits compression (if enabled in the derived fields) to values which
        exceed a certain size (in characters).
@@ -67,7 +67,7 @@
        - If sortMissingLast="false" and sortMissingFirst="false" (the default),
          then default lucene sorting will be used which places docs without the
          field first in an ascending sort and last in a descending sort.
-    -->    
+    -->
 
 
     <!-- numeric field types that store and index the text
@@ -91,7 +91,7 @@
 
     <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
          is a more restricted form of the canonical representation of dateTime
-         http://www.w3.org/TR/xmlschema-2/#dateTime    
+         http://www.w3.org/TR/xmlschema-2/#dateTime
          The trailing "Z" designates UTC time and is mandatory.
          Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
          All other components are mandatory.
@@ -106,7 +106,7 @@
                NOW/DAY+6MONTHS+3DAYS
                   ... 6 months and 3 days in the future from the start of
                       the current day
-                      
+
          Consult the DateField javadocs for more information.
       -->
     <fieldType name="date" class="solr.DateField" sortMissingLast="true" omitNorms="true"/>
@@ -200,13 +200,13 @@
         <filter class="solr.TrimFilterFactory" />
         <!-- The PatternReplaceFilter gives you the flexibility to use
              Java Regular expression to replace any sequence of characters
-             matching a pattern with an arbitrary replacement string, 
+             matching a pattern with an arbitrary replacement string,
              which may include back refrences to portions of the orriginal
              string matched by the pattern.
-             
+
              See the Java Regular Expression documentation for more
              infomation on pattern and replacement string syntax.
-             
+
              http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/package-summary.html
           -->
         <filter class="solr.PatternReplaceFilterFactory"
@@ -215,10 +215,10 @@
       </analyzer>
     </fieldType>
 
-    <!-- since fields of this type are by default not stored or indexed, any data added to 
-         them will be ignored outright 
-     --> 
-    <fieldtype name="ignored" stored="false" indexed="false" class="solr.StrField" /> 
+    <!-- since fields of this type are by default not stored or indexed, any data added to
+         them will be ignored outright
+     -->
+    <fieldtype name="ignored" stored="false" indexed="false" class="solr.StrField" />
 
  </types>
 
@@ -239,32 +239,13 @@
        fields or fields that need an index-time boost need norms.
    -->
 
-   <!-- The same values as on subscriber.py of enfold.indexing and __init__.py of SolrIntegration
-   <field name="Title" type="text" indexed="true" stored="true"/>
-   <field name="Title_sort" type="string" indexed="true" stored="false"/>
-   <field name="url" type="string" indexed="true" stored="true"/>
-   <field name="portal_type" type="string" indexed="true" stored="true"/>
-   <field name="created" type="date" indexed="true" stored="true" multiValued="false"/>
-   <field name="ModificationDate" type="date" indexed="true" stored="true" multiValued="false"/>
-   <field name="effective" type="date" indexed="true" stored="true" multiValued="false"/>
-   <field name="expires" type="date" indexed="true" stored="true" multiValued="false"/>
-   <field name="parent" type="string" indexed="true" stored="true"/>
-   <field name="parentfolder" type="string" indexed="true" stored="true"/>
-   <field name="allow" type="text_ws" indexed="true" stored="true" multiValued="true" omitNorms="true"/>
-   <field name="Creator" type="string" indexed="true" stored="true"/>
-   <field name="fullname" type="string" indexed="true" stored="true"/>
-   <field name="review_state" type="string" indexed="true" stored="true"/>
-   <field name="Subject" type="string" indexed="true" stored="true"/>
-   <field name="Description" type="text" indexed="true" stored="true"/>
-   <field name="body" type="text" indexed="true" stored="true"/>
-   -->
    <field name="uid" type="string" indexed="true" stored="true" required="true"/>
    #for $index in $options.indeces
    <field name="$index.name" type="$index.type" indexed="$index.indexed"
           stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
           omitNorms="$index.omitnorms" />
    #end for
-   
+
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
    <field name="default_field" type="text" indexed="true" stored="true" multiValued="true"/>
@@ -273,7 +254,7 @@
         When each document was indexed.
      -->
    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
-   
+
 
    <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
         will be used if the name matches any of the patterns.
@@ -290,10 +271,10 @@
    <dynamicField name="*_f"  type="sfloat"  indexed="true"  stored="true"/>
    <dynamicField name="*_d"  type="sdouble" indexed="true"  stored="true"/>
    <dynamicField name="*_dt" type="date"    indexed="true"  stored="true"/>
-   
+
  </fields>
 
- <!-- Field to use to determine and enforce document uniqueness. 
+ <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
  <uniqueKey>uid</uniqueKey>

@@ -30,7 +30,7 @@ class Recipe(object):
         self.name, self.options, self.buildout = name, options, buildout
         self.part_dir = os.path.join(buildout['buildout']['parts-directory'], name)
 
-        options['address'] = options.get('address','').strip()
+        options['host'] = options.get('host','').strip()
         options['port'] = options.get('port', '').strip()
         options['basepath'] = options.get('basepath', '/').strip()
         options['solr-location'] = options.get('solr-location', '').strip()
@@ -72,7 +72,7 @@ class Recipe(object):
 
             if not set(entry.keys()).issubset(set(INDEX_ATTRIBUTES.keys())):
                 raise zc.buildout.UserError(
-                    'Invalid index attribute(s). Allowed attributes are %s' % (', '.join(INDEX_ATTRIBUTES.keys()))) 
+                    'Invalid index attribute(s). Allowed attributes are %s' % (', '.join(INDEX_ATTRIBUTES.keys())))
 
             if entry['type'].lower() not in INDEX_TYPES:
                 raise zc.buildout.UserError('Invalid index type: %s' % entry['type'])
@@ -96,7 +96,7 @@ class Recipe(object):
                     if value.strip() in TRUE_VALUES:
                         value = 'true'
                     else:
-                        value = 'false' 
+                        value = 'false'
                     entry[key] = value
 
             indeces.append(entry)
@@ -124,11 +124,9 @@ class Recipe(object):
     def create_bin_scripts(self, **kwargs):
         """ Create a runner for our solr instance """
         iw.recipe.template.Script(
-                self.buildout,
-                'solr-instance',
-                kwargs
-                ).install()
-
+            self.buildout,
+            'solr-instance',
+            kwargs).install()
 
     def install(self):
         """installer"""
@@ -171,7 +169,6 @@ class Recipe(object):
         self.create_bin_scripts(
             source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
             pidfile=os.path.join(solr_var, 'solr.pid'),
-            # work around a bug in iw.recipe.template
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.part_dir)
 

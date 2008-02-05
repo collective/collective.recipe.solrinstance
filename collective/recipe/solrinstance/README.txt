@@ -7,8 +7,8 @@ solr-location
     Path to the location of the Solr installation. This
     should be the top-level installation directory.
 
-address
-    Address of the Solr server, e.g. some.server.com.
+host
+    Name or IP address of the Solr server, e.g. some.server.com.
 
 port
     Server port.
@@ -17,7 +17,7 @@ basepath
     Base path to the Solr service on the server. The final URL to the
     Solr service will be made of
 
-       ``$address:$port/$basepath``
+       ``$host:$port/$basepath``
 
     to which the actual commands will be appended.
 
@@ -32,7 +32,7 @@ schema-destination
 jetty-destination
     Optional override for the directory where the ``jetty.xml`` file
     will be generated. Defaults to the Solr default location.
-    
+
 index
     Configures the different types of index fields provided by the
     Solr instance. Each field is configured on a separated line. Each
