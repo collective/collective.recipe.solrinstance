@@ -20,11 +20,11 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'indexed' : 'true',
                     'stored' : 'true',
                     'keepinzope' : 'true'}
-ZOPE_CONF = """\
-   <product-config solr>
-       address %(host)s:%(port)s
-       basepath %(basepath)s
-   </product-config>
+ZOPE_CONF = """
+<product-config solr>
+    address %(host)s:%(port)s
+    basepath %(basepath)s
+</product-config>
 """
 TRUE_VALUES = set(['yes', 'true', '1', 'on'])
 TEMPLATE_DIR = os.path.dirname(__file__)

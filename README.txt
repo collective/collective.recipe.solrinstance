@@ -114,7 +114,8 @@ Finally, check that the zope-conf snippet was correctly generated::
     >>> cat(sample_buildout, '.installed.cfg')
     [buildout]
     ...
-    zope-conf = <product-config solr>
-                ...address 127.0.0.1:1234
-                ...basepath /solr
-             ...</product-config>
+    zope-conf =
+        <product-config solr>
+        ...address 127.0.0.1:1234
+        ...basepath /solr
+        </product-config>
