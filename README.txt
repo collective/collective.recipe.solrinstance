@@ -32,6 +32,7 @@ extracted in the parts directory::
     ... host = 127.0.0.1
     ... port = 1234
     ... max-num-results = 99
+    ... section-name = SOLR
     ... index =
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
@@ -122,7 +123,7 @@ Finally, check that the zope-conf snippet was correctly generated::
     [buildout]
     ...
     zope-conf =
-        <product-config solr>
+        <product-config SOLR>
         ...address 127.0.0.1:1234
         ...basepath /solr
         </product-config>

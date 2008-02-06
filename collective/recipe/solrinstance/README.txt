@@ -51,11 +51,15 @@ filter
 max-num-results
     The maximum number of results the Solr server returns. Defaults to 10.
 
+section-name
+    Name of the product-config section to be generated for ``zope.conf``.
+    Defaults to 'solr'.
+
 zope-conf
     Optional override for the configuration snippet that is generated to
-    be included in zope.conf by other recipes. Defaults to:
+    be included in ``zope.conf`` by other recipes. Defaults to:
 
-        <product-config solr>
+        <product-config ${part:section-name}>
             address ${part:host}:${part:port}
             basepath ${part:basepath}
         </product-config>

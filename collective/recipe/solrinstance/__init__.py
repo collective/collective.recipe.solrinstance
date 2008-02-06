@@ -21,7 +21,7 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'stored' : 'true',
                     'keepinzope' : 'true'}
 ZOPE_CONF = """
-<product-config solr>
+<product-config %(section-name)s>
     address %(host)s:%(port)s
     basepath %(basepath)s
 </product-config>
@@ -39,6 +39,7 @@ class Recipe(object):
         options['host'] = options.get('host','localhost').strip()
         options['port'] = options.get('port', '8983').strip()
         options['basepath'] = options.get('basepath', '/solr').strip()
+        options['section-name'] = options.get('section-name', 'solr').strip()
         options['solr-location'] = options.get('solr-location', '').strip()
         options['zope-conf'] = options.get('zope-conf', ZOPE_CONF % options).strip()
 
