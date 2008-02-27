@@ -69,7 +69,7 @@ class Recipe(object):
         filters = {}
         for index in INDEX_TYPES:
             filters[index] = []
-        for line in self.options['filter'].strip().splitlines():
+        for line in self.options.get('filter', '').strip().splitlines():
             index, params = line.split(' ', 1)
             parsed = params.split(' ', 1)
             klass, extra = parsed[0], ''
