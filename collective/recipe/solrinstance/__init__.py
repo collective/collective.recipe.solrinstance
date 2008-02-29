@@ -20,6 +20,13 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'indexed' : 'true',
                     'stored' : 'true',
                     'keepinzope' : 'true'}
+DEFAULT_FILTERS = """
+    text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
+    text solr.WordDelimiterFilterFactory generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0"
+    text solr.LowerCaseFilterFactory
+    text solr.EnglishPorterFilterFactory protected="protwords.txt"
+    text solr.RemoveDuplicatesTokenFilterFactory
+"""
 ZOPE_CONF = """
 <product-config %(section-name)s>
     address %(host)s:%(port)s
@@ -69,7 +76,7 @@ class Recipe(object):
         filters = {}
         for index in INDEX_TYPES:
             filters[index] = []
-        for line in self.options.get('filter', '').strip().splitlines():
+        for line in self.options.get('filter', DEFAULT_FILTERS).strip().splitlines():
             index, params = line.split(' ', 1)
             parsed = params.split(' ', 1)
             klass, extra = parsed[0], ''
