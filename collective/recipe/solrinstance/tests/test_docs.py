@@ -33,10 +33,10 @@ def doc_suite(test_dir, setUp=None, tearDown=None, globs=None):
     if package_dir not in sys.path:
         sys.path.append(package_dir)
 
-    suite.append(doctest.DocFileSuite('README.txt', optionflags=flags,
+    suite.append(doctest.DocFileSuite('../README.txt', optionflags=flags,
                                   globs=globs, setUp=setUp,
                                   tearDown=tearDown,
-                                  module_relative=False))
+                                  module_relative=True))
 
     return unittest.TestSuite(suite)
 
