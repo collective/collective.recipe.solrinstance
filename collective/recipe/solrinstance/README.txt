@@ -17,6 +17,7 @@ extracted in the parts directory::
     ... port = 1234
     ... max-num-results = 99
     ... section-name = SOLR
+    ... unique-key = uniqueID
     ... index =
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
@@ -88,6 +89,8 @@ And make sure the substitution worked for all files.
     <field name="Bar" type="date" indexed="false"
            stored="false" required="true" multiValued="true"
            omitNorms="true" />
+    ...
+    <uniqueKey>uniqueID</uniqueKey>
     ...
 
 `solrconfig.xml`::

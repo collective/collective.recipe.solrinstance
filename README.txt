@@ -65,6 +65,10 @@ filter
     configure the filter. Check the available filters in Solr's
     docs: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
 
+unique-key
+    Optional override for declaring a field to be unique for all documents.
+    See http://wiki.apache.org/solr/SchemaXml for more information.
+    
 max-num-results
     The maximum number of results the Solr server returns. Defaults to 10.
 

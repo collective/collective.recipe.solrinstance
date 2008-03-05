@@ -69,6 +69,8 @@ class Recipe(object):
             raise zc.buildout.UserError(
                 'Please use a positive integer for the number of default results')
 
+        options['uniqueKey'] = options.get('unique-key', 'uid').strip()
+
     def parse_filter(self):
         """Parses the filter definitions from the options."""
         filters = {}
@@ -193,7 +195,8 @@ class Recipe(object):
             source='%s/templates/schema.xml.tmpl' % TEMPLATE_DIR,
             destination=self.options['schema-destination'],
             filters=self.parse_filter(),
-            indeces=self.parse_index())
+            indeces=self.parse_index(),
+            options=self.options)
 
         self.create_bin_scripts(
             source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
