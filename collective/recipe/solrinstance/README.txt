@@ -1,65 +1,129 @@
-Supported options
-=================
+**************************************
+Recipe for configuring a Solr instance
+**************************************
 
-The recipe supports the following options:
+.. contents::
 
-solr-location
-    Path to the location of the Solr installation. This should be
-    the top-level installation directory.
+The recipe configures an instance of the Solr_ indexing server. Solr
+is an open source enterprise search server based on the Lucene_ Java
+search library, with XML/HTTP and JSON APIs, hit highlighting, faceted
+search, caching, replication, and a web administration interface
 
-host
-    Name or IP address of the Solr server, e.g. some.server.com.
-    Defaults to 'localhost'.
+SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.solrinstance/
 
-port
-    Server port. Defaults to 8983.
+.. _Solr : http://lucene.apache.org/solr/
+.. _Lucene : http://lucene.apache.org/java/docs/index.html
 
-basepath
-    Base path to the Solr service on the server. The final URL to the
-    Solr service will be made of
+Simple example
+==============
 
-       ``$host:$port/$basepath``
+    >>> import os
 
-    to which the actual commands will be appended. Defaults to '/solr'.
+In the simplest form we can download a simple package and have it
+extracted in the parts directory::
 
-config-destination
-    Optional override for the directory where the ``solrconfig.xml``
-    file will be generated. Defaults to the Solr default location.
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... host = 127.0.0.1
+    ... port = 1234
+    ... max-num-results = 99
+    ... section-name = SOLR
+    ... index =
+    ...     name:Foo type:text
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ... filter =
+    ...     text solr.ISOLatin1AccentFilterFactory
+    ...     text_ws Baz foo="bar" juca="bala"
+    ... """)
 
-schema-destination
-    Optional override for the directory where the ``schema.xml`` file
-    will be generated. Defaults to the Solr default location.
+Create the default structure. We assume the solr distribution was
+downloaded before::
 
-jetty-destination
-    Optional override for the directory where the ``jetty.xml`` file
-    will be generated. Defaults to the Solr default location.
+    >>> os.makedirs(join(sample_buildout, 'example', 'etc'))
+    >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf'))
 
-index
-    Configures the different types of index fields provided by the
-    Solr instance. Each field is configured on a separated line. Each
-    line contains a white-space separated list of ``[key]:[value]``
-    pairs which define the index.
+Ok, let's run the buildout::
 
-filter
-    Configure the additional filters for each index type. Each filter
-    is configured on a separated line. Each line contains a
-    ``index params`` pair, where ``ìndex`` is one of the existing
-    index types and ``params`` contains ``[key]:[value]`` items to
-    configure the filter. Check the available filters in Solr's
-    docs: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
+    >>> print system(buildout)
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+    <BLANKLINE>
 
-max-num-results
-    The maximum number of results the Solr server returns. Defaults to 10.
+Check if the run script is here and the template substitution worked::
 
-section-name
-    Name of the product-config section to be generated for ``zope.conf``.
-    Defaults to 'solr'.
+    >>> cat(sample_buildout, 'bin', 'solr-instance')
+    #!...
+    from subprocess import Popen, call
+    import sys, os
+    from signal import SIGHUP
+    ...
+    SOLR_DIR = '.../parts/solr'
+    ...
 
-zope-conf
-    Optional override for the configuration snippet that is generated to
-    be included in ``zope.conf`` by other recipes. Defaults to:
+Also check that the XML files are where we expect them to be::
 
-        <product-config ${part:section-name}>
-            address ${part:host}:${part:port}
-            basepath ${part:basepath}
+    >>> ls(sample_buildout, 'parts', 'solr', 'etc')
+    -  jetty.xml
+
+    >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
+    -  schema.xml
+    -  solrconfig.xml
+
+And make sure the substitution worked for all files.
+
+`jetty.xml`::
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'etc', 'jetty.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <Set name="port">1234</Set>
+    ...
+    <Arg>.../var/solr/log/jetty-yyyy_mm_dd.request.log</Arg>
+    ...
+
+`schema.xml`::
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <filter class="Baz" foo="bar" juca="bala"/>
+    ...
+    <filter class="solr.ISOLatin1AccentFilterFactory" />
+    ...
+    <field name="uid" type="string" indexed="true" stored="true" required="true"/>
+    <field name="Foo" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           omitNorms="false" />
+    <field name="Bar" type="date" indexed="false"
+           stored="false" required="true" multiValued="true"
+           omitNorms="true" />
+    ...
+
+`solrconfig.xml`::
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <dataDir>.../var/solr/data</dataDir>
+    ...
+    <int name="rows">99</int>
+    ...
+
+Finally, check that the zope-conf snippet was correctly generated::
+
+    >>> cat(sample_buildout, '.installed.cfg')
+    [buildout]
+    ...
+    zope-conf =
+        <product-config SOLR>
+        ...address 127.0.0.1:1234
+        ...basepath /solr
         </product-config>
