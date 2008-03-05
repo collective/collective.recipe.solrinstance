@@ -132,9 +132,9 @@ class Recipe(object):
             indeces.append(entry)
 
         unique = self.options['uniqueKey']
-        if not unique in names:
+        if unique and not unique in names:
             raise zc.buildout.UserError('Unique key without according index: %s' % unique)
-        if not indeces[names.index(unique)].get('required', None) == 'true':
+        if unique and not indeces[names.index(unique)].get('required', None) == 'true':
             raise zc.buildout.UserError('Unique key needs to be declared "required": %s' % unique)
 
         return indeces
