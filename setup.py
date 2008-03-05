@@ -55,6 +55,6 @@ setup(name='collective.recipe.solrinstance',
       tests_require=['zope.testing',
                      'iw.recipe.template',
                     ],
-      test_suite = 'collective.recipe.solrinstance.tests.test_docs.test_suite',
+      test_suite = 'collective.recipe.solrinstance.tests.test_suite',
       entry_points=entry_points,
       )
