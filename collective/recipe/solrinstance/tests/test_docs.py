@@ -2,10 +2,11 @@
 Generic Test case for 'collective.recipe.solrinstance' doctest
 """
 
-from unittest import TestSuite, main
+from unittest import TestSuite
 from doctest import COMPARISON_FLAGS
 from zope.testing import doctestunit
 from zc.buildout.testing import buildoutSetUp, install_develop
+
 
 def setUp(test):
     buildoutSetUp(test)
@@ -20,7 +21,4 @@ def test_suite():
            'README.txt', package='collective.recipe.solrinstance',
            optionflags=COMPARISON_FLAGS, setUp=setUp)
     ])
-
-if __name__ == '__main__':
-    main(defaultTest='test_suite')
 
