@@ -22,11 +22,6 @@ setup(name='collective.recipe.solrinstance',
         + '\n' +
         read('CHANGES.txt')
         + '\n' +
-        'Detailed Documentation\n'
-        '**********************\n'
-        + '\n' +
-        read('collective','recipe','solrinstance','README.txt')
-        + '\n' +
         'Contributors\n' 
         '***********************\n'
         + '\n' +
