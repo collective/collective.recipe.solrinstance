@@ -15,6 +15,8 @@ flags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE |
 
 def setUp(test):
     zc.buildout.testing.buildoutSetUp(test)
+    zc.buildout.testing.install_develop('zope.testing', test)
+    zc.buildout.testing.install_develop('iw.recipe.template', test)
     zc.buildout.testing.install_develop('collective.recipe.solrinstance', test)
 
 def test_suite():
