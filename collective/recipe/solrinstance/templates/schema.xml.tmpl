@@ -245,14 +245,16 @@
    #end for
 
    <!-- catchall field, containing all other searchable text fields (implemented
-        via copyField further on in this schema  -->
+        via copyField further on in this schema);  disabled by default -->
+   <!--
    <field name="default_field" type="text" indexed="true" stored="true" multiValued="true"/>
+     -->
 
    <!-- Here, default is used to create a "timestamp" field indicating
-        When each document was indexed.
-     -->
+        when each document was indexed;  disabled by default -->
+   <!--
    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
-
+     -->
 
    <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
         will be used if the name matches any of the patterns.
