@@ -133,3 +133,24 @@ Finally, test the error handling as well:
     ...
     Error: Unique key without according index: uniqueID
 
+We need to remove the "solr" part before re-running the the buildout, which
+is a bit stupid, but oh well:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:text
+    ...     name:Foo type:text
+    ... """)
+    >>> print system(buildout)
+    Installing solr.
+    ...
+    Error: Unique key needs to be declared "required": uniqueID
+

@@ -134,6 +134,8 @@ class Recipe(object):
         unique = self.options['uniqueKey']
         if not unique in names:
             raise zc.buildout.UserError('Unique key without according index: %s' % unique)
+        if not indeces[names.index(unique)].get('required', None) == 'true':
+            raise zc.buildout.UserError('Unique key needs to be declared "required": %s' % unique)
 
         return indeces
 
