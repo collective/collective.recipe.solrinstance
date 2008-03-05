@@ -134,13 +134,13 @@ class Recipe(object):
 
         unique = self.options['uniqueKey']
         if unique and not unique in names:
-            raise zc.buildout.UserError('Unique key without according index: %s' % unique)
+            raise zc.buildout.UserError('Unique key without matching index: %s' % unique)
         if unique and not indeces[names.index(unique)].get('required', None) == 'true':
             raise zc.buildout.UserError('Unique key needs to be declared "required": %s' % unique)
 
         default = self.options['defaultSearchField']
         if default and not default in names:
-            raise zc.buildout.UserError('Default search field without according index: %s' % default)
+            raise zc.buildout.UserError('Default search field without matching index: %s' % default)
 
         return indeces
 

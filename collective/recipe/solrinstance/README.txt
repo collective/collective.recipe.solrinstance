@@ -131,7 +131,7 @@ Finally, test the error handling as well:
     >>> print system(buildout)
     Uninstalling solr.
     ...
-    Error: Unique key without according index: uniqueID
+    Error: Unique key without matching index: uniqueID
 
 We need to remove the "solr" part before re-running the the buildout, which
 is a bit stupid, but oh well:
@@ -155,7 +155,7 @@ is a bit stupid, but oh well:
     Error: Unique key needs to be declared "required": uniqueID
 
 A default search field can also be specified, but this also requires the
-according index to be set up:
+matching index to be set up:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> write(sample_buildout, 'buildout.cfg',
@@ -172,7 +172,7 @@ according index to be set up:
     >>> print system(buildout)
     Installing solr.
     ...
-    Error: Default search field without according index: Foo
+    Error: Default search field without matching index: Foo
 
 With the index set up correctly, things work again:
 
