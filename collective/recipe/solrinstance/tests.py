@@ -3,7 +3,7 @@ Generic Test case for 'collective.recipe.solrinstance' doctest
 """
 
 from unittest import TestSuite
-from doctest import COMPARISON_FLAGS
+from doctest import COMPARISON_FLAGS, REPORT_ONLY_FIRST_FAILURE
 from zope.testing import doctestunit
 from zc.buildout.testing import buildoutSetUp, install_develop
 
@@ -19,6 +19,6 @@ def test_suite():
     return TestSuite([
         doctestunit.DocFileSuite(
            'README.txt', package='collective.recipe.solrinstance',
-           optionflags=COMPARISON_FLAGS, setUp=setUp)
+           optionflags=COMPARISON_FLAGS | REPORT_ONLY_FIRST_FAILURE, setUp=setUp)
     ])
 
