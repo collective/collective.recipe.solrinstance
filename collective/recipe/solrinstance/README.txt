@@ -115,7 +115,8 @@ Let's check that the zope-conf snippet was correctly generated::
         ...basepath /solr
         </product-config>
 
-Finally, test the error handling as well:
+Finally, test the error handling as well, for example specifying the optional
+unique key.  Without a matching index this yields an error, though:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -133,8 +134,10 @@ Finally, test the error handling as well:
     ...
     Error: Unique key without matching index: uniqueID
 
-We need to remove the "solr" part before re-running the the buildout, which
-is a bit stupid, but oh well:
+If a unique key was specified, it'll also be mandatory to pass it in, i.e.
+the index needs to be declared to be "required".  Aside from that, we need
+to remove the "solr" part before re-running the the buildout, which is a
+bit stupid, but oh well:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> write(sample_buildout, 'buildout.cfg',
@@ -154,6 +157,32 @@ is a bit stupid, but oh well:
     ...
     Error: Unique key needs to be declared "required": uniqueID
 
+If no unique key was specified in the first place, the tag shouldn't appear
+in the generated xml either:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text
+    ... """)
+    >>> print system(buildout)
+    Installing solr.
+    ...
+    >>> def read(*path):
+    ...     return open(os.path.join(*path)).read()
+    >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> schema.index('<uniqueKey>')
+    Traceback (most recent call last):
+    ...
+    ValueError: substring not found
+
 A default search field can also be specified, but this also requires the
 matching index to be set up:
 
@@ -170,7 +199,7 @@ matching index to be set up:
     ... index =
     ... """)
     >>> print system(buildout)
-    Installing solr.
+    Uninstalling solr.
     ...
     Error: Default search field without matching index: Foo
 
@@ -221,9 +250,6 @@ There's no default for the default search field, however:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-
-    >>> def read(*path):
-    ...     return open(os.path.join(*path)).read()
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
     Traceback (most recent call last):

@@ -277,7 +277,9 @@
  <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
+ #if $options.options.uniqueKey
  <uniqueKey>$options.options.uniqueKey</uniqueKey>
+ #end if
 
  #if $options.options.defaultSearchField
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
