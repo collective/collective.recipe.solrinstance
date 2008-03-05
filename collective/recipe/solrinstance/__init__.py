@@ -131,6 +131,10 @@ class Recipe(object):
 
             indeces.append(entry)
 
+        unique = self.options['uniqueKey']
+        if not unique in names:
+            raise zc.buildout.UserError('Unique key without according index: %s' % unique)
+
         return indeces
 
     def generate_jetty(self, **kwargs):

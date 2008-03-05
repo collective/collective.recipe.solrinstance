@@ -19,6 +19,7 @@ extracted in the parts directory::
     ... section-name = SOLR
     ... unique-key = uniqueID
     ... index =
+    ...     name:uniqueID type:string indexed:true stored:true required:true
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ... filter =
@@ -82,7 +83,7 @@ And make sure the substitution worked for all files.
     ...
     <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
-    <field name="uid" type="string" indexed="true" stored="true" required="true"/>
+    <field name="uniqueID" type="string" indexed="true" stored="true" required="true" ... />
     <field name="Foo" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
            omitNorms="false" />
@@ -103,7 +104,7 @@ And make sure the substitution worked for all files.
     <int name="rows">99</int>
     ...
 
-Finally, check that the zope-conf snippet was correctly generated::
+Let's check that the zope-conf snippet was correctly generated::
 
     >>> cat(sample_buildout, '.installed.cfg')
     [buildout]
@@ -113,3 +114,22 @@ Finally, check that the zope-conf snippet was correctly generated::
         ...address 127.0.0.1:1234
         ...basepath /solr
         </product-config>
+
+Finally, test the error handling as well:
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:Foo type:text
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    ...
+    Error: Unique key without according index: uniqueID
+
