@@ -2,31 +2,25 @@
 Generic Test case for 'collective.recipe.solrinstance' doctest
 """
 
-import unittest
-import doctest
-import sys
-import os
-
+from unittest import TestSuite, main
+from doctest import COMPARISON_FLAGS
 from zope.testing import doctestunit
-import zc.buildout.testing
-
-flags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE |
-         doctest.REPORT_ONLY_FIRST_FAILURE)
+from zc.buildout.testing import buildoutSetUp, install_develop
 
 def setUp(test):
-    zc.buildout.testing.buildoutSetUp(test)
-    zc.buildout.testing.install_develop('zope.testing', test)
-    zc.buildout.testing.install_develop('iw.recipe.template', test)
-    zc.buildout.testing.install_develop('collective.recipe.solrinstance', test)
+    buildoutSetUp(test)
+    install_develop('zope.testing', test)
+    install_develop('iw.recipe.template', test)
+    install_develop('collective.recipe.solrinstance', test)
 
 def test_suite():
     """ returns the test suite """
-    return unittest.TestSuite([
+    return TestSuite([
         doctestunit.DocFileSuite(
            'README.txt', package='collective.recipe.solrinstance',
-           optionflags=flags, setUp=setUp)
+           optionflags=COMPARISON_FLAGS, setUp=setUp)
     ])
 
 if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
+    main(defaultTest='test_suite')
 

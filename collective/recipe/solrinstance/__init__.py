@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 """Recipe solrinstance"""
 
-import logging
 import zc.buildout
 import iw.recipe.template
 import shutil
 import os
-import sys
 
 INDEX_TYPES = set(['text', 'text_ws', 'keyword', 'date', 'string'])
 INDEX_ATTRIBUTES = {'name' : '',

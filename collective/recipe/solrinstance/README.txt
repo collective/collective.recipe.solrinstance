@@ -39,7 +39,6 @@ Ok, let's run the buildout::
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    <BLANKLINE>
 
 Check if the run script is here and the template substitution worked::
 
