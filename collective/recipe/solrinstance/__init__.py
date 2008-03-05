@@ -70,6 +70,7 @@ class Recipe(object):
                 'Please use a positive integer for the number of default results')
 
         options['uniqueKey'] = options.get('unique-key', 'uid').strip()
+        options['defaultSearchField'] = options.get('default-search-field', '').strip()
 
     def parse_filter(self):
         """Parses the filter definitions from the options."""
@@ -136,6 +137,10 @@ class Recipe(object):
             raise zc.buildout.UserError('Unique key without according index: %s' % unique)
         if unique and not indeces[names.index(unique)].get('required', None) == 'true':
             raise zc.buildout.UserError('Unique key needs to be declared "required": %s' % unique)
+
+        default = self.options['defaultSearchField']
+        if default and not default in names:
+            raise zc.buildout.UserError('Default search field without according index: %s' % default)
 
         return indeces
 

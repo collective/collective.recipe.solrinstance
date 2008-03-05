@@ -277,8 +277,11 @@
    -->
  <uniqueKey>$options.options.uniqueKey</uniqueKey>
 
+
+ #if $options.options.defaultSearchField
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
- <defaultSearchField>default_field</defaultSearchField>
+ <defaultSearchField>$options.options.defaultSearchField</defaultSearchField>
+ #end if
 
  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
  <solrQueryParser defaultOperator="OR"/>

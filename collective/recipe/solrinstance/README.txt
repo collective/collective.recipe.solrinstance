@@ -154,3 +154,79 @@ is a bit stupid, but oh well:
     ...
     Error: Unique key needs to be declared "required": uniqueID
 
+A default search field can also be specified, but this also requires the
+according index to be set up:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... default-search-field = Foo
+    ... unique-key =
+    ... index =
+    ... """)
+    >>> print system(buildout)
+    Installing solr.
+    ...
+    Error: Default search field without according index: Foo
+
+With the index set up correctly, things work again:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... default-search-field = Foo
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text
+    ... """)
+    >>> print system(buildout)
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <defaultSearchField>Foo</defaultSearchField>
+    ...
+
+There's no default for the default search field, however:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key =
+    ... index =
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> def read(*path):
+    ...     return open(os.path.join(*path)).read()
+    >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> schema.index('<defaultSearchField>')
+    Traceback (most recent call last):
+    ...
+    ValueError: substring not found
+
