@@ -67,12 +67,13 @@ filter
 
 unique-key
     Optional override for declaring a field to be unique for all documents.
-    See http://wiki.apache.org/solr/SchemaXml for more information.
-    
+    See http://wiki.apache.org/solr/SchemaXml for more information
+    Default to 'uid'.
+
 default-search-field
     Configure a default search field, which is used when no field was
-    explicitly given.  See http://wiki.apache.org/solr/SchemaXml.
-    
+    explicitly given. See http://wiki.apache.org/solr/SchemaXml.
+
 max-num-results
     The maximum number of results the Solr server returns. Defaults to 10.
 
