@@ -68,7 +68,7 @@ filter
 unique-key
     Optional override for declaring a field to be unique for all documents.
     See http://wiki.apache.org/solr/SchemaXml for more information
-    Default to 'uid'.
+    Defaults to 'uid'.
 
 default-search-field
     Configure a default search field, which is used when no field was
