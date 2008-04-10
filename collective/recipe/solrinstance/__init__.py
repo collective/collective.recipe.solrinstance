@@ -60,10 +60,6 @@ class Recipe(object):
             'schema-destination',
             os.path.join(self.part_dir, 'solr', 'conf'))
 
-        options['schema-template'] = options.get(
-            'schema-template',
-            '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR)
-
         try:
             num_results = int(options.get('max-num-results', '10').strip())
             if num_results < 1:
@@ -109,7 +105,7 @@ class Recipe(object):
                 raise zc.buildout.UserError(
                     'Invalid index attribute(s). Allowed attributes are %s' % (', '.join(INDEX_ATTRIBUTES.keys())))
 
-            if entry['type'].lower() not in INDEX_TYPES:
+            if entry['type'].lower() not in INDEX_TYPES and not self.options.has_key('schema-template'):
                 raise zc.buildout.UserError('Invalid index type: %s' % entry['type'])
 
             if entry['name'] in names:
@@ -207,7 +203,8 @@ class Recipe(object):
             rows=self.options['max-num-results'])
 
         self.generate_solr_schema(
-            source=self.options['schema-template'],
+            source=self.options.get('schema-template',
+                '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR),
             destination=self.options['schema-destination'],
             filters=self.parse_filter(),
             indeces=self.parse_index(),
