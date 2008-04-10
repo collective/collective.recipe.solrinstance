@@ -60,6 +60,10 @@ class Recipe(object):
             'schema-destination',
             os.path.join(self.part_dir, 'solr', 'conf'))
 
+        options['schema-template'] = options.get(
+            'schema-template',
+            '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR)
+
         try:
             num_results = int(options.get('max-num-results', '10').strip())
             if num_results < 1:
@@ -203,7 +207,7 @@ class Recipe(object):
             rows=self.options['max-num-results'])
 
         self.generate_solr_schema(
-            source='%s/templates/schema.xml.tmpl' % TEMPLATE_DIR,
+            source=self.options['schema-template'],
             destination=self.options['schema-destination'],
             filters=self.parse_filter(),
             indeces=self.parse_index(),

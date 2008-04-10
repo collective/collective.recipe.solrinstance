@@ -47,6 +47,11 @@ schema-destination
     Optional override for the directory where the ``schema.xml`` file
     will be generated. Defaults to the Solr default location.
 
+schema-template
+    Optional override for the template used to generate the ``schema.xml``
+    file. Defaults to the template contained in the recipe, i.e.
+    ``templates/schema.xml.tmpl``.
+
 jetty-destination
     Optional override for the directory where the ``jetty.xml`` file
     will be generated. Defaults to the Solr default location.

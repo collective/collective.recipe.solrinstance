@@ -256,3 +256,32 @@ There's no default for the default search field, however:
     ...
     ValueError: substring not found
 
+For more complex setups it's also possible to specify an alternative template
+to be used to generate `schema.xml`
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = %s
+    ... unique-key =
+    ... index =
+    ... """ % tmpl)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    Simple example
+    ...
+    For more complex setups it's also possible...
+    ...
+
