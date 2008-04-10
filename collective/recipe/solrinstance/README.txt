@@ -4,7 +4,7 @@ Simple example
     >>> import os
 
 In the simplest form we can download a simple package and have it
-extracted in the parts directory::
+extracted in the parts directory:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -28,12 +28,12 @@ extracted in the parts directory::
     ... """)
 
 Create the default structure. We assume the solr distribution was
-downloaded before::
+downloaded before:
 
     >>> os.makedirs(join(sample_buildout, 'example', 'etc'))
     >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf'))
 
-Ok, let's run the buildout::
+Ok, let's run the buildout:
 
     >>> print system(buildout)
     Installing solr.
@@ -42,7 +42,7 @@ Ok, let's run the buildout::
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
 
-Check if the run script is here and the template substitution worked::
+Check if the run script is here and the template substitution worked:
 
     >>> cat(sample_buildout, 'bin', 'solr-instance')
     #!...
@@ -53,7 +53,7 @@ Check if the run script is here and the template substitution worked::
     SOLR_DIR = '.../parts/solr'
     ...
 
-Also check that the XML files are where we expect them to be::
+Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
@@ -64,7 +64,7 @@ Also check that the XML files are where we expect them to be::
 
 And make sure the substitution worked for all files.
 
-`jetty.xml`::
+`jetty.xml`:
 
     >>> cat(sample_buildout, 'parts', 'solr', 'etc', 'jetty.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -74,7 +74,7 @@ And make sure the substitution worked for all files.
     <Arg>.../var/solr/log/jetty-yyyy_mm_dd.request.log</Arg>
     ...
 
-`schema.xml`::
+`schema.xml`:
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -94,7 +94,7 @@ And make sure the substitution worked for all files.
     <uniqueKey>uniqueID</uniqueKey>
     ...
 
-`solrconfig.xml`::
+`solrconfig.xml`:
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -104,7 +104,7 @@ And make sure the substitution worked for all files.
     <int name="rows">99</int>
     ...
 
-Let's check that the zope-conf snippet was correctly generated::
+Let's check that the zope-conf snippet was correctly generated:
 
     >>> cat(sample_buildout, '.installed.cfg')
     [buildout]
@@ -257,7 +257,7 @@ There's no default for the default search field, however:
     ValueError: substring not found
 
 For more complex setups it's also possible to specify an alternative template
-to be used to generate `schema.xml`
+to be used to generate `schema.xml`:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
