@@ -285,3 +285,47 @@ to be used to generate `schema.xml`:
     For more complex setups it's also possible...
     ...
 
+When used custom index attributes should be allowed as they might make sense
+in some situations:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = %s
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar
+    ... """ % tmpl)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+Without the custom template for `schema.xml` this should yield an error:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    ...
+    Error: Invalid index attribute(s). Allowed attributes are ...
+

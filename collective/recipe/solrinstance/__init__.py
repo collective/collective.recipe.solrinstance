@@ -92,6 +92,7 @@ class Recipe(object):
         """Parses the index definitions from the options."""
         indeces = []
         names = []
+        customTemplate = self.options.has_key('schema-template')
         for line in self.options['index'].strip().splitlines():
             entry = {}
             for item in line.split():
@@ -101,11 +102,11 @@ class Recipe(object):
                 else:
                     entry[attr] = value
 
-            if not set(entry.keys()).issubset(set(INDEX_ATTRIBUTES.keys())):
+            if not set(entry.keys()).issubset(set(INDEX_ATTRIBUTES.keys())) and not customTemplate:
                 raise zc.buildout.UserError(
                     'Invalid index attribute(s). Allowed attributes are %s' % (', '.join(INDEX_ATTRIBUTES.keys())))
 
-            if entry['type'].lower() not in INDEX_TYPES and not self.options.has_key('schema-template'):
+            if entry['type'].lower() not in INDEX_TYPES and not customTemplate:
                 raise zc.buildout.UserError('Invalid index type: %s' % entry['type'])
 
             if entry['name'] in names:
