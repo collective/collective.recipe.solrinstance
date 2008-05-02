@@ -286,10 +286,17 @@ to be used to generate `schema.xml`:
     ...
 
 When used custom index attributes should be allowed as they might make sense
-in some situations:
+in some situations.  Any additional attributes are collected in a special
+variable that can then be conveniently used in the template:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
+    >>> write(sample_buildout, 'schema.xml',
+    ... """<schema name="foo">
+    ... #for $index in $options.indeces
+    ... <field name="$index.name" $index.extras />
+    ... #end for
+    ... </schema>""")
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
     ... [buildout]
@@ -297,11 +304,12 @@ in some situations:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... schema-template = %s
+    ... schema-template = schema.xml
     ... unique-key =
     ... index =
-    ...     name:Foo type:text foo:bar
-    ... """ % tmpl)
+    ...     name:Foo type:text foo:bar another:one
+    ...     name:Bar type:text
+    ... """)
     >>> print system(buildout)
     Uninstalling solr.
     Installing solr.
@@ -309,6 +317,11 @@ in some situations:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    <schema name="foo">
+    <field name="Foo" another="one" foo="bar" />
+    <field name="Bar"  />
+    </schema>
 
 Without the custom template for `schema.xml` this should yield an error:
 

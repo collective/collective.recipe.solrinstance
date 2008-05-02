@@ -17,6 +17,7 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'required' : 'false',
                     'indexed' : 'true',
                     'stored' : 'true',
+                    'extras' : '',
                     'keepinzope' : 'true'}
 DEFAULT_FILTERS = """
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
@@ -90,9 +91,10 @@ class Recipe(object):
 
     def parse_index(self):
         """Parses the index definitions from the options."""
+        customTemplate = self.options.has_key('schema-template')
+        indexAttrs = set(INDEX_ATTRIBUTES.keys())
         indeces = []
         names = []
-        customTemplate = self.options.has_key('schema-template')
         for line in self.options['index'].strip().splitlines():
             entry = {}
             for item in line.split():
@@ -102,9 +104,16 @@ class Recipe(object):
                 else:
                     entry[attr] = value
 
-            if not set(entry.keys()).issubset(set(INDEX_ATTRIBUTES.keys())) and not customTemplate:
-                raise zc.buildout.UserError(
-                    'Invalid index attribute(s). Allowed attributes are %s' % (', '.join(INDEX_ATTRIBUTES.keys())))
+            keys = set(entry.keys())
+            if not keys.issubset(indexAttrs):
+                if customTemplate:
+                    extras = []
+                    for key in sorted(keys.difference(indexAttrs)):
+                        extras.append('%s="%s"' % (key, entry[key]))
+                    entry['extras'] = ' '.join(extras)
+                else:
+                    raise zc.buildout.UserError(
+                        'Invalid index attribute(s). Allowed attributes are %s' % ', '.join(indexAttrs))
 
             if entry['type'].lower() not in INDEX_TYPES and not customTemplate:
                 raise zc.buildout.UserError('Invalid index type: %s' % entry['type'])
@@ -120,7 +129,7 @@ class Recipe(object):
                 if key == 'copyfield':
                     entry[key] = [{'source':entry['name'], 'dest':val}
                                   for val in value]
-                elif key == 'name':
+                elif key in ('name', 'extras'):
                     entry[key] = value
                 elif key == 'type':
                     entry[key] = value.lower()
