@@ -11,6 +11,7 @@ from zc.buildout.testing import buildoutSetUp, install_develop
 def setUp(test):
     buildoutSetUp(test)
     install_develop('zope.testing', test)
+    install_develop('Cheetah', test)
     install_develop('iw.recipe.template', test)
     install_develop('collective.recipe.solrinstance', test)
 
