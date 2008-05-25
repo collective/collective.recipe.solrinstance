@@ -6,7 +6,8 @@ import iw.recipe.template
 import shutil
 import os
 
-INDEX_TYPES = set(['text', 'text_ws', 'keyword', 'date', 'string'])
+INDEX_TYPES = set(['text', 'text_ws', 'ignored', 'date', 'string',
+                   'boolean', 'integer', 'long', 'float', 'double'])
 INDEX_ATTRIBUTES = {'name' : '',
                     'type' : '',
                     'copyfield' : [],
