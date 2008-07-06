@@ -1,7 +1,7 @@
 Change History
 **************
 
-x.x.x (xxxx-xx-xx)
-=====
+0.1 (2008-07-07)
+================
 
  - First public release.
