@@ -5,7 +5,7 @@ This module contains the tool of collective.recipe.solrinstance
 import os
 from setuptools import setup, find_packages
 
-version = '1.0'
+version = '0.1'
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
