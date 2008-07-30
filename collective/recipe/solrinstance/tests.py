@@ -10,6 +10,7 @@ from zc.buildout.testing import buildoutSetUp, install_develop
 
 def setUp(test):
     buildoutSetUp(test)
+    install_develop('zope.interface', test)
     install_develop('zope.testing', test)
     install_develop('Cheetah', test)
     install_develop('iw.recipe.template', test)
