@@ -1,6 +1,14 @@
 Change History
 **************
 
+0.2 (SVN/unreleased)
+====================
+
+ - Improved stop command by using SIGTERM instead of SIGHUP [guido_w]
+
+ - Made that stdout and stderr get redirected to a log file when daemonizing
+   the solr instance [guido_w]
+
 0.1 (2008-07-07)
 ================
 

@@ -224,6 +224,7 @@ class Recipe(object):
         self.create_bin_scripts(
             source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
             pidfile=os.path.join(solr_var, 'solr.pid'),
+            logfile=os.path.join(solr_var, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.part_dir)
 

@@ -1,6 +1,6 @@
 from subprocess import Popen, call
 import sys, os
-from signal import SIGHUP
+from signal import SIGTERM
 
 if len(sys.argv) != 2:
     print "please run with  %s start|stop|purge|status|fg" % __file__
@@ -8,22 +8,29 @@ if len(sys.argv) != 2:
 
 PID_FILE = '$options.pidfile'
 SOLR_DIR = '$options.solrdir'
+SOLR_LOG = '$options.logfile'
 
 def start(daemonize=True):
-    pid = Popen(['java', '-jar', 'start.jar'], cwd=SOLR_DIR).pid
+    logfp = None
+    if daemonize:
+        logfp = file(SOLR_LOG, 'a+')
+    pid = Popen(['java', '-jar', 'start.jar'], cwd=SOLR_DIR,
+                stdout=logfp, stderr=logfp).pid
     if not(daemonize):
         return os.waitpid(pid, 0)
     else:
         f = open(PID_FILE, 'wb')
         f.write(str(pid))
         f.close()
+        print 'Solr started with pid %s' % (pid,)
 
 def stop():
     try:
         f = open(PID_FILE)
         pid = f.read().strip()
         f.close()
-        os.kill(int(pid), SIGHUP)
+        # SIGHUP here didn't quite do the job, so using TERM instead
+        os.kill(int(pid), SIGTERM)
         os.unlink(PID_FILE)
         print "Solr stopped successfully."
     except (IOError, OSError):
