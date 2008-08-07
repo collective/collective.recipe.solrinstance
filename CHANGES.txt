@@ -1,7 +1,7 @@
 Change History
 **************
 
-0.2 (SVN/unreleased)
+0.2 (2008-08-07)
 ====================
 
  - Improved stop command by using SIGTERM instead of SIGHUP [guido_w]
