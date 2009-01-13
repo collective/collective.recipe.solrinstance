@@ -95,3 +95,6 @@ zope-conf
             basepath ${part:basepath}
         </product-config>
 
+default-operator
+    The default operator to use for queries.  Valid values or AND and OR.
+    Defaults to OR.

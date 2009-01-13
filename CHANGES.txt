@@ -3,6 +3,8 @@ Change History
 0.3 (SVN/Unreleased)
 ====================
 
+ - Added default-operator [swampmonkey]
+
 0.2 (2008-08-08)
 ================
 

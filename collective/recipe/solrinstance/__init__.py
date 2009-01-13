@@ -73,6 +73,7 @@ class Recipe(object):
 
         options['uniqueKey'] = options.get('unique-key', 'uid').strip()
         options['defaultSearchField'] = options.get('default-search-field', '').strip()
+        options['defaultOperator'] = options.get('default-operator', 'OR').strip().upper()
 
     def parse_filter(self):
         """Parses the filter definitions from the options."""
