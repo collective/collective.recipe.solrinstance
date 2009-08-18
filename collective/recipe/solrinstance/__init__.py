@@ -74,6 +74,7 @@ class Recipe(object):
         options['uniqueKey'] = options.get('unique-key', 'uid').strip()
         options['defaultSearchField'] = options.get('default-search-field', '').strip()
         options['defaultOperator'] = options.get('default-operator', 'OR').strip().upper()
+        options['additional-solrconfig'] = options.get('additional-solrconfig', '').strip()
 
     def parse_filter(self):
         """Parses the filter definitions from the options."""
@@ -228,7 +229,8 @@ class Recipe(object):
             source='%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR,
             datadir=solr_data,
             destination=self.options['config-destination'],
-            rows=self.options['max-num-results'])
+            rows=self.options['max-num-results'],
+            additional_solrconfig=self.options['additional-solrconfig'])
 
         self.generate_solr_schema(
             source=self.options.get('schema-template',

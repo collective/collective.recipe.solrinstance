@@ -348,3 +348,35 @@ Without the custom template for `schema.xml` this should yield an error:
     ...
     Error: Invalid index attribute(s). Allowed attributes are ...
 
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ...     name:Bar type:text
+    ... additional-solrconfig = 
+    ...     <foo attr="value1">
+    ...         <bar />
+    ...     </foo>
+    ... """)
+    >>> print system(buildout)
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <foo attr="value1">
+        <bar />
+    </foo>
+    ...

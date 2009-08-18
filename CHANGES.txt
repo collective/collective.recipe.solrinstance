@@ -3,7 +3,11 @@ Change History
 0.3 (SVN/Unreleased)
 ====================
 
+ - Added additional-solrconfig allowing one to extend the
+   solrconfig.xml [anguenot]
+
  - Support whitespace in schema index attributes values [anguenot]
+
  - Added default-operator [swampmonkey]
 
 0.2 (2008-08-08)

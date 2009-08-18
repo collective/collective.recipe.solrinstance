@@ -98,3 +98,7 @@ zope-conf
 default-operator
     The default operator to use for queries.  Valid values or AND and OR.
     Defaults to OR.
+
+additional-solrconf
+    Optional additional configuration to be included inside the
+    solrconfig.xml. For instance, ``<requestHandler />`` directives.
