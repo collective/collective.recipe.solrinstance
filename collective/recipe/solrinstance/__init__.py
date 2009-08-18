@@ -91,6 +91,22 @@ class Recipe(object):
             filters[index].append({'class': klass, 'extra': extra})
         return filters
 
+    def _splitIndexLine(self, line):
+        # Split an index line.
+        # XXX should be implemented using re
+        params = []
+        for each in line.split():
+            if each.find(':') == -1:
+                # The former attr value contains a whitespace which is
+                # allowed.
+                if len(params) == 0:
+                    raise zc.buildout.UserError(
+                        'Invalid index definition : %s' % line)
+                params[len(params)-1] += ' ' + each
+            else:
+                params.append(each)
+        return params
+
     def parse_index(self):
         """Parses the index definitions from the options."""
         customTemplate = self.options.has_key('schema-template')
@@ -99,7 +115,7 @@ class Recipe(object):
         names = []
         for line in self.options['index'].strip().splitlines():
             entry = {}
-            for item in line.split():
+            for item in self._splitIndexLine(line):
                 attr, value = item.split(':')[:2]
                 if attr == 'copyfield':
                     entry.setdefault(attr, []).append(value)

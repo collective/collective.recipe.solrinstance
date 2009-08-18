@@ -22,6 +22,7 @@ extracted in the parts directory:
     ...     name:uniqueID type:string indexed:true stored:true required:true
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ...     name:Foo bar type:text
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
@@ -36,6 +37,8 @@ downloaded before:
 Ok, let's run the buildout:
 
     >>> print system(buildout)
+    Getting distribution for 'zope.exceptions'.
+    Got zope.exceptions ...                
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
@@ -90,6 +93,9 @@ And make sure the substitution worked for all files.
     <field name="Bar" type="date" indexed="false"
            stored="false" required="true" multiValued="true"
            omitNorms="true" />
+    <field name="Foo bar" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           omitNorms="false" />
     ...
     <uniqueKey>uniqueID</uniqueKey>
     ...
