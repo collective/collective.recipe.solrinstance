@@ -240,7 +240,7 @@
     -->
   <requestDispatcher handleSelect="true" >
     <!--Make sure your system has some authentication before enabling remote streaming!  -->
-    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="${$options.requestParsers_multipartUploadLimitInKB or 2048}" />
   </requestDispatcher>
 
 

@@ -37,8 +37,8 @@ downloaded before:
 Ok, let's run the buildout:
 
     >>> print system(buildout)
-    Getting distribution for 'zope.exceptions'.
-    Got zope.exceptions ...                
+    Get...
+    ...
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
@@ -379,4 +379,63 @@ Without the custom template for `schema.xml` this should yield an error:
     <foo attr="value1">
         <bar />
     </foo>
+    ...
+
+Testing the request parsers defaul limit:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
+    ...
+
+Test changing the request parsers limit: 
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key = 
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ... requestParsers-multipartUploadLimitInKB = 4096
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="4096" />
     ...

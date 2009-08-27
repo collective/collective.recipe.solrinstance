@@ -102,3 +102,8 @@ default-operator
 additional-solrconf
     Optional additional configuration to be included inside the
     solrconfig.xml. For instance, ``<requestHandler />`` directives.
+
+requestParsers-multipartUploadLimitInKB 
+    Optional ``<requestParsers />`` parameter useful if you are submitting
+    very large documents to Solr. May be the case with Solr >= 1.4 if
+    Solr is indexing binaries extracted from request.

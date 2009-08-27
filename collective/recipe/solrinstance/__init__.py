@@ -75,6 +75,7 @@ class Recipe(object):
         options['defaultSearchField'] = options.get('default-search-field', '').strip()
         options['defaultOperator'] = options.get('default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options.get('additional-solrconfig', '').strip()
+        options['requestParsers-multipartUploadLimitInKB'] = options.get('requestParsers-multipartUploadLimitInKB', '2048').strip()
 
     def parse_filter(self):
         """Parses the filter definitions from the options."""
@@ -230,7 +231,8 @@ class Recipe(object):
             datadir=solr_data,
             destination=self.options['config-destination'],
             rows=self.options['max-num-results'],
-            additional_solrconfig=self.options['additional-solrconfig'])
+            additional_solrconfig=self.options['additional-solrconfig'],
+            requestParsers_multipartUploadLimitInKB=self.options['requestParsers-multipartUploadLimitInKB'])
 
         self.generate_solr_schema(
             source=self.options.get('schema-template',

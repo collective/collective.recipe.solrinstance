@@ -2,6 +2,9 @@ Change History
 **************
 0.3 (SVN/Unreleased)
 ====================
+ 
+ - Added requestParsers-multipartUploadLimitInKB allowing one to
+   adjust the request parsers limit. [anguenot]
 
  - Added additional-solrconfig allowing one to extend the
    solrconfig.xml [anguenot]
