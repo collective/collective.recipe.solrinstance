@@ -43,6 +43,11 @@ config-destination
     Optional override for the directory where the ``solrconfig.xml``
     file will be generated. Defaults to the Solr default location.
 
+config-template
+    Optional override for the template used to generate the ``solrconfig.xml``
+    file. Defaults to the template contained in the recipe, i.e.
+    ``templates/solrconfig.xml.tmpl``.
+
 schema-destination
     Optional override for the directory where the ``schema.xml`` file
     will be generated. Defaults to the Solr default location.

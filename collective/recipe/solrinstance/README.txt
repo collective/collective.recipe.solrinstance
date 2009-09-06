@@ -439,3 +439,33 @@ Test changing the request parsers limit:
     ...
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="4096" />
     ...
+
+For more complex configuration requirements, it's also possible to specify an
+alternative template to be used to generate `solrconfig.xml`:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... config-template = %s
+    ... unique-key =
+    ... index =
+    ... """ % tmpl)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    Simple example
+    ...
+    For more complex configuration requirements it's also possible...
+    ...
+

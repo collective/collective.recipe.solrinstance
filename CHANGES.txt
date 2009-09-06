@@ -13,6 +13,9 @@ Change History
 
  - Added default-operator [swampmonkey]
 
+ - Added config-template for allowing an alternate template to be used for
+   generating the solrconfig.xml file. [cguardia]
+
 0.2 (2008-08-08)
 ================
 

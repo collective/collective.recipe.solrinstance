@@ -227,7 +227,8 @@ class Recipe(object):
             destination=self.options['jetty-destination'])
 
         self.generate_solr_conf(
-            source='%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR,
+            source=self.options.get('config-template',
+                '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR),
             datadir=solr_data,
             destination=self.options['config-destination'],
             rows=self.options['max-num-results'],
