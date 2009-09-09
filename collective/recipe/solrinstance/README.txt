@@ -266,7 +266,10 @@ For more complex setups it's also possible to specify an alternative template
 to be used to generate `schema.xml`:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
-    >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
+    >>> write(sample_buildout, 'alt_schema.xml',
+    ... """<schema>
+    ... schema here
+    ... </schema>""")
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
     ... [buildout]
@@ -274,10 +277,10 @@ to be used to generate `schema.xml`:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... schema-template = %s
+    ... schema-template = alt_schema.xml
     ... unique-key =
     ... index =
-    ... """ % tmpl)
+    ... """)
     >>> print system(buildout)
     Uninstalling solr.
     Installing solr.
@@ -286,17 +289,15 @@ to be used to generate `schema.xml`:
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
-    Simple example
-    ...
-    For more complex setups it's also possible...
-    ...
+    <schema>
+    schema here
+    </schema>
 
 When used custom index attributes should be allowed as they might make sense
 in some situations.  Any additional attributes are collected in a special
 variable that can then be conveniently used in the template:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
-    >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
     >>> write(sample_buildout, 'schema.xml',
     ... """<schema name="foo">
     ... #for $index in $options.indeces
@@ -361,7 +362,7 @@ Without the custom template for `schema.xml` this should yield an error:
     ... index =
     ...     name:Foo type:text foo:bar another:one
     ...     name:Bar type:text
-    ... additional-solrconfig = 
+    ... additional-solrconfig =
     ...     <foo attr="value1">
     ...         <bar />
     ...     </foo>
@@ -410,7 +411,7 @@ Testing the request parsers default limit:
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
     ...
 
-Test changing the request parsers limit: 
+Test changing the request parsers limit:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> write(sample_buildout, 'buildout.cfg',
@@ -421,7 +422,7 @@ Test changing the request parsers limit:
     ... [solr]
     ... recipe = collective.recipe.solrinstance
     ... schema-template = schema.xml
-    ... unique-key = 
+    ... unique-key =
     ... index =
     ...     name:Foo type:text foo:bar another:one
     ... requestParsers-multipartUploadLimitInKB = 4096
@@ -489,14 +490,14 @@ Solr instances to coexist in a single buildout:
     ... recipe = collective.recipe.solrinstance
     ... unique-key =
     ... index =
-    ... vardir = var/solr-main
+    ... vardir = ${buildout:directory}/var/solr-main
     ... script = solr-main
     ...
     ... [solr-functest]
     ... recipe = collective.recipe.solrinstance
     ... unique-key =
     ... index =
-    ... vardir = var/solr-functest
+    ... vardir = ${buildout:directory}/var/solr-functest
     ... script =
     ... """)
     >>> print system(buildout)
