@@ -62,6 +62,12 @@ class Recipe(object):
             'schema-destination',
             os.path.join(self.part_dir, 'solr', 'conf'))
 
+        options['vardir'] = options.get(
+            'vardir',
+            os.path.join(buildout['buildout']['directory'], 'var', 'solr'))
+
+        options['script'] = options.get('script', 'solr-instance').strip()
+
         try:
             num_results = int(options.get('max-num-results', '10').strip())
             if num_results < 1:
@@ -194,10 +200,11 @@ class Recipe(object):
 
     def create_bin_scripts(self, **kwargs):
         """ Create a runner for our solr instance """
-        iw.recipe.template.Script(
-            self.buildout,
-            'solr-instance',
-            kwargs).install()
+        if self.options['script']:
+            iw.recipe.template.Script(
+                self.buildout,
+                self.options['script'],
+                kwargs).install()
 
     def install(self):
         """installer"""
@@ -210,9 +217,7 @@ class Recipe(object):
         # Copy the instance files
         shutil.copytree(os.path.join(self.options['solr-location'], 'example'), self.part_dir)
 
-        solr_var = os.path.join(
-                self.buildout['buildout']['directory'], 'var', 'solr')
-
+        solr_var = self.options['vardir']
         solr_data = os.path.join(solr_var, 'data')
         solr_log = os.path.join(solr_var, 'log')
 

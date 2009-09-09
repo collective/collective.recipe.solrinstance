@@ -381,7 +381,7 @@ Without the custom template for `schema.xml` this should yield an error:
     </foo>
     ...
 
-Testing the request parsers defaul limit:
+Testing the request parsers default limit:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> write(sample_buildout, 'buildout.cfg',
@@ -444,7 +444,10 @@ For more complex configuration requirements, it's also possible to specify an
 alternative template to be used to generate `solrconfig.xml`:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
-    >>> tmpl = os.path.join(os.path.dirname(__file__), 'README.txt')
+    >>> write(sample_buildout, 'alt_solrconfig.xml',
+    ... """<config>
+    ... configure me here
+    ... </config>""")
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
     ... [buildout]
@@ -452,10 +455,10 @@ alternative template to be used to generate `solrconfig.xml`:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... config-template = %s
+    ... config-template = alt_solrconfig.xml
     ... unique-key =
     ... index =
-    ... """ % tmpl)
+    ... """)
     >>> print system(buildout)
     Uninstalling solr.
     Installing solr.
@@ -464,8 +467,53 @@ alternative template to be used to generate `solrconfig.xml`:
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
-    Simple example
+    <config>
+    configure me here
+    </config>
+
+The ``vardir`` option lets you override the location of the Solr data
+files.  The ``script`` option lets you override the name of the generated
+script (normally "solr-instance"); provide an empty script name to not
+generate the script.  These options make it possible for multiple
+Solr instances to coexist in a single buildout:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> rmdir(sample_buildout, 'var')
+    >>> remove(sample_buildout, 'bin', 'solr-instance')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-main solr-functest
     ...
-    For more complex configuration requirements it's also possible...
+    ... [solr-main]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key =
+    ... index =
+    ... vardir = var/solr-main
+    ... script = solr-main
     ...
+    ... [solr-functest]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key =
+    ... index =
+    ... vardir = var/solr-functest
+    ... script =
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr-main.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-main: Generated script 'solr-main'.
+    Installing solr-functest.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    >>> ls(sample_buildout, 'var')
+    d  solr-functest
+    d  solr-main
+    >>> ls(sample_buildout, 'bin')
+    -  buildout
+    -  solr-main
 

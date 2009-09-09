@@ -112,3 +112,18 @@ requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case with Solr >= 1.4 if
     Solr is indexing binaries extracted from request.
+
+vardir
+    Optional override for the location of the directory where Solr
+    stores its indexes and log files. Defaults to
+    ``${buildout:directory}/var/solr``. This option and the ``script``
+    option make it possible to create multiple Solr instances in a
+    single buildout and dedicate one or more of the instances to
+    automated functional testing.
+
+script
+    Optional override for the name of the generated Solr instance
+    control script. Defaults to ``solr-instance``. This option and the
+    ``vardir`` option make it possible to create multiple Solr
+    instances in a single buildout and dedicate one or more of the
+    instances to automated functional testing.
