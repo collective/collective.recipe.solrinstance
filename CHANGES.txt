@@ -1,8 +1,13 @@
 Change History
 **************
-0.3 (SVN/Unreleased)
+0.4 (SVN/Unreleased)
 ====================
  
+ -
+
+0.3 (2009-09-10)
+====================
+
  - Added requestParsers-multipartUploadLimitInKB allowing one to
    adjust the request parsers limit. [anguenot]
 
