@@ -83,6 +83,9 @@ class Recipe(object):
         options['additional-solrconfig'] = options.get('additional-solrconfig', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options.get('requestParsers-multipartUploadLimitInKB', '2048').strip()
 
+        # Solr startup commands
+        options['java_opts'] = options.get('java_opts', '')
+
     def parse_filter(self):
         """Parses the filter definitions from the options."""
         filters = {}
@@ -114,6 +117,20 @@ class Recipe(object):
             else:
                 params.append(each)
         return params
+
+    def parse_java_opts(self):
+        """Parsed the java opts from `options`. """
+        cmd_opts = []
+        _start = ['java', '-jar']
+        _jar = 'start.jar'
+        _opts = []
+        if not self.options['java_opts']:
+            cmd_opts = _start
+        else:
+            _opts = self.options['java_opts'].strip().splitlines()
+            cmd_opts = _start + _opts
+        cmd_opts.append(_jar)
+        return cmd_opts
 
     def parse_index(self):
         """Parses the index definitions from the options."""
@@ -253,7 +270,8 @@ class Recipe(object):
             pidfile=os.path.join(solr_var, 'solr.pid'),
             logfile=os.path.join(solr_var, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
-            solrdir=self.part_dir)
+            solrdir=self.part_dir,
+            startcmd=self.parse_java_opts())
 
         # returns installed files
         return parts

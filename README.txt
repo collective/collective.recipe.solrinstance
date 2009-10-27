@@ -127,3 +127,16 @@ script
     ``vardir`` option make it possible to create multiple Solr
     instances in a single buildout and dedicate one or more of the
     instances to automated functional testing.
+
+java_opts
+    Optional. Parameters to pass to the Java Virtual Machine (JVM) used to
+run Solr. Each option is specified on a separated line.
+    For example::
+       
+        [solr-instance]
+        ... 
+        java_opts =
+          -Xms512M
+          -Xmx1024M
+        ...
+    

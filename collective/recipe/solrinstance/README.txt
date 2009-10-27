@@ -55,6 +55,8 @@ Check if the run script is here and the template substitution worked:
     ...
     SOLR_DIR = '.../parts/solr'
     ...
+    START_CMD = ['java', '-jar', 'start.jar']
+    ...
 
 Also check that the XML files are where we expect them to be:
 
@@ -518,3 +520,46 @@ Solr instances to coexist in a single buildout:
     -  buildout
     -  solr-main
 
+Testing the java_opts optional params:
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... host = 127.0.0.1
+    ... port = 1234
+    ... max-num-results = 99
+    ... section-name = SOLR
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:string indexed:true stored:true required:true
+    ... java_opts = 
+    ...     -Xms512M
+    ...     -Xmx1024M 
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    Uninstalling solr-functest.
+    Uninstalling solr-main.    
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+Check if the run script is here and the template substitution worked
+with java_opts:
+
+    >>> cat(sample_buildout, 'bin', 'solr-instance')
+    #!...
+    from subprocess import Popen, call
+    import sys, os
+    from signal import SIGTERM
+    ...
+    START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
+    ...

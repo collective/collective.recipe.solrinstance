@@ -9,12 +9,13 @@ if len(sys.argv) != 2:
 PID_FILE = '$options.pidfile'
 SOLR_DIR = '$options.solrdir'
 SOLR_LOG = '$options.logfile'
+START_CMD = $options.startcmd
 
 def start(daemonize=True):
     logfp = None
     if daemonize:
         logfp = file(SOLR_LOG, 'a+')
-    pid = Popen(['java', '-jar', 'start.jar'], cwd=SOLR_DIR,
+    pid = Popen(START_CMD, cwd=SOLR_DIR,
                 stdout=logfp, stderr=logfp).pid
     if not(daemonize):
         return os.waitpid(pid, 0)

@@ -3,7 +3,8 @@ Change History
 0.4 (SVN/Unreleased)
 ====================
  
- -
+ - Added optional java_opts parameter pass to the Java Virtual
+   Machine (JVM) used to run Solr. [anguenot]
 
 0.3 (2009-09-10)
 ====================
