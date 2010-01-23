@@ -82,6 +82,7 @@ class Recipe(object):
         options['defaultOperator'] = options.get('default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options.get('additional-solrconfig', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options.get('requestParsers-multipartUploadLimitInKB', '2048').strip()
+        options['extraFieldTypes'] = options.get('extra-field-types', '')
 
         # Solr startup commands
         options['java_opts'] = options.get('java_opts', '')
@@ -112,7 +113,7 @@ class Recipe(object):
                 # allowed.
                 if len(params) == 0:
                     raise zc.buildout.UserError(
-                        'Invalid index definition : %s' % line)
+                        'Invalid index definition: %s' % line)
                 params[len(params)-1] += ' ' + each
             else:
                 params.append(each)
@@ -155,11 +156,11 @@ class Recipe(object):
                         extras.append('%s="%s"' % (key, entry[key]))
                     entry['extras'] = ' '.join(extras)
                 else:
+                    invalid = keys.difference(indexAttrs)
                     raise zc.buildout.UserError(
-                        'Invalid index attribute(s). Allowed attributes are %s' % ', '.join(indexAttrs))
-
-            if entry['type'].lower() not in INDEX_TYPES and not customTemplate:
-                raise zc.buildout.UserError('Invalid index type: %s' % entry['type'])
+                        'Invalid index attribute(s): %s. '
+                        'Allowed attributes are: %s.' %
+                        (', '.join(invalid), ', '.join(indexAttrs)))
 
             if entry['name'] in names:
                 raise zc.buildout.UserError(
@@ -268,7 +269,7 @@ class Recipe(object):
         self.create_bin_scripts(
             source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
             pidfile=os.path.join(solr_var, 'solr.pid'),
-            logfile=os.path.join(solr_var, 'solr.log'),
+            logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.part_dir,
             startcmd=self.parse_java_opts())

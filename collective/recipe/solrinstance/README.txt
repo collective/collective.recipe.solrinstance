@@ -37,7 +37,6 @@ downloaded before:
 Ok, let's run the buildout:
 
     >>> print system(buildout)
-    Get...
     ...
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
@@ -264,6 +263,59 @@ There's no default for the default search field, however:
     ...
     ValueError: substring not found
 
+You can also define extra field types:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key =
+    ... extra-field-types =
+    ...     <fieldType name="foo_type" class="FooField"/>
+    ...     <fieldType name="bar_type" class="BarField">
+    ...         <analyzer type="index">
+    ...             <tokenizer class="BarTokenizer"/> 
+    ...         </analizer>
+    ...     </fieldType>
+    ... index =
+    ...     name:Foo type:foo_type
+    ...     name:Bar type:bar_type
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <types>
+    ...
+    <fieldType name="foo_type" class="FooField"/>
+    <fieldType name="bar_type" class="BarField">
+        <analyzer type="index">
+            <tokenizer class="BarTokenizer"/> 
+        </analizer>
+    </fieldType>
+    ... 
+    <fields>
+    ...
+    <field name="Foo" type="foo_type" indexed="true"
+           stored="true" required="false" multiValued="false"
+           omitNorms="false" />
+    <field name="Bar" type="bar_type" indexed="true"
+           stored="true" required="false" multiValued="false"
+           omitNorms="false" />
+    ...
+    </fields>
+    ...
+ 
 For more complex setups it's also possible to specify an alternative template
 to be used to generate `schema.xml`:
 
@@ -329,7 +381,7 @@ variable that can then be conveniently used in the template:
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema name="foo">
     <field name="Foo" another="one" foo="bar" />
-    <field name="Bar"  />
+    <field name="Bar" />
     </schema>
 
 Without the custom template for `schema.xml` this should yield an error:
@@ -349,7 +401,9 @@ Without the custom template for `schema.xml` this should yield an error:
     >>> print system(buildout)
     Uninstalling solr.
     ...
-    Error: Invalid index attribute(s). Allowed attributes are ...
+    Error: Invalid index attribute(s): foo. Allowed attributes are: ...
+
+Additional solrconfig should also be allowed:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> write(sample_buildout, 'buildout.cfg',

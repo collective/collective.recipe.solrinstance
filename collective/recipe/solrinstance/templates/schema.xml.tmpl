@@ -219,6 +219,11 @@
      -->
     <fieldtype name="ignored" stored="false" indexed="false" class="solr.StrField" />
 
+    #if $options.options.extraFieldTypes
+    <!-- Extra field types: -->
+    $options.options.extraFieldTypes
+    #end if
+
  </types>
 
 

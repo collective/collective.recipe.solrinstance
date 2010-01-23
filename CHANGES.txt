@@ -8,6 +8,19 @@ Change History
    Machine (JVM) used to run Solr.
    [anguenot]
 
+ - Fixed to create the ``solr.log`` file inside the ``log`` folder.
+   [deo]
+
+ - Made sure to display the invalid index attribute name when raising
+   the related error.
+   [deo]
+
+ - Added support for defining custom field types.
+   [deo]
+
+ - Added a ``restart`` command to the solr instance control script.
+   [deo]
+
 
 0.3 (2009-09-10)
 ================
