@@ -60,6 +60,11 @@ if sys.argv[1] == 'fg':
     start(False)
 elif sys.argv[1] == 'stop':
     stop()
+elif sys.argv[1] == 'restart':
+    if status() > 0:
+        stop()
+    start(True)
+    sys.exit()
 elif sys.argv[1] == 'purge':
     purge()
 elif sys.argv[1] == 'status':
@@ -70,5 +75,4 @@ elif sys.argv[1] == 'status':
         print "Solr not running."
 else:
     print ("illegal option: please run with "
-           "%s start|stop|status|purge|fg" % __file__)
-
+           "%s start|stop|restart|status|purge|fg" % __file__)
