@@ -145,4 +145,3 @@ run Solr. Each option is specified on a separated line.
           -Xms512M
           -Xmx1024M
         ...
-    

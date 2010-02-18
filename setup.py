@@ -30,13 +30,11 @@ setup(name='collective.recipe.solrinstance',
         'Download\n'
         '***********************\n'
         ),
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         'Framework :: Buildout',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
         'Topic :: Software Development :: Build Tools',
-        'Topic :: Software Development :: Libraries :: Python Modules',
         ],
       keywords='',
       author='Kai Lautaportti',
@@ -50,7 +48,6 @@ setup(name='collective.recipe.solrinstance',
       install_requires=['setuptools',
                         'iw.recipe.template',
                         'zc.buildout'
-                        # -*- Extra requirements: -*-
                         ],
       tests_require=['zope.testing',
                      'iw.recipe.template',
