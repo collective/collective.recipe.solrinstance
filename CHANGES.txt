@@ -1,7 +1,7 @@
 Change History
 **************
 
-0.4 (Unreleased)
+0.4 (2010-02-18)
 ================
 
 - Some package metadata cleanup.
