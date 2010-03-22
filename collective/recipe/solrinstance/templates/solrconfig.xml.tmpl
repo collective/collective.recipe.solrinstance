@@ -328,13 +328,13 @@
   <requestHandler name="/admin/file"       class="org.apache.solr.handler.admin.ShowFileRequestHandler" >
   
   If you wish to hide files under {solr.home}/conf, explicitly register the ShowFileRequestHandler using:
+  -->
   <requestHandler name="/admin/file" class="org.apache.solr.handler.admin.ShowFileRequestHandler" >
     <lst name="invariants">
-     <str name="hidden">synonyms.txt</str> 
-     <str name="hidden">anotherfile.txt</str> 
+     <str name="hidden">scripts.conf</str>
     </lst>
   </requestHandler>
-  -->
+
   <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
 
   <!-- ping/healthcheck -->
@@ -395,7 +395,6 @@
   <!-- config for the admin interface -->
   <admin>
     <defaultQuery>solr</defaultQuery>
-    <gettableFiles>solrconfig.xml schema.xml admin-extra.html</gettableFiles>
   </admin>
 
   $options.additional_solrconfig
