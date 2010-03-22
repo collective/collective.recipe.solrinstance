@@ -74,7 +74,7 @@ Change History
     separate classes for the two handlers.
 
   There is a number of new handlers in Solr 1.4, which aren't enabled by
-  default. Read to the Solr documentation for the examples.
+  default. Read the Solr documentation for the examples.
   [hannosch]
 
 - Updated jetty.xml and solrconfig.xml to Solr 1.4 defaults. The
