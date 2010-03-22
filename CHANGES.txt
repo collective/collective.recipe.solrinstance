@@ -5,7 +5,7 @@ Change History
 ================
 
 - Made the tests pass again, by installing more packages into the test buildout
-  environment and ignoring some ``UserWarning`` output from Cheetah.
+  environment.
   [hannosch]
 
 0.4 (2010-02-18)
