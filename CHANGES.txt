@@ -1,7 +1,7 @@
 Change History
 **************
 
-1.0a1 (unreleased)
+1.0a1 (2010-03-22)
 ==================
 
 - Replaced the ``gettableFiles`` option in the admin section with the new
