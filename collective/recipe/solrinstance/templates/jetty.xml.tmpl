@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 
 <!-- =============================================================== -->
@@ -12,6 +12,12 @@
 
 <Configure id="Server" class="org.mortbay.jetty.Server">
 
+    <!-- Increase the maximum POST size to 1 MB to be able to handle large shard requests -->
+    <Call class="java.lang.System" name="setProperty">
+      <Arg>org.mortbay.jetty.Request.maxFormContentSize</Arg>
+      <Arg>1000000</Arg>
+    </Call>
+
     <!-- =========================================================== -->
     <!-- Server Thread Pool                                          -->
     <!-- =========================================================== -->
@@ -21,7 +27,7 @@
       <New class="org.mortbay.thread.BoundedThreadPool">
         <Set name="minThreads">10</Set>
         <Set name="lowThreads">50</Set>
-        <Set name="maxThreads">250</Set>
+        <Set name="maxThreads">10000</Set>
       </New>
 
       <!-- Optional Java 5 bounded threadpool with job queue 
@@ -117,7 +123,7 @@
     <!-- deployments at the configured scanInterval.                 -->
     <!--                                                             -->
     <!-- This deployer is configured to deploy contexts configured   -->
-    <!-- in the JETTY_HOME/contexts directory                       -->
+    <!-- in the JETTY_HOME/contexts directory                        -->
     <!--                                                             -->
     <!-- =========================================================== -->
     <Call name="addLifeCycle">
@@ -138,7 +144,7 @@
     <!-- non standard contexts (see ContextDeployer above).          -->
     <!--                                                             -->
     <!-- This deployer is configured to deploy webapps from the      -->
-    <!-- JETTY_HOME/webapps directory                               -->
+    <!-- JETTY_HOME/webapps directory                                -->
     <!--                                                             -->
     <!-- Normally only one type of deployer need be used.            -->
     <!--                                                             -->
@@ -160,7 +166,7 @@
     <!-- Configure Authentication Realms                             -->
     <!-- Realms may be configured for the entire server here, or     -->
     <!-- they can be configured for a specific web app in a context  -->
-    <!-- configuration (see (jetty.home)/contexts/test.xml for an   -->
+    <!-- configuration (see (jetty.home)/contexts/test.xml for an    -->
     <!-- example).                                                   -->
     <!-- =========================================================== -->
     <Set name="UserRealms">
@@ -180,7 +186,7 @@
     <!-- Configure Request Log                                       -->
     <!-- Request logs  may be configured for the entire server here, -->
     <!-- or they can be configured for a specific web app in a       -->
-    <!-- contexts configuration (see (jetty.home)/contexts/test.xml -->
+    <!-- contexts configuration (see (jetty.home)/contexts/test.xml  -->
     <!-- for an example).                                            -->
     <!-- =========================================================== -->
     <Ref id="RequestLog">
