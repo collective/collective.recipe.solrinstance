@@ -1,16 +1,17 @@
 Change History
 **************
 
-1.0a2 (unreleased)
+1.0a2 (2010-03-22)
 ==================
 
-
+- Fixed invalid reStructuredText format in the changelog.
+  [hannosch]
 
 1.0a1 (2010-03-22)
 ==================
 
 - Replaced the ``gettableFiles`` option in the admin section with the new
-  *.admin.ShowFileRequestHandler approach. By default your entire
+  ``*.admin.ShowFileRequestHandler`` approach. By default your entire
   ``SOLR_HOME/conf`` except for the ``scripts.conf`` is exposed.
   [hannosch]
 
@@ -27,10 +28,10 @@ Change History
 
   * New binary and random field types.
 
-  * The int, float, long, double and date fields now use the solr.Trie*
+  * The int, float, long, double and date fields now use the ``solr.Trie*``
     classes. These are more efficient in general.
 
-  * New tint, tfloat, tlong, tdouble and tdate fields. These are solr.Trie*
+  * New tint, tfloat, tlong, tdouble and tdate fields. These are ``solr.Trie*``
     fields with a precisionStep configured. You can use them for fields that
     see a lot of range queries.
 
