@@ -42,10 +42,29 @@ Change History
   [hannosch]
 
 - Simplify solrconfig.xml and unconfigure example handlers that rely on a
-  specific schema.
+  specific schema. Other changes include:
+
+  * Indexes are now flushed when the ramBufferSizeMB is exceeded, defaulting to
+    32mb instead of every 1000 documents. The maxBufferedDocs is deprecated.
+
+  * The new reopenReaders option causes IndexReaders to be reopened instead of
+    closed and then opened.
+
+  * The filterCache uses the solr.FastLRUCache instead of the solr.LRUCache.
+
+  * The queryResultWindowSize defaults to 30 instead of 10.
+
+  * The requestHandler use the new solr.SearchHandler, which supports a
+    defType argument to turn it into a dismax handler, instead of having two
+    separate classes for the two handlers.
+
+  There is a number of new handlers in Solr 1.4, which aren't enabled by
+  default. Read to the Solr documentation for the examples.
   [hannosch]
 
-- Updated jetty.xml and solrconfig.xml to Solr 1.4 defaults.
+- Updated jetty.xml and solrconfig.xml to Solr 1.4 defaults. The
+  ``*.jetty.Request.maxFormContentSize`` has been set to allow post request of
+  1mb by default.
   [hannosch]
 
 - Made the tests pass again, by installing more packages into the test buildout
