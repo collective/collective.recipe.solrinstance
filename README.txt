@@ -64,7 +64,7 @@ jetty-destination
 extra-field-types
     Configure the extra field types available to be used in the
     ``index`` option. You can create custom field types with special
-    analysers and tokenizers, check Solr's complete reference: 
+    analysers and tokenizers, check Solr's complete reference:
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
 
 filter
@@ -114,7 +114,7 @@ additional-solrconf
     Optional additional configuration to be included inside the
     solrconfig.xml. For instance, ``<requestHandler />`` directives.
 
-requestParsers-multipartUploadLimitInKB 
+requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case with Solr >= 1.4 if
     Solr is indexing binaries extracted from request.
@@ -138,9 +138,9 @@ java_opts
     Optional. Parameters to pass to the Java Virtual Machine (JVM) used to
 run Solr. Each option is specified on a separated line.
     For example::
-       
+
         [solr-instance]
-        ... 
+        ...
         java_opts =
           -Xms512M
           -Xmx1024M

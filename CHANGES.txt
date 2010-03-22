@@ -68,7 +68,7 @@ Change History
   [guido_w]
 
 - Added support for setting Solr filters.
-  [deo] 
+  [deo]
 
 
 0.1 (2008-07-07)

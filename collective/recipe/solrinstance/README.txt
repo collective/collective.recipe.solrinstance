@@ -284,7 +284,7 @@ You can also define extra field types:
     ...     <fieldType name="foo_type" class="FooField"/>
     ...     <fieldType name="bar_type" class="BarField">
     ...         <analyzer type="index">
-    ...             <tokenizer class="BarTokenizer"/> 
+    ...             <tokenizer class="BarTokenizer"/>
     ...         </analizer>
     ...     </fieldType>
     ... index =
@@ -309,10 +309,10 @@ You can also define extra field types:
     <fieldType name="foo_type" class="FooField"/>
     <fieldType name="bar_type" class="BarField">
         <analyzer type="index">
-            <tokenizer class="BarTokenizer"/> 
+            <tokenizer class="BarTokenizer"/>
         </analizer>
     </fieldType>
-    ... 
+    ...
     <fields>
     ...
     <field name="Foo" type="foo_type" indexed="true"
@@ -324,7 +324,7 @@ You can also define extra field types:
     ...
     </fields>
     ...
- 
+
 For more complex setups it's also possible to specify an alternative template
 to be used to generate `schema.xml`:
 
@@ -611,16 +611,16 @@ Testing the java_opts optional params:
     ... unique-key = uniqueID
     ... index =
     ...     name:uniqueID type:string indexed:true stored:true required:true
-    ... java_opts = 
+    ... java_opts =
     ...     -Xms512M
-    ...     -Xmx1024M 
+    ...     -Xmx1024M
     ... """)
 
 Ok, let's run the buildout:
 
     >>> print system(buildout)
     Uninstalling solr-functest.
-    Uninstalling solr-main.    
+    Uninstalling solr-main.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
