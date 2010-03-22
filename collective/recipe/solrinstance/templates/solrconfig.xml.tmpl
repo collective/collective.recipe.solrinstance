@@ -414,8 +414,8 @@
          requests or to gain autowarming data from. -->
     <listener event="firstSearcher" class="solr.QuerySenderListener">
       <arr name="queries">
-        <lst> <str name="q">solr rocks</str><str name="start">0</str><str name="rows">10</str></lst>
-        <lst><str name="q">static firstSearcher warming query from solrconfig.xml</str></lst>
+        <!-- <lst> <str name="q">solr rocks</str><str name="start">0</str><str name="rows">10</str></lst> -->
+        <!-- <lst><str name="q">static firstSearcher warming query from solrconfig.xml</str></lst> -->
       </arr>
     </listener>
 
@@ -491,122 +491,13 @@
     <!-- default values for query parameters -->
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-       <int name="rows">${$options.rows or 10}</int>
+       <int name="rows">$options.rows</int>
        <!--
        <int name="rows">10</int>
        <str name="fl">*</str>
        <str name="version">2.1</str>
         -->
      </lst>
-  </requestHandler>
-
-<!-- Please refer to http://wiki.apache.org/solr/SolrReplication for details on configuring replication -->
-<!-- remove the <lst name="master"> section if this is just a slave -->
-<!-- remove  the <lst name="slave"> section if this is just a master -->
-<!--
-<requestHandler name="/replication" class="solr.ReplicationHandler" >
-    <lst name="master">
-      <str name="replicateAfter">commit</str>
-      <str name="replicateAfter">startup</str>
-      <str name="confFiles">schema.xml,stopwords.txt</str>
-    </lst>
-    <lst name="slave">
-      <str name="masterUrl">http://localhost:8983/solr/replication</str>
-      <str name="pollInterval">00:00:60</str>
-    </lst>
-</requestHandler>-->
-
-  <!-- DisMaxRequestHandler allows easy searching across multiple fields
-       for simple user-entered phrases.  It's implementation is now
-       just the standard SearchHandler with a default query type
-       of "dismax". 
-       see http://wiki.apache.org/solr/DisMaxRequestHandler
-   -->
-  <requestHandler name="dismax" class="solr.SearchHandler" >
-    <lst name="defaults">
-     <str name="defType">dismax</str>
-     <str name="echoParams">explicit</str>
-     <float name="tie">0.01</float>
-     <str name="qf">
-        text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0 manu^1.1 cat^1.4
-     </str>
-     <str name="pf">
-        text^0.2 features^1.1 name^1.5 manu^1.4 manu_exact^1.9
-     </str>
-     <str name="bf">
-        popularity^0.5 recip(price,1,1000,1000)^0.3
-     </str>
-     <str name="fl">
-        id,name,price,score
-     </str>
-     <str name="mm">
-        2&lt;-1 5&lt;-2 6&lt;90%
-     </str>
-     <int name="ps">100</int>
-     <str name="q.alt">*:*</str>
-     <!-- example highlighter config, enable per-query with hl=true -->
-     <str name="hl.fl">text features name</str>
-     <!-- for this field, we want no fragmenting, just highlighting -->
-     <str name="f.name.hl.fragsize">0</str>
-     <!-- instructs Solr to return the field itself if no query terms are
-          found -->
-     <str name="f.name.hl.alternateField">name</str>
-     <str name="f.text.hl.fragmenter">regex</str> <!-- defined below -->
-    </lst>
-  </requestHandler>
-
-  <!-- Note how you can register the same handler multiple times with
-       different names (and different init parameters)
-    -->
-  <requestHandler name="partitioned" class="solr.SearchHandler" >
-    <lst name="defaults">
-     <str name="defType">dismax</str>
-     <str name="echoParams">explicit</str>
-     <str name="qf">text^0.5 features^1.0 name^1.2 sku^1.5 id^10.0</str>
-     <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
-     <!-- This is an example of using Date Math to specify a constantly
-          moving date range in a config...
-       -->
-     <str name="bq">incubationdate_dt:[* TO NOW/DAY-1MONTH]^2.2</str>
-    </lst>
-    <!-- In addition to defaults, "appends" params can be specified
-         to identify values which should be appended to the list of
-         multi-val params from the query (or the existing "defaults").
-
-         In this example, the param "fq=instock:true" will be appended to
-         any query time fq params the user may specify, as a mechanism for
-         partitioning the index, independent of any user selected filtering
-         that may also be desired (perhaps as a result of faceted searching).
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "appends" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <lst name="appends">
-      <str name="fq">inStock:true</str>
-    </lst>
-    <!-- "invariants" are a way of letting the Solr maintainer lock down
-         the options available to Solr clients.  Any params values
-         specified here are used regardless of what values may be specified
-         in either the query, the "defaults", or the "appends" params.
-
-         In this example, the facet.field and facet.query params are fixed,
-         limiting the facets clients can use.  Faceting is not turned on by
-         default - but if the client does specify facet=true in the request,
-         these are the only facets they will be able to see counts for;
-         regardless of what other facet.field or facet.query params they
-         may specify.
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "invariants" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <lst name="invariants">
-      <str name="facet.field">cat</str>
-      <str name="facet.field">manu_exact</str>
-      <str name="facet.query">price:[* TO 500]</str>
-      <str name="facet.query">price:[500 TO *]</str>
-    </lst>
   </requestHandler>
 
   <!-- Solr Cell: http://wiki.apache.org/solr/ExtractingRequestHandler -->
@@ -633,12 +524,11 @@
   <requestHandler name="/terms" class="org.apache.solr.handler.component.SearchHandler">
      <lst name="defaults">
       <bool name="terms">true</bool>
-    </lst>     
+    </lst>
     <arr name="components">
       <str>termsComponent</str>
     </arr>
   </requestHandler>
-
 
   <!-- a search component that enables you to configure the top results for
        a given query regardless of the normal lucene scoring.-->
@@ -667,18 +557,6 @@
        To enable solr1.1 behavior, remove the /update handler or change its path
     -->
   <requestHandler name="/update" class="solr.XmlUpdateRequestHandler" />
-
-
-  <requestHandler name="/update/javabin" class="solr.BinaryUpdateRequestHandler" />
-
-  <!--
-   Analysis request handler.  Since Solr 1.3.  Use to return how a document is analyzed.  Useful
-   for debugging and as a token server for other types of applications.
-
-   This is deprecated in favor of the improved DocumentAnalysisRequestHandler and FieldAnalysisRequestHandler
-
-   <requestHandler name="/analysis" class="solr.AnalysisRequestHandler" />
-   -->
 
   <!--
     An analysis handler that provides a breakdown of the analysis process of provided docuemnts. This handler expects a
@@ -794,50 +672,6 @@
    </formatter>
   </highlighting>
 
-  <!-- An example dedup update processor that creates the "id" field on the fly
-       based on the hash code of some other fields.  This example has overwriteDupes
-       set to false since we are using the id field as the signatureField and Solr
-       will maintain uniqueness based on that anyway. 
-       
-       You have to link the chain to an update handler above to use it ie:
-         <requestHandler name="/update "class="solr.XmlUpdateRequestHandler">
-           <lst name="defaults">
-             <str name="update.processor">dedupe</str>
-           </lst>
-         </requestHandler>  
-  -->
-  <!--
-  <updateRequestProcessorChain name="dedupe">
-    <processor class="org.apache.solr.update.processor.SignatureUpdateProcessorFactory">
-      <bool name="enabled">true</bool>
-      <str name="signatureField">id</str>
-      <bool name="overwriteDupes">false</bool>
-      <str name="fields">name,features,cat</str>
-      <str name="signatureClass">org.apache.solr.update.processor.Lookup3Signature</str>
-    </processor>
-    <processor class="solr.LogUpdateProcessorFactory" />
-    <processor class="solr.RunUpdateProcessorFactory" />
-  </updateRequestProcessorChain>
-  -->
-
-
-  <!-- queryResponseWriter plugins... query responses will be written using the
-    writer specified by the 'wt' request parameter matching the name of a registered
-    writer.
-    The "default" writer is the default and will be used if 'wt' is not specified 
-    in the request. XMLResponseWriter will be used if nothing is specified here.
-    The json, python, and ruby writers are also available by default.
-
-    <queryResponseWriter name="xml" class="org.apache.solr.request.XMLResponseWriter" default="true"/>
-    <queryResponseWriter name="json" class="org.apache.solr.request.JSONResponseWriter"/>
-    <queryResponseWriter name="python" class="org.apache.solr.request.PythonResponseWriter"/>
-    <queryResponseWriter name="ruby" class="org.apache.solr.request.RubyResponseWriter"/>
-    <queryResponseWriter name="php" class="org.apache.solr.request.PHPResponseWriter"/>
-    <queryResponseWriter name="phps" class="org.apache.solr.request.PHPSerializedResponseWriter"/>
-
-    <queryResponseWriter name="custom" class="com.example.MyResponseWriter"/>
-  -->
-
   <!-- XSLT response writer transforms the XML output by any xslt file found
        in Solr's conf/xslt directory.  Changes to xslt files are checked for
        every xsltCacheLifetimeSeconds.  
@@ -846,23 +680,10 @@
     <int name="xsltCacheLifetimeSeconds">5</int>
   </queryResponseWriter>
 
-
-  <!-- example of registering a query parser
-  <queryParser name="lucene" class="org.apache.solr.search.LuceneQParserPlugin"/>
-  -->
-
-  <!-- example of registering a custom function parser 
-  <valueSourceParser name="myfunc" class="com.mycompany.MyValueSourceParser" />
-  -->
-
   <!-- config for the admin interface -->
   <admin>
     <defaultQuery>solr</defaultQuery>
     <gettableFiles>solrconfig.xml schema.xml admin-extra.html</gettableFiles>
-
-    <!-- configure a healthcheck file for servers behind a loadbalancer
-    <healthcheck type="file">server-enabled</healthcheck>
-    -->
   </admin>
 
   $options.additional_solrconfig

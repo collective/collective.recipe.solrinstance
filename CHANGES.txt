@@ -4,6 +4,10 @@ Change History
 1.0 (unreleased)
 ================
 
+- Simplify solrconfig.xml and unconfigure example handlers that rely on a
+  specific schema.
+  [hannosch]
+
 - Updated jetty.xml and solrconfig.xml to Solr 1.4 defaults.
   [hannosch]
 
