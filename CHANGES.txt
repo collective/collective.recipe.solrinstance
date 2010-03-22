@@ -39,7 +39,7 @@ Change History
     fields with a precisionStep configured. You can use them for fields that
     see a lot of range queries.
 
-  * The old sint, slong, sfloat and sdouble fields are longer configured.
+  * The old sint, slong, sfloat and sdouble fields are no longer configured.
 
   * The examples fields text_greek, textTight and alphaOnlySort are no longer
     configured by default.
