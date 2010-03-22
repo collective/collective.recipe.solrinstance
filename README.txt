@@ -15,6 +15,10 @@ SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.s
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
+Note: This version of the recipe only supports Solr 1.4. Please use a release
+from the 0.x series if you are using Solr 1.3.
+
+
 Supported options
 =================
 
@@ -116,8 +120,8 @@ additional-solrconf
 
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
-    very large documents to Solr. May be the case with Solr >= 1.4 if
-    Solr is indexing binaries extracted from request.
+    very large documents to Solr. May be the case if Solr is indexing binaries
+    extracted from request.
 
 vardir
     Optional override for the location of the directory where Solr

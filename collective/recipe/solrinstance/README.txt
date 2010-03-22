@@ -304,9 +304,9 @@ You can also define extra field types:
     ...
     <fieldType name="foo_type" class="FooField"/>
     <fieldType name="bar_type" class="BarField">
-        <analyzer type="index">
-            <tokenizer class="BarTokenizer"/>
-        </analizer>
+    <analyzer type="index">
+    <tokenizer class="BarTokenizer"/>
+    </analizer>
     </fieldType>
     ...
     <fields>
@@ -317,7 +317,6 @@ You can also define extra field types:
     <field name="Bar" type="bar_type" indexed="true"
            stored="true" required="false" multiValued="false"
            omitNorms="false" />
-    ...
     </fields>
     ...
 
