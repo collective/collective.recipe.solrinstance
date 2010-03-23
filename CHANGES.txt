@@ -4,6 +4,10 @@ Change History
 1.0a3 (unreleased)
 ==================
 
+- Added back a field type called ``integer`` with the same properties as the
+  ``int`` type. This ensures basic schemas created by ``collective.solr`` won't
+  need any schema changes, though they still need a full reindex.
+  [hannosch]
 
 1.0a2 (2010-03-22)
 ==================

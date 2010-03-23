@@ -80,6 +80,9 @@
     <fieldType name="long" class="solr.TrieLongField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
     <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
 
+    <!-- BBB support for existing schemas based on collective.solr -->
+    <fieldType name="integer" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
+
     <!--
      Numeric field types that index each value at various levels of precision
      to accelerate range queries when the number of values between the range
