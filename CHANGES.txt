@@ -4,6 +4,10 @@ Change History
 1.0a4 (unreleased)
 ==================
 
+- Added back JMX configuration. See http://wiki.apache.org/solr/SolrJmx for
+  more details. You can enable it by adding ``-Dcom.sun.management.jmxremote``
+  to the ``java_opts`` option.
+  [hannosch]
 
 1.0a3 (2010-03-23)
 ==================
