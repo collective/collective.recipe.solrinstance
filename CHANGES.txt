@@ -4,6 +4,9 @@ Change History
 1.0a5 (unreleased)
 ==================
 
+- Added more options: ``maxWarmingSearchers``, ``useColdSearcher`` and
+  ``cacheSize``.
+  [hannosch]
 
 1.0a4 (2010-05-05)
 ==================

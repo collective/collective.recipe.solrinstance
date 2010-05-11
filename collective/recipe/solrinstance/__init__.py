@@ -256,7 +256,11 @@ class Recipe(object):
             destination=self.options['config-destination'],
             rows=self.options['max-num-results'],
             additional_solrconfig=self.options['additional-solrconfig'],
-            requestParsers_multipartUploadLimitInKB=self.options['requestParsers-multipartUploadLimitInKB'])
+            cacheSize=self.options.get('cacheSize'),
+            useColdSearcher=self.options.get('useColdSearcher', 'false'),
+            maxWarmingSearchers=self.options.get('maxWarmingSearchers', '4'),
+            requestParsers_multipartUploadLimitInKB=self.options['requestParsers-multipartUploadLimitInKB'],
+            )
 
         self.generate_solr_schema(
             source=self.options.get('schema-template',

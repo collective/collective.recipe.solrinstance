@@ -141,25 +141,34 @@
          -->
     <filterCache
       class="solr.FastLRUCache"
-      size="512"
-      initialSize="512"
-      autowarmCount="0"/>
+      size="$options.cacheSize"
+      initialSize="$options.cacheSize"
+      autowarmCount="128"/>
+
+    <!-- Cache used to hold field values that are quickly accessible
+         by document id. The fieldValueCache is created by default
+         even if not configured here. -->
+    <fieldValueCache
+      class="solr.FastLRUCache"
+      size="$options.cacheSize"
+      autowarmCount="128"
+      showItems="32"/>
 
    <!-- queryResultCache caches results of searches - ordered lists of
          document ids (DocList) based on a query, a sort, and the range
          of documents requested.  -->
     <queryResultCache
       class="solr.LRUCache"
-      size="512"
-      initialSize="512"
-      autowarmCount="0"/>
+      size="$options.cacheSize"
+      initialSize="$options.cacheSize"
+      autowarmCount="32"/>
 
   <!-- documentCache caches Lucene Document objects (the stored fields for each document).
        Since Lucene internal document ids are transient, this cache will not be autowarmed.  -->
     <documentCache
       class="solr.LRUCache"
-      size="512"
-      initialSize="512"
+      size="$options.cacheSize"
+      initialSize="$options.cacheSize"
       autowarmCount="0"/>
 
     <!-- If true, stored fields that are not requested will be loaded lazily.
@@ -185,12 +194,12 @@
          then immediately register the still warming searcher and use it.  If
          "false" then all requests will block until the first searcher is done
          warming. -->
-    <useColdSearcher>false</useColdSearcher>
+    <useColdSearcher>$options.useColdSearcher</useColdSearcher>
 
     <!-- Maximum number of searchers that may be warming in the background
       concurrently.  An error is returned if this limit is exceeded. Recommend
       1-2 for read-only slaves, higher for masters w/o cache warming. -->
-    <maxWarmingSearchers>4</maxWarmingSearchers>
+    <maxWarmingSearchers>$options.maxWarmingSearchers</maxWarmingSearchers>
 
   </query>
 

@@ -118,6 +118,18 @@ additional-solrconf
     Optional additional configuration to be included inside the
     solrconfig.xml. For instance, ``<requestHandler />`` directives.
 
+cacheSize
+    Number of cache entries for the various caches (filterCache,
+    fieldValueCache, queryResultCache and documentCache). Defaults to ``512``.
+
+maxWarmingSearchers
+    Maximum number of searchers that may be warming in the background.
+    Defaults to 4. For read-only slaves recommend to set to 1 or 2.
+
+useColdSearcher
+    If a request comes in without a warm searcher available, immediately use
+    one of the warming searchers to handle the request. Defaults to ``false``.
+
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case if Solr is indexing binaries
