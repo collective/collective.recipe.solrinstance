@@ -66,6 +66,9 @@ class Recipe(object):
             'vardir',
             os.path.join(buildout['buildout']['directory'], 'var', 'solr'))
 
+        options['logdir'] = options.get(
+            'logdir',
+            os.path.join(buildout['buildout']['directory'], 'var', 'solr'))
         options['script'] = options.get('script', 'solr-instance').strip()
 
         try:
@@ -237,12 +240,15 @@ class Recipe(object):
 
         solr_var = self.options['vardir']
         solr_data = os.path.join(solr_var, 'data')
-        solr_log = os.path.join(solr_var, 'log')
+        if options['logdir']:
+            solr_log = self.options['logdir']
+        else:
+            solr_log = os.path.join(solr_var, 'log')
 
         for path in solr_data, solr_log:
             if not os.path.exists(path):
                 os.makedirs(path)
-
+                                                                                                             :
         self.generate_jetty(
             source='%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR,
             logdir=solr_log,

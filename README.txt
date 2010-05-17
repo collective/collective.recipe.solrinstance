@@ -143,6 +143,10 @@ vardir
     single buildout and dedicate one or more of the instances to
     automated functional testing.
 
+logdir 
+   Optional override for the location of the Solr logfiles.
+   Defaults to ``${buildout:directory}/var/solr``.
+
 script
     Optional override for the name of the generated Solr instance
     control script. Defaults to ``solr-instance``. This option and the
