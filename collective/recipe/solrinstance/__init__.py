@@ -248,7 +248,7 @@ class Recipe(object):
         for path in solr_data, solr_log:
             if not os.path.exists(path):
                 os.makedirs(path)
-                                                                                                             :
+
         self.generate_jetty(
             source='%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR,
             logdir=solr_log,
