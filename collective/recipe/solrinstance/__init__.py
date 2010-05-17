@@ -240,7 +240,7 @@ class Recipe(object):
 
         solr_var = self.options['vardir']
         solr_data = os.path.join(solr_var, 'data')
-        if options['logdir']:
+        if self.options['logdir']:
             solr_log = self.options['logdir']
         else:
             solr_log = os.path.join(solr_var, 'log')
