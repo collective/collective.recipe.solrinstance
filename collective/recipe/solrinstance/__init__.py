@@ -68,7 +68,7 @@ class Recipe(object):
 
         options['logdir'] = options.get(
             'logdir',
-            None)
+            '')
         options['script'] = options.get('script', 'solr-instance').strip()
 
         try:
