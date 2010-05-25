@@ -4,15 +4,20 @@ Change History
 1.0a8 (unreleased)
 ==================
 
-- ``logdir`` option internal bugfix: buildout does not allow None options values (__setitem__) [anguenot] 
+- ``logdir`` option internal bugfix: buildout does not allow ``None`` options
+  values (__setitem__).
+  [anguenot]
 
 1.0a7 (2010-05-17)
 ==================
-- bugfix
+
+- Fixed syntax error in new logdir code.
+  [ajung]
 
 1.0a6 (2010-05-17)
 ==================
-- Added ``logdir`` option
+
+- Added ``logdir`` option.
   [ajung]
 
 1.0a5 (2010-05-11)
