@@ -3,7 +3,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '1.0a8'
+version = '1.0b1'
 
 
 def read(name):

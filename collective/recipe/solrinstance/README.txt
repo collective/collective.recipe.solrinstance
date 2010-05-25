@@ -444,6 +444,40 @@ Additional solrconfig should also be allowed:
     </foo>
     ...
 
+Test autoCommit arguments:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ... autoCommitMaxDocs = 1000
+    ... autoCommitMaxTime = 900000
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <autoCommit>
+    <maxDocs>1000</maxDocs>
+    <maxTime>900000</maxTime>
+    </autoCommit>
+    ...
+
 Testing the request parsers default limit:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')

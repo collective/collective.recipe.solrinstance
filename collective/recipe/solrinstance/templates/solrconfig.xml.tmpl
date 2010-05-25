@@ -110,6 +110,19 @@
          causes solr to search appropriate packages, including
          org.apache.solr.(search|update|request|core|analysis)
      -->
+
+    <!-- Perform a <commit/> automatically under certain conditions:
+         maxDocs - number of updates since last commit is greater than this
+         maxTime - oldest uncommited update (in ms) is this long ago
+         Instead of enabling autoCommit, consider using "commitWithin"
+         when adding documents. http://wiki.apache.org/solr/UpdateXmlMessages
+    <autoCommit>
+      <maxDocs>10000</maxDocs>
+      <maxTime>1000</maxTime>
+    </autoCommit>
+    -->
+    $options.autoCommit
+
   </updateHandler>
 
   <query>

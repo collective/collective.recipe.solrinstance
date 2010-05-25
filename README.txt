@@ -130,6 +130,14 @@ useColdSearcher
     If a request comes in without a warm searcher available, immediately use
     one of the warming searchers to handle the request. Defaults to ``false``.
 
+autoCommitMaxDocs
+    Let's you enable auto commit handling and force a commit after at least
+    the number of documents were added. This is disabled by default.
+
+autoCommitMaxTime
+    Let's you enable auto commit handling after a specified time in milli
+    seconds. This is disabled by default.
+
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case if Solr is indexing binaries

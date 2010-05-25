@@ -1,8 +1,11 @@
 Change History
 **************
 
-1.0a8 (unreleased)
+1.0b1 (unreleased)
 ==================
+
+- Added new ``autoCommitMaxDocs`` and ``autoCommitMaxTime`` options.
+  [hannnosch]
 
 - ``logdir`` option internal bugfix: buildout does not allow ``None`` options
   values (__setitem__).

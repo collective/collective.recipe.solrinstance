@@ -87,6 +87,9 @@ class Recipe(object):
         options['requestParsers-multipartUploadLimitInKB'] = options.get('requestParsers-multipartUploadLimitInKB', '2048').strip()
         options['extraFieldTypes'] = options.get('extra-field-types', '')
 
+        options['autoCommitMaxDocs'] = options.get('autoCommitMaxDocs', '')
+        options['autoCommitMaxTime'] = options.get('autoCommitMaxTime', '')
+
         # Solr startup commands
         options['java_opts'] = options.get('java_opts', '')
 
@@ -201,6 +204,20 @@ class Recipe(object):
 
         return indeces
 
+    def parseAutoCommit(self):
+        options = self.options
+        mdocs = options['autoCommitMaxDocs']
+        mtime = options['autoCommitMaxTime']
+        if mdocs or mtime:
+            result = ['<autoCommit>']
+            if mdocs:
+                result.append('<maxDocs>%s</maxDocs>' % str(mdocs))
+            if mtime:
+                result.append('<maxTime>%s</maxTime>' % str(mtime))
+            result.append('</autoCommit>')
+            return '\n'.join(result)
+        return ''
+
     def generate_jetty(self, **kwargs):
         iw.recipe.template.Template(
             self.buildout,
@@ -249,32 +266,35 @@ class Recipe(object):
             if not os.path.exists(path):
                 os.makedirs(path)
 
+        options = self.options
+
         self.generate_jetty(
             source='%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR,
             logdir=solr_log,
-            serverport=self.options['port'],
-            destination=self.options['jetty-destination'])
+            serverport=options['port'],
+            destination=options['jetty-destination'])
 
         self.generate_solr_conf(
-            source=self.options.get('config-template',
+            source=options.get('config-template',
                 '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR),
             datadir=solr_data,
-            destination=self.options['config-destination'],
-            rows=self.options['max-num-results'],
-            additional_solrconfig=self.options['additional-solrconfig'],
-            cacheSize=self.options.get('cacheSize'),
-            useColdSearcher=self.options.get('useColdSearcher', 'false'),
-            maxWarmingSearchers=self.options.get('maxWarmingSearchers', '4'),
-            requestParsers_multipartUploadLimitInKB=self.options['requestParsers-multipartUploadLimitInKB'],
+            destination=options['config-destination'],
+            rows=options['max-num-results'],
+            additional_solrconfig=options['additional-solrconfig'],
+            cacheSize=options.get('cacheSize'),
+            useColdSearcher=options.get('useColdSearcher', 'false'),
+            maxWarmingSearchers=options.get('maxWarmingSearchers', '4'),
+            requestParsers_multipartUploadLimitInKB=options['requestParsers-multipartUploadLimitInKB'],
+            autoCommit=self.parseAutoCommit(),
             )
 
         self.generate_solr_schema(
-            source=self.options.get('schema-template',
+            source=options.get('schema-template',
                 '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR),
-            destination=self.options['schema-destination'],
+            destination=options['schema-destination'],
             filters=self.parse_filter(),
             indeces=self.parse_index(),
-            options=self.options)
+            options=options)
 
         self.create_bin_scripts(
             source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
