@@ -1,7 +1,7 @@
 Change History
 **************
 
-1.0b2 (unreleased)
+1.0b2 (2010-06-01)
 ==================
 
 - Actually do something in the update call. Now the configuration is updated
