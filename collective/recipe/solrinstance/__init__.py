@@ -309,4 +309,8 @@ class Recipe(object):
 
     def update(self):
         """updater"""
-        pass
+
+        if os.path.exists(self.part_dir):
+            shutil.rmtree(self.part_dir)
+
+        return self.install()

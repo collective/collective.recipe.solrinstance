@@ -4,6 +4,10 @@ Change History
 1.0b2 (unreleased)
 ==================
 
+- Actually do something in the update call. Now the configuration is updated
+  when you run buildout again.
+  [fschulze]
+
 - Handle termination signal in the wrapper script, so the solr instance is
   killed when the wrapper dies.
   [fschulze]
