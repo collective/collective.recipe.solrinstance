@@ -1,6 +1,7 @@
 from subprocess import Popen, call
+import atexit
+import signal
 import sys, os
-from signal import SIGTERM
 
 if len(sys.argv) != 2:
     print "please run with  %s start|stop|purge|status|fg" % __file__
@@ -17,13 +18,18 @@ def start(daemonize=True):
         logfp = file(SOLR_LOG, 'a+')
     pid = Popen(START_CMD, cwd=SOLR_DIR,
                 stdout=logfp, stderr=logfp).pid
+    f = open(PID_FILE, 'wb')
+    f.write(str(pid))
+    f.close()
+    print 'Solr started with pid %s' % (pid,)
     if not(daemonize):
-        return os.waitpid(pid, 0)
-    else:
-        f = open(PID_FILE, 'wb')
-        f.write(str(pid))
-        f.close()
-        print 'Solr started with pid %s' % (pid,)
+        try:
+            return os.waitpid(pid, 0)
+        except OSError, e:
+            if e.errno == 4:
+                return
+            else:
+                raise e
 
 def stop():
     try:
@@ -31,7 +37,7 @@ def stop():
         pid = f.read().strip()
         f.close()
         # SIGHUP here didn't quite do the job, so using TERM instead
-        os.kill(int(pid), SIGTERM)
+        os.kill(int(pid), signal.SIGTERM)
         os.unlink(PID_FILE)
         print "Solr stopped successfully."
     except (IOError, OSError):
@@ -52,6 +58,20 @@ def status():
         return pid
     except (IOError, OSError):
         return -1
+
+def graceful_stop():
+    print "Graceful stop"
+    if status() > 0:
+        stop()
+
+def exit_signal_handler(sig, frame):
+    graceful_stop()
+
+# We want solr to stop if this wrapper script is stopped
+signal.signal(signal.SIGQUIT, exit_signal_handler)
+signal.signal(signal.SIGINT, exit_signal_handler)
+signal.signal(signal.SIGTERM, exit_signal_handler)
+atexit.register(graceful_stop)
 
 if sys.argv[1] == 'start':
     start(True)

@@ -4,6 +4,9 @@ Change History
 1.0b2 (unreleased)
 ==================
 
+- Handle termination signal in the wrapper script, so the solr instance is
+  killed when the wrapper dies.
+  [fschulze]
 
 1.0b1 (2010-05-25)
 ==================
