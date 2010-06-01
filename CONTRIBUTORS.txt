@@ -1,6 +1,7 @@
 - Andreas Zeidler
 - Carlos de la Guardia
 - Dorneles Tremea
+- Florian Schulze
 - Guido Wesdorp
 - Hanno Schlichting
 - Jan Murre
