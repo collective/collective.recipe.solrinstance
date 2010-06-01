@@ -49,8 +49,9 @@ Check if the run script is here and the template substitution worked:
     >>> cat(sample_buildout, 'bin', 'solr-instance')
     #!...
     from subprocess import Popen, call
+    import atexit
+    import signal
     import sys, os
-    from signal import SIGTERM
     ...
     SOLR_DIR = '.../parts/solr'
     ...
@@ -655,8 +656,9 @@ with java_opts:
     >>> cat(sample_buildout, 'bin', 'solr-instance')
     #!...
     from subprocess import Popen, call
+    import atexit
+    import signal
     import sys, os
-    from signal import SIGTERM
     ...
     START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
     ...
