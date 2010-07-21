@@ -17,6 +17,7 @@ def setUp(test):
     install_develop('Markdown', test)
     install_develop('iw.recipe.template', test)
     install_develop('collective.recipe.solrinstance', test)
+    install_develop('elementtree', test)
 
 def test_suite():
     """ returns the test suite """

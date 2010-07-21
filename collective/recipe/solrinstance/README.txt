@@ -43,6 +43,7 @@ Ok, let's run the buildout:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
 Check if the run script is here and the template substitution worked:
 
@@ -232,6 +233,7 @@ With the index set up correctly, things work again:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -260,6 +262,7 @@ There's no default for the default search field, however:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
@@ -297,6 +300,7 @@ You can also define extra field types:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -347,6 +351,7 @@ to be used to generate `schema.xml`:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
@@ -384,6 +389,7 @@ variable that can then be conveniently used in the template:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema name="foo">
@@ -436,6 +442,7 @@ Additional solrconfig should also be allowed:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -469,6 +476,7 @@ Test autoCommit arguments:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -501,6 +509,7 @@ Testing the request parsers default limit:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -531,6 +540,7 @@ Test changing the request parsers limit:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -564,6 +574,7 @@ alternative template to be used to generate `solrconfig.xml`:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <config>
@@ -610,6 +621,7 @@ Solr instances to coexist in a single buildout:
     jetty.xml: Generated file 'jetty.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    ...
 
     >>> ls(sample_buildout, 'var')
     d  solr-functest
@@ -649,6 +661,7 @@ Ok, let's run the buildout:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
+    ...
 
 Check if the run script is here and the template substitution worked
 with java_opts:
