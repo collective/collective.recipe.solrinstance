@@ -71,12 +71,12 @@ def exit_signal_handler(sig, frame):
 signal.signal(signal.SIGQUIT, exit_signal_handler)
 signal.signal(signal.SIGINT, exit_signal_handler)
 signal.signal(signal.SIGTERM, exit_signal_handler)
-atexit.register(graceful_stop)
 
 if sys.argv[1] == 'start':
     start(True)
     sys.exit()
 if sys.argv[1] == 'fg':
+    atexit.register(graceful_stop)
     start(False)
 elif sys.argv[1] == 'stop':
     stop()

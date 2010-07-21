@@ -4,6 +4,9 @@ Change History
 1.0b3 (unreleased)
 ==================
 
+- Don't kill solr after script finish when script is just used for starting
+  solr as a daemon
+  [do3cc]
 
 1.0b2 (2010-06-01)
 ==================
