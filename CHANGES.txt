@@ -1,7 +1,7 @@
 Change History
 **************
 
-1.0b3 (unreleased)
+1.0b3 (2010-07-23)
 ==================
 
 - Don't kill solr after script finish when script is just used for starting
