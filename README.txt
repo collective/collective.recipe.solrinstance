@@ -20,7 +20,7 @@ from the 0.x series if you are using Solr 1.3.
 
 
 Supported options
-=================
+*****************
 
 The recipe supports the following options:
 
