@@ -269,7 +269,8 @@ class Recipe(object):
         options = self.options
 
         self.generate_jetty(
-            source='%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR,
+            source=options.get('jetty-template',
+                     '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR),
             logdir=solr_log,
             serverport=options['port'],
             destination=options['jetty-destination'])

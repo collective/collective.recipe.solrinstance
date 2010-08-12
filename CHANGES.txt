@@ -1,11 +1,11 @@
 Change History
 **************
 
-1.0b4 (unreleased)
+1.0b4 (2010-08-12)
 ==================
 
-- Nothing changed yet.
-
+- added ``jetty-template`` option 
+  [ajung]
 
 1.0b3 (2010-07-23)
 ==================
