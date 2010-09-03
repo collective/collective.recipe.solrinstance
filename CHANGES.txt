@@ -4,11 +4,13 @@ Change History
 1.0b5 (unreleased)
 ==================
 
+- Actually provide the default value for the ``cacheSize`` option.
+  [hannosch]
 
 1.0b4 (2010-08-12)
 ==================
 
-- added ``jetty-template`` option 
+- Added ``jetty-template`` option.
   [ajung]
 
 1.0b3 (2010-07-23)

@@ -282,7 +282,7 @@ class Recipe(object):
             destination=options['config-destination'],
             rows=options['max-num-results'],
             additional_solrconfig=options['additional-solrconfig'],
-            cacheSize=options.get('cacheSize'),
+            cacheSize=options.get('cacheSize', '512'),
             useColdSearcher=options.get('useColdSearcher', 'false'),
             maxWarmingSearchers=options.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=options['requestParsers-multipartUploadLimitInKB'],
