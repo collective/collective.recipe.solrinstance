@@ -4,6 +4,8 @@ Change History
 1.1 (unreleased)
 ================
 
+- Support for Windows
+  [bluszcz]
 
 1.0 (2010-12-12)
 ================

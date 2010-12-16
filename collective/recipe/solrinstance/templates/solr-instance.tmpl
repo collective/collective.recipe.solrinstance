@@ -4,13 +4,33 @@ import signal
 import sys, os
 import platform
 
+
+WINDOWS = False
+
+if platform.system()=='Windows':
+    WINDOWS = True
+    _pyver = platform.python_version_tuple()
+    # if int(_pyver[0]) == 2 and int(_pyver[1]) < 7 and (_pyver[1]>=5):
+    if int(_pyver[0]) == 2 and (_pyver[1]>=5):
+        # For Win Python lower than 2.7 we have to emulate kill function
+        # it can be achieved using ctypes module, which exists since 2.5
+        # TODO: implement using os.kill for Python 2.7+ on Windows
+        import ctypes
+
+        def kill(pid):
+            """kill function for Win32"""
+            kernel32 = ctypes.windll.kernel32
+            handle = kernel32.OpenProcess(1, 0, pid)
+            return (0 != kernel32.TerminateProcess(handle, 0))
+
+
 if len(sys.argv) != 2:
     print "please run with  %s start|stop|purge|status|fg" % __file__
     sys.exit()
 
-PID_FILE = '$options.pidfile'
-SOLR_DIR = '$options.solrdir'
-SOLR_LOG = '$options.logfile'
+PID_FILE = r'$options.pidfile'
+SOLR_DIR = r'$options.solrdir'
+SOLR_LOG = r'$options.logfile'
 START_CMD = $options.startcmd
 
 def start(daemonize=True):
@@ -38,7 +58,11 @@ def stop():
         pid = f.read().strip()
         f.close()
         # SIGHUP here didn't quite do the job, so using TERM instead
-        os.kill(int(pid), signal.SIGTERM)
+        if WINDOWS:
+            kill(int(pid))
+        else:
+            os.kill(int(pid), signal.SIGTERM)
+
         os.unlink(PID_FILE)
         print "Solr stopped successfully."
     except (IOError, OSError):
@@ -70,7 +94,7 @@ def exit_signal_handler(sig, frame):
 
 # We want solr to stop if this wrapper script is stopped
 
-if platform.system()!='Windows':
+if not WINDOWS:
     # "On Windows, signal() can only be called with SIGABRT, SIGFPE, SIGILL, 
     # SIGINT, SIGSEGV, or SIGTERM. A ValueError will be raised in any other 
     # case" <= http://docs.python.org/library/signal.html
