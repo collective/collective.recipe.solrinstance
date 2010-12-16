@@ -74,8 +74,7 @@ if platform.system()!='Windows':
     # "On Windows, signal() can only be called with SIGABRT, SIGFPE, SIGILL, 
     # SIGINT, SIGSEGV, or SIGTERM. A ValueError will be raised in any other 
     # case" <= http://docs.python.org/library/signal.html
-    signal.signal(signal.SIGQUIT, exit_signal_handler
-signal.signal(signal.SIGQUIT, exit_signal_handler)
+    signal.signal(signal.SIGQUIT, exit_signal_handler)
 signal.signal(signal.SIGINT, exit_signal_handler)
 signal.signal(signal.SIGTERM, exit_signal_handler)
 
