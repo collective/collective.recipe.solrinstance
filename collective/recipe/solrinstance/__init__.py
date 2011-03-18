@@ -272,6 +272,7 @@ class Recipe(object):
             source=options.get('jetty-template',
                      '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR),
             logdir=solr_log,
+            serverhost=options['host'],
             serverport=options['port'],
             destination=options['jetty-destination'])
 

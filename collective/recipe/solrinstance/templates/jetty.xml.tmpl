@@ -70,6 +70,7 @@
     <Call name="addConnector">
       <Arg>
           <New class="org.mortbay.jetty.bio.SocketConnector">
+            <Set name="host">$options.serverhost</Set>
             <Set name="port">$options.serverport</Set>
             <Set name="maxIdleTime">50000</Set>
             <Set name="lowResourceMaxIdleTime">1500</Set>

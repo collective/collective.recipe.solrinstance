@@ -4,6 +4,9 @@ Change History
 1.1 (unreleased)
 ================
 
+- Make jetty.xml.tmpl honor the host parameter.
+  [davidblewett]
+
 - Support for Windows
   [bluszcz]
 
