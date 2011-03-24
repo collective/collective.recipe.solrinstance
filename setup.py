@@ -3,7 +3,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '1.1dev'
+version = '2.0'
 
 
 def read(name):
@@ -43,11 +43,17 @@ setup(name='collective.recipe.solrinstance',
       install_requires=[
         'setuptools',
         'iw.recipe.template',
+        'elementtree',
         'zc.buildout'],
       tests_require=[
         'zope.testing',
+        'zope.interface',
+        'elementtree',
         'iw.recipe.template'],
       test_suite = 'collective.recipe.solrinstance.tests.test_suite',
       entry_points = {
-        "zc.buildout": ["default = collective.recipe.solrinstance:Recipe"]},
+        "zc.buildout": ["default = collective.recipe.solrinstance:SolrSingleRecipe",
+                        "mc = collective.recipe.solrinstance:MultiCoreRecipe",
+                        ]
+        },
       )

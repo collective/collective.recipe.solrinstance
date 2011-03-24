@@ -1,11 +1,15 @@
 Change History
 **************
 
+2.0 (unreleased)
+================
+- Added ``default`` to filter attributes.
+- Refactured to get multicore working.
+- Multicore recipe ``collective.recipe.solrinstance:mc``.
+- Pinned buildout version to get tests working.
+
 1.1 (unreleased)
 ================
-
-- Make jetty.xml.tmpl honor the host parameter.
-  [davidblewett]
 
 - Support for Windows
   [bluszcz]

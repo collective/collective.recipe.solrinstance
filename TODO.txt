@@ -1,0 +1,4 @@
+[] add mapping-ISOLatin1Accent.txt, stopwords.txt, protwords.txt, 
+synonyms.txt, spellings.txt to conf folder
+[] fix admin path
+
