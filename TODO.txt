@@ -1,4 +1,8 @@
-[] add mapping-ISOLatin1Accent.txt, stopwords.txt, protwords.txt, 
+TODO
+====
+[] allow every name for type in filter
+[] add dynamic fields as attribute to recipe
+[x] add mapping-ISOLatin1Accent.txt, stopwords.txt, protwords.txt, 
 synonyms.txt, spellings.txt to conf folder
-[] fix admin path
+[x] fix admin path
 

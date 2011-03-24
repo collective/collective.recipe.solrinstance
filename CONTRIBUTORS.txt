@@ -12,3 +12,5 @@
 - Tarek Ziade
 - Tom Gross
 - Andreas Jung
+- Josip Delic
+
