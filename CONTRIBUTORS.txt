@@ -8,7 +8,8 @@
 - Joshua LaPlace
 - Julien Anguenot
 - Kai Lautaportti
-- Shane Hataway
+- Shane Hathaway
 - Tarek Ziade
 - Tom Gross
 - Andreas Jung
+- David Blewett
