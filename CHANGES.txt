@@ -1,7 +1,7 @@
 Change History
 **************
 
-1.1 (unreleased)
+1.1 (2011-04-04)
 ================
 
 - Make jetty.xml.tmpl honor the host parameter.
