@@ -18,7 +18,6 @@ SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.s
 Note: This version of the recipe only supports Solr 1.4. Please use a release
 from the 0.x series if you are using Solr 1.3.
 
-
 Supported options
 *****************
 
@@ -177,3 +176,85 @@ run Solr. Each option is specified on a separated line.
           -Xms512M
           -Xmx1024M
         ...
+
+cores
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every 
+    section in ``cores`` a multicore solr instance is created with it's own 
+    configuration.
+
+Examples single solr
+--------------------
+
+A simple example how a single solr could look like::
+
+    [buildout]
+    parts = solr-download
+            solr
+           
+    [solr-download]
+    recipe = hexagonit.recipe.download
+    strip-top-level-dir = true
+    url = http://mirror.netcologne.de/apache.org//lucene/solr/1.4.1/apache-solr-1.4.1.tgz
+
+    [solr]
+    recipe = collective.recipe.solrinstance
+    solr-location = ${solr-download:location}
+    host = 127.0.0.1
+    port = 1234
+    max-num-results = 99
+    section-name = SOLR
+    unique-key = uniqueID
+    index =
+        name:uniqueID type:string indexed:true stored:true required:true
+        name:Foo type:text
+        name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+        name:Foo bar type:text
+    filter =
+        text solr.LowerCaseFilterFactory
+
+Example multicore solr
+----------------------
+
+To get multicore working it is needed to use 
+``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore 
+solr could look like::
+
+    [buildout]
+    parts = solr-download
+            solr-mc
+           
+    [solr-download]
+    recipe = hexagonit.recipe.download
+    strip-top-level-dir = true
+    url = http://mirror.netcologne.de/apache.org//lucene/solr/1.4.1/apache-solr-1.4.1.tgz
+
+    [solr-mc]
+    recipe = collective.recipe.solrinstance:mc
+    solr-location = ${solr-download:location}
+    host = 127.0.0.1
+    port = 1234
+    section-name = SOLR
+    cores = core1 core2
+
+    [core1]
+    max-num-results = 99
+    unique-key = uniqueID
+    index =
+        name:uniqueID type:string indexed:true stored:true required:true
+        name:Foo type:text
+        name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+        name:Foo bar type:text
+    filter =
+        text solr.LowerCaseFilterFactory
+
+    [core2]
+    max-num-results = 66
+    unique-key = uid
+    index =
+        name:uid type:string indexed:true stored:true required:true
+        name:La type:text
+        name:Le type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+        name:Lau type:text
+    filter =
+        text solr.LowerCaseFilterFactory
+

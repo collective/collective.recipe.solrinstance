@@ -1,6 +1,9 @@
 Simple example
 ==============
 
+Testting single solr instance
+-----------------------------
+
     >>> import os
 
 In the simplest form we can download a simple package and have it
@@ -33,6 +36,8 @@ downloaded before:
 
     >>> os.makedirs(join(sample_buildout, 'example', 'etc'))
     >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf'))
+    >>> open(join(sample_buildout, 'example', 'solr', 'conf', 'test1.txt'), 'w').close()
+    >>> open(join(sample_buildout, 'example', 'solr', 'conf', 'test2.txt'), 'w').close()
 
 Ok, let's run the buildout:
 
@@ -43,7 +48,6 @@ Ok, let's run the buildout:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
 Check if the run script is here and the template substitution worked:
 
@@ -54,7 +58,7 @@ Check if the run script is here and the template substitution worked:
     import signal
     import sys, os
     ...
-    SOLR_DIR = '.../parts/solr'
+    SOLR_DIR = r'.../parts/solr'
     ...
     START_CMD = ['java', '-jar', 'start.jar']
     ...
@@ -67,6 +71,8 @@ Also check that the XML files are where we expect them to be:
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
     -  schema.xml
     -  solrconfig.xml
+    -  test1.txt
+    -  test2.txt
 
 And make sure the substitution worked for all files.
 
@@ -89,16 +95,18 @@ And make sure the substitution worked for all files.
     ...
     <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
-    <field name="uniqueID" type="string" indexed="true" stored="true" required="true" ... />
+    <field name="uniqueID" type="string" indexed="true"
+           stored="true" required="true" multiValued="false"
+           omitNorms="false"/>
     <field name="Foo" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
-           omitNorms="false" />
+           omitNorms="false"/>
     <field name="Bar" type="date" indexed="false"
            stored="false" required="true" multiValued="true"
-           omitNorms="true" />
+           omitNorms="true"/>
     <field name="Foo bar" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
-           omitNorms="false" />
+           omitNorms="false"/>
     ...
     <uniqueKey>uniqueID</uniqueKey>
     ...
@@ -164,7 +172,7 @@ bit stupid, but oh well:
     >>> print system(buildout)
     Installing solr.
     ...
-    Error: Unique key needs to be declared "required": uniqueID
+    Error: Unique key needs to declared "required"=true or "default"=NEW: uniqueID
 
 If no unique key was specified in the first place, the tag shouldn't appear
 in the generated xml either:
@@ -233,7 +241,6 @@ With the index set up correctly, things work again:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -262,7 +269,6 @@ There's no default for the default search field, however:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
@@ -300,7 +306,6 @@ You can also define extra field types:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -318,11 +323,10 @@ You can also define extra field types:
     ...
     <field name="Foo" type="foo_type" indexed="true"
            stored="true" required="false" multiValued="false"
-           omitNorms="false" />
+           omitNorms="false"/>
     <field name="Bar" type="bar_type" indexed="true"
            stored="true" required="false" multiValued="false"
-           omitNorms="false" />
-    </fields>
+           omitNorms="false"/>
     ...
 
 For more complex setups it's also possible to specify an alternative template
@@ -351,7 +355,6 @@ to be used to generate `schema.xml`:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
@@ -389,7 +392,6 @@ variable that can then be conveniently used in the template:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema name="foo">
@@ -442,7 +444,6 @@ Additional solrconfig should also be allowed:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -476,7 +477,6 @@ Test autoCommit arguments:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -509,7 +509,6 @@ Testing the request parsers default limit:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -540,7 +539,6 @@ Test changing the request parsers limit:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -574,7 +572,6 @@ alternative template to be used to generate `solrconfig.xml`:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <config>
@@ -621,7 +618,6 @@ Solr instances to coexist in a single buildout:
     jetty.xml: Generated file 'jetty.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
-    ...
 
     >>> ls(sample_buildout, 'var')
     d  solr-functest
@@ -661,7 +657,6 @@ Ok, let's run the buildout:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
-    ...
 
 Check if the run script is here and the template substitution worked
 with java_opts:
@@ -675,3 +670,159 @@ with java_opts:
     ...
     START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
     ...
+
+Testting multicore 
+------------------
+Testing multicore recipe without cores:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... host = 127.0.0.1
+    ... port = 1234
+    ... max-num-results = 99
+    ... section-name = SOLR
+    ... java_opts =
+    ...     -Xms512M
+    ...     -Xmx1024M
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    While:
+    ...
+    Error: Attribute `cores` not defined.
+
+Testing multicore recipe with wrong cores:
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... host = 127.0.0.1
+    ... cores = 
+    ... port = 1234
+    ... max-num-results = 99
+    ... section-name = SOLR
+    ... java_opts =
+    ...     -Xms512M
+    ...     -Xmx1024M
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    While:
+    ...
+    Error: Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`
+
+Test a our first core 
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... host = 127.0.0.1
+    ... port = 1234
+    ... section-name = SOLR
+    ... cores = core1 core2
+    ... java_opts =
+    ...     -Xms512M
+    ...     -Xmx1024M
+    ...
+    ... [core1]
+    ... max-num-results = 55
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ...     name:Foo type:text
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ...     name:Foo bar type:text
+    ...     name:BlaWS type:text_ws
+    ... filter =
+    ...     text solr.ISOLatin1AccentFilterFactory
+    ...     text_ws Baz foo="bar" juca="bala"
+    ...
+    ... [core2]
+    ... max-num-results = 99
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ...     name:Foo type:text
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ...     name:Foo bar type:text
+    ... filter =
+    ...     text solr.ISOLatin1AccentFilterFactory
+    ...     text_ws Baz foo="bar" juca="bala"
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr-mc.
+    solr.xml: Generated file 'solr.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    jetty.xml: Generated file 'jetty.xml'.
+    solr-instance: Generated script 'solr-instance'.
+
+See if there are all needed files:
+
+    >>> ls(sample_buildout, 'parts', 'solr-mc', 'solr')
+    d  core1
+    d  core2
+    -  solr.xml
+
+See if there is ``solr.xml``:
+
+    >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'solr.xml')
+    <?xml...
+    <solr persistent="true">
+    ...
+      <cores adminPath="/admin/cores">
+        <core name="core1" instanceDir="core1" />
+        <core name="core2" instanceDir="core2" />
+      </cores>
+    ...
+
+See if there are all needed files in `core1`:
+
+    >>> ls(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf')
+    - schema.xml
+    - solrconfig.xml
+    -  test1.txt
+    -  test2.txt
+
+See if name is set in `schema.xml`:
+
+    >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf', 'schema.xml')
+    <?xml...
+    <schema name="core1"...
+    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+    </fieldType>
+    ...
+    <field name="BlaWS" type="text_ws" indexed="true"
+           stored="true" required="false" multiValued="false"
+           omitNorms="false"/>
+    ...
+
+

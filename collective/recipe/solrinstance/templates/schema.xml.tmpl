@@ -29,7 +29,7 @@
  http://wiki.apache.org/solr/SchemaXml
 -->
 
-<schema name="example" version="1.2">
+<schema name="$options.options.name" version="1.2">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="1.2" is Solr's version number for the schema syntax and semantics.  It should
@@ -209,9 +209,15 @@
    -->
 
    #for $index in $options.indeces
+   #if $index.default
    <field name="$index.name" type="$index.type" indexed="$index.indexed"
           stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
-          omitNorms="$index.omitnorms" />
+          omitNorms="$index.omitnorms" default="$index.default"/>
+   #else
+   <field name="$index.name" type="$index.type" indexed="$index.indexed"
+          stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
+          omitNorms="$index.omitnorms"/>
+   #end if
    #end for
 
  </fields>

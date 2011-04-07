@@ -1,0 +1,14 @@
+syntax: glob
+*~
+*.pyc
+*.pyo
+.nose
+parts/*
+*.egg-info/*
+downloads/*
+develop-eggs/*
+bin/*
+*.swp
+.installed.cfg
+env/*
+.svn/
