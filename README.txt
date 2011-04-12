@@ -183,7 +183,7 @@ cores
     configuration.
 
 Examples single solr
---------------------
+====================
 
 A simple example how a single solr could look like::
 
@@ -213,7 +213,7 @@ A simple example how a single solr could look like::
         text solr.LowerCaseFilterFactory
 
 Example multicore solr
-----------------------
+======================
 
 To get multicore working it is needed to use 
 ``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore 
