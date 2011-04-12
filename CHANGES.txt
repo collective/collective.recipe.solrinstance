@@ -1,7 +1,7 @@
 Change History
 **************
 
-2.0 (unreleased)
+2.0 (2011-04-12)
 ================
 
 - Added ``default`` to filter attributes.
