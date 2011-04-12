@@ -7,11 +7,11 @@ Change History
 - Added ``default`` to filter attributes.
   [jod]
 
-- Multicore recipe ``collective.recipe.solrinstance:mc``.
+- Multicore recipe ``collective.recipe.solrinstance:mc``. [jod]
 
     * Refactured to get multicore working.
     * Pinned buildout version to get tests working.
-  [jod]
+
 
 1.1 (2011-04-04)
 ================
