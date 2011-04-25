@@ -167,7 +167,7 @@ script
 
 java_opts
     Optional. Parameters to pass to the Java Virtual Machine (JVM) used to
-run Solr. Each option is specified on a separated line.
+    run Solr. Each option is specified on a separated line.
     For example::
 
         [solr-instance]
