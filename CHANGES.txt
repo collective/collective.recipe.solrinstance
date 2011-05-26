@@ -4,6 +4,17 @@ Change History
 3.0a2 (unreleased)
 ==================
 
+- Pass the `host` option to the Jetty config, so it can be configured to listen
+  only on localhost or a specific IP.
+  [hannosch]
+
+- Disabled Jetty request log.
+  [hannosch]
+
+- Updated `jetty.xml` template to match new defaults found in the Solr 3.1
+  release.
+  [hannosch]
+
 - Fixed syntax error introduced around `httpCaching` directive.
   [hannosch]
 

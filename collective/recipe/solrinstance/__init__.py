@@ -56,7 +56,7 @@ class SolrBase(object):
         options = {}
 
         options['name'] = options_orig.get('name', name).strip()
-        options['host'] = options_orig.get('host','localhost').strip()
+        options['host'] = options_orig.get('host', 'localhost').strip()
         options['port'] = options_orig.get('port', '8983').strip()
         options['basepath'] = options_orig.get('basepath', '/solr').strip()
         options['solr-location'] = os.path.abspath(options_orig.get('solr-location', '').strip())
@@ -309,8 +309,7 @@ class SolrSingleRecipe(SolrBase):
         parts = [self.install_dir]
 
         if os.path.exists(self.install_dir):
-            raise zc.buildout.UserError(
-                'Target directory %s already exists. Please remove it.' % self.install_dir)
+            shutil.rmtree(self.install_dir)
 
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'], 'example'), self.install_dir)
@@ -329,6 +328,7 @@ class SolrSingleRecipe(SolrBase):
         self.generate_jetty(
             source=self.instanceopts.get('jetty-template'),
             logdir=solr_log,
+            serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
             destination=self.instanceopts['jetty-destination'])
 
@@ -366,10 +366,6 @@ class SolrSingleRecipe(SolrBase):
 
     def update(self):
         """updater"""
-
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
-
         return self.install()
 
 
@@ -399,8 +395,7 @@ class MultiCoreRecipe(SolrBase):
         parts = [self.install_dir]
 
         if os.path.exists(self.install_dir):
-            raise zc.buildout.UserError(
-                'Target directory %s already exists. Please remove it.' % self.install_dir)
+            shutil.rmtree(self.install_dir)
 
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'], 'example'), self.install_dir)
@@ -466,6 +461,7 @@ class MultiCoreRecipe(SolrBase):
             source=self.instanceopts.get('jetty-template',
                      '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR),
             logdir=solr_log,
+            serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
             destination=self.instanceopts['jetty-destination'])
 
@@ -483,9 +479,4 @@ class MultiCoreRecipe(SolrBase):
 
     def update(self):
         """updater"""
-
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
-
         return self.install()
-
