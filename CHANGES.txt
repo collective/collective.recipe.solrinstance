@@ -4,6 +4,10 @@ Change History
 3.0a2 (unreleased)
 ==================
 
+- Added new `logging-template` option and instruct Jetty to use the
+  `logging.properties` file. The default logging level is set to `WARNING`.
+  [hannosch]
+
 - Pass the `host` option to the Jetty config, so it can be configured to listen
   only on localhost or a specific IP.
   [hannosch]

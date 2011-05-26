@@ -45,6 +45,7 @@ Ok, let's run the buildout:
     ...
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -67,6 +68,7 @@ Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
+    -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
     -  schema.xml
@@ -82,8 +84,6 @@ And make sure the substitution worked for all files.
     <?xml version="1.0"?>
     ...
     <Set name="port">1234</Set>
-    ...
-    <Arg>.../var/solr/log/jetty-yyyy_mm_dd.request.log</Arg>
     ...
 
 `schema.xml`:
@@ -238,6 +238,7 @@ With the index set up correctly, things work again:
     >>> print system(buildout)
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -266,6 +267,7 @@ There's no default for the default search field, however:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -303,6 +305,7 @@ You can also define extra field types:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -352,6 +355,7 @@ to be used to generate `schema.xml`:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -389,6 +393,7 @@ variable that can then be conveniently used in the template:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -441,6 +446,7 @@ Additional solrconfig should also be allowed:
     >>> print system(buildout)
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -474,6 +480,7 @@ Test autoCommit arguments:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -506,6 +513,7 @@ Testing the request parsers default limit:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -536,6 +544,7 @@ Test changing the request parsers limit:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -569,6 +578,7 @@ alternative template to be used to generate `solrconfig.xml`:
     Uninstalling solr.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -611,11 +621,13 @@ Solr instances to coexist in a single buildout:
     Uninstalling solr.
     Installing solr-main.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-main: Generated script 'solr-main'.
     Installing solr-functest.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
 
@@ -654,6 +666,7 @@ Ok, let's run the buildout:
     Uninstalling solr-main.
     Installing solr.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     solr-instance: Generated script 'solr-instance'.
@@ -779,6 +792,7 @@ Ok, let's run the buildout:
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
     jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
     solr-instance: Generated script 'solr-instance'.
 
 See if there are all needed files:

@@ -62,6 +62,8 @@ class SolrBase(object):
         options['solr-location'] = os.path.abspath(options_orig.get('solr-location', '').strip())
         options['jetty-template'] = options_orig.get("jetty-template", 
                 '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR)
+        options['logging-template'] = options_orig.get("logging-template",
+                '%s/templates/logging.properties.tmpl' % TEMPLATE_DIR)
 
         options['jetty-destination'] = options_orig.get(
                 'jetty-destination', os.path.join(self.install_dir, 'etc'))
@@ -260,6 +262,12 @@ class SolrBase(object):
             'jetty.xml',
             kwargs).install()
 
+    def generate_logging(self, **kwargs):
+        iw.recipe.template.Template(
+            self.buildout,
+            'logging.properties',
+            kwargs).install()
+
     def generate_solr_conf(self, **kwargs):
         iw.recipe.template.Template(
             self.buildout,
@@ -330,6 +338,10 @@ class SolrSingleRecipe(SolrBase):
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
+            destination=self.instanceopts['jetty-destination'])
+
+        self.generate_logging(
+            source=self.instanceopts.get('logging-template'),
             destination=self.instanceopts['jetty-destination'])
 
         self.generate_solr_conf(
@@ -463,6 +475,10 @@ class MultiCoreRecipe(SolrBase):
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
+            destination=self.instanceopts['jetty-destination'])
+
+        self.generate_logging(
+            source=self.instanceopts.get('logging-template'),
             destination=self.instanceopts['jetty-destination'])
 
         self.create_bin_scripts(

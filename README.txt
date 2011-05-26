@@ -55,6 +55,10 @@ jetty-template
     Optional override for the ``jetty.xml`` template. Defaults to 
     ``templates/jetty.xml.tmpl``.
 
+logging-template
+    Optional override for the ``logging.properties`` template. Defaults to
+    ``templates/logging.properties.tmpl``.
+
 schema-destination
     Optional override for the directory where the ``schema.xml`` file
     will be generated. Defaults to the Solr default location.
