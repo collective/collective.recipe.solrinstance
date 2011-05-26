@@ -15,8 +15,8 @@ SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.s
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-Note: This version of the recipe only supports Solr 1.4. Please use a release
-from the 0.x series if you are using Solr 1.3.
+Note: This version of the recipe only supports Solr 3.1. Please use a release
+from the 2.x series if you are using Solr 1.4.
 
 Supported options
 *****************
@@ -194,14 +194,14 @@ A simple example how a single solr could look like::
     [solr-download]
     recipe = hexagonit.recipe.download
     strip-top-level-dir = true
-    url = http://mirror.netcologne.de/apache.org//lucene/solr/1.4.1/apache-solr-1.4.1.tgz
+    url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/3.1.0/apache-solr-3.1.0.zip
 
     [solr]
     recipe = collective.recipe.solrinstance
     solr-location = ${solr-download:location}
     host = 127.0.0.1
     port = 1234
-    max-num-results = 99
+    max-num-results = 500
     section-name = SOLR
     unique-key = uniqueID
     index =
@@ -222,11 +222,11 @@ solr could look like::
     [buildout]
     parts = solr-download
             solr-mc
-           
+
     [solr-download]
     recipe = hexagonit.recipe.download
     strip-top-level-dir = true
-    url = http://mirror.netcologne.de/apache.org//lucene/solr/1.4.1/apache-solr-1.4.1.tgz
+    url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/3.1.0/apache-solr-3.1.0.zip
 
     [solr-mc]
     recipe = collective.recipe.solrinstance:mc
@@ -257,4 +257,3 @@ solr could look like::
         name:Lau type:text
     filter =
         text solr.LowerCaseFilterFactory
-

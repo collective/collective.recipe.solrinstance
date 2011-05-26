@@ -29,7 +29,7 @@
  http://wiki.apache.org/solr/SchemaXml
 -->
 
-<schema name="$options.options.name" version="1.2">
+<schema name="$options.options.name" version="1.3">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="1.2" is Solr's version number for the schema syntax and semantics.  It should
@@ -37,6 +37,7 @@
        1.0: multiValued attribute did not exist, all fields are multiValued by nature
        1.1: multiValued attribute introduced, false by default
        1.2: omitTermFreqAndPositions attribute introduced, true by default except for text fields.
+       1.3: removed optional field compress feature
      -->
 
   <types>
@@ -48,11 +49,7 @@
        org.apache.solr.analysis package.
     -->
 
-    <!-- The StrField type is not analyzed, but indexed/stored verbatim.
-       - StrField and TextField support an optional compressThreshold which
-       limits compression (if enabled in the derived fields) to values which
-       exceed a certain size (in characters).
-    -->
+    <!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
 
     <!-- boolean type: "true" or "false" -->
@@ -62,6 +59,7 @@
 
     <!-- The optional sortMissingLast and sortMissingFirst attributes are
          currently supported on types that are sorted internally as strings.
+           This includes "string","boolean","sint","slong","sfloat","sdouble","pdate"
        - If sortMissingLast="true", then a sort on this field will cause documents
          without the field to come after documents with the field,
          regardless of the requested sort order (asc or desc).
@@ -70,7 +68,8 @@
          regardless of the requested sort order.
        - If sortMissingLast="false" and sortMissingFirst="false" (the default),
          then default lucene sorting will be used which places docs without the
-         field first in an ascending sort and last in a descending sort. -->
+         field first in an ascending sort and last in a descending sort.
+    -->
 
     <!--
       Default numeric field types. For faster range queries, consider the tint/tfloat/tlong/tdouble types.
@@ -152,8 +151,12 @@
         words on case-change, alpha numeric boundaries, and non-alphanumeric chars,
         so that a query of "wifi" or "wi fi" could match a document containing "Wi-Fi".
         Synonyms and stopwords are customized by external files, and stemming is enabled.
+        The attribute autoGeneratePhraseQueries="true" (the default) causes words that get split to
+        form phrase queries. For example, WordDelimiterFilter splitting text:pdp-11 will cause the parser
+        to generate text:"pdp 11" rather than (text:PDP OR text:11).
+        NOTE: autoGeneratePhraseQueries="true" tends to not work well for non whitespace delimited languages.
         -->
-    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
       <analyzer type="index">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         #for $filter in $options.filters.text
@@ -173,6 +176,28 @@
          any data added to them will be ignored outright.  -->
     <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
 
+    <!-- This point type indexes the coordinates as separate fields (subFields)
+      If subFieldType is defined, it references a type, and a dynamic field
+      definition is created matching *___<typename>.  Alternately, if
+      subFieldSuffix is defined, that is used to create the subFields.
+      Example: if subFieldType="double", then the coordinates would be
+        indexed in fields myloc_0___double,myloc_1___double.
+      Example: if subFieldSuffix="_d" then the coordinates would be indexed
+        in fields myloc_0_d,myloc_1_d
+      The subFields are an implementation detail of the fieldType, and end
+      users normally should not need to know about them.
+     -->
+    <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
+
+    <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
+    <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+
+   <!--
+    A Geohash is a compact representation of a latitude longitude pair in a single field.
+    See http://wiki.apache.org/solr/SpatialSearch
+   -->
+    <fieldtype name="geohash" class="solr.GeoHashField"/>
+
     #if $options.options.extraFieldTypes
     <!-- Extra field types: -->
     $options.options.extraFieldTypes
@@ -188,9 +213,6 @@
        <types> section
      indexed: true if this field should be indexed (searchable or sortable)
      stored: true if this field should be retrievable
-     compressed: [false] if this field should be stored using gzip compression
-       (this will only apply if the field type is compressable; among
-       the standard field types, only TextField and StrField are)
      multiValued: true if this field may contain multiple values per document
      omitNorms: (expert) set to true to omit the norms associated with
        this field (this disables length normalization and index-time

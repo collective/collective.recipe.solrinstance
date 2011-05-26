@@ -1,6 +1,24 @@
 Change History
 **************
 
+3.0 (unreleased)
+================
+
+- Updated the default ``schema.xml`` to the Solr 3.1 format. The schema version
+  is now ``1.3`` instead of ``1.2``. The schema is no longer compatible with
+  Solr 1.4. Please use a recipe version from the 2.x series for that.
+
+  Changes to the schema include:
+
+  * Fields no longer have a compressed option.
+
+  * The default schema defines three new field types: `point`, `location` and
+    `geohash` useful for geospatial data.
+
+  If you have an older Solr 1.4 index, you should be able to continue using it
+  without a full reindex.
+  [hannosch]
+
 2.1 (2011-04-12)
 ================
 
