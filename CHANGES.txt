@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.0a2 (unreleased)
+3.0a2 (2011-05-26)
 ==================
 
 - Added new `logging-template` option and instruct Jetty to use the
