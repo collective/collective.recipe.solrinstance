@@ -15,16 +15,16 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<!-- 
-     For more details about configurations options that may appear in this 
+<!--
+     For more details about configurations options that may appear in this
      file, see http://wiki.apache.org/solr/SolrConfigXml.
 
      Specifically, the Solr Config can support XInclude, which may make it easier to manage
      the configuration.  See https://issues.apache.org/jira/browse/SOLR-1167
 -->
 <config>
-  <!-- Set this to 'false' if you want solr to continue working after it has 
-       encountered an severe configuration error.  In a production environment, 
+  <!-- Set this to 'false' if you want solr to continue working after it has
+       encountered an severe configuration error.  In a production environment,
        you may want solr to keep working even if one handler is mis-configured.
 
        You may also set this to false using by setting the system property:
@@ -64,14 +64,14 @@
     <ramBufferSizeMB>32</ramBufferSizeMB>
     <mergeFactor>10</mergeFactor>
 
-    <!-- If true, unlock any held write or commit locks on startup. 
+    <!-- If true, unlock any held write or commit locks on startup.
          This defeats the locking mechanism that allows multiple
          processes to safely access a lucene index, and should be
          used with care.
          This is not needed if lock type is 'none' or 'single'
      -->
     <unlockOnStartup>false</unlockOnStartup>
-    
+
     <!-- If true, IndexReaders will be reopened (often more efficient) instead
          of closed and then opened.  -->
     <reopenReaders>true</reopenReaders>
@@ -86,11 +86,11 @@
     <!--  To aid in advanced debugging, you may turn on IndexWriter debug logging.
       Setting to true will set the file that the underlying Lucene IndexWriter
       will write its debug infostream to.  -->
-     <infoStream file="INFOSTREAM.txt">false</infoStream> 
+     <infoStream file="INFOSTREAM.txt">false</infoStream>
 
   </mainIndex>
 
-  <!--	Enables JMX if and only if an existing MBeanServer is found, use this
+  <!--  Enables JMX if and only if an existing MBeanServer is found, use this
     if you want to configure JMX through JVM parameters. Remove this to disable
     exposing Solr configuration and statistics to JMX.
 
@@ -127,8 +127,8 @@
 
   <query>
     <!-- Maximum number of clauses in a boolean query... in the past, this affected
-        range or prefix queries that expanded to big boolean queries - built in Solr 
-        query parsers no longer create queries with this limitation. 
+        range or prefix queries that expanded to big boolean queries - built in Solr
+        query parsers no longer create queries with this limitation.
         An exception is thrown if exceeded.  -->
     <maxBooleanClauses>1024</maxBooleanClauses>
 
@@ -216,7 +216,7 @@
 
   </query>
 
-  <!-- 
+  <!--
     Let the dispatch filter handler /select?qt=XXX
     handleSelect=true will use consistent error handling for /select and /update
     handleSelect=false will use solr1.1 style error formatting
@@ -226,7 +226,7 @@
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="$options.requestParsers_multipartUploadLimitInKB" />
 
     <!-- Set HTTP caching related parameters (for proxy caches and clients).
-          
+
          To get the behaviour of Solr 1.2 (ie: no caching related headers)
          use the never304="true" option and do not specify a value for
          <cacheControl>
@@ -265,7 +265,7 @@
 
   <!-- requestHandler plugins... incoming queries will be dispatched to the
      correct handler based on the path or the qt (query type) param.
-     Names starting with a '/' are accessed with the a path equal to the 
+     Names starting with a '/' are accessed with the a path equal to the
      registered name.  Names without a leading '/' are accessed with:
       http://host/app/select?qt=name
      If no qt is defined, the requestHandler that declares default="true"
@@ -352,17 +352,17 @@
   <requestHandler name="/update/csv" class="solr.CSVRequestHandler" startup="lazy" />
 
 
-  <!-- 
-   Admin Handlers - This will register all the standard admin RequestHandlers.  Adding 
+  <!--
+   Admin Handlers - This will register all the standard admin RequestHandlers.  Adding
    this single handler is equivalent to registering:
-   
+
   <requestHandler name="/admin/luke"       class="org.apache.solr.handler.admin.LukeRequestHandler" />
   <requestHandler name="/admin/system"     class="org.apache.solr.handler.admin.SystemInfoHandler" />
   <requestHandler name="/admin/plugins"    class="org.apache.solr.handler.admin.PluginInfoHandler" />
   <requestHandler name="/admin/threads"    class="org.apache.solr.handler.admin.ThreadDumpHandler" />
   <requestHandler name="/admin/properties" class="org.apache.solr.handler.admin.PropertiesRequestHandler" />
   <requestHandler name="/admin/file"       class="org.apache.solr.handler.admin.ShowFileRequestHandler" >
-  
+
   If you wish to hide files under {solr.home}/conf, explicitly register the ShowFileRequestHandler using:
   -->
   <requestHandler name="/admin/file" class="org.apache.solr.handler.admin.ShowFileRequestHandler" >
@@ -422,7 +422,7 @@
 
   <!-- XSLT response writer transforms the XML output by any xslt file found
        in Solr's conf/xslt directory.  Changes to xslt files are checked for
-       every xsltCacheLifetimeSeconds.  
+       every xsltCacheLifetimeSeconds.
    -->
   <queryResponseWriter name="xslt" class="org.apache.solr.request.XSLTResponseWriter">
     <int name="xsltCacheLifetimeSeconds">5</int>
