@@ -107,7 +107,7 @@ class SolrBase(object):
                 os.path.join(self.install_dir, 'solr', 'conf'))
 
         try:
-            num_results = int(options_orig.get('max-num-results', '10').strip())
+            num_results = int(options_orig.get('max-num-results', '500').strip())
             if num_results < 1:
                 raise ValueError
             options['max-num-results'] = str(num_results)

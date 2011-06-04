@@ -102,7 +102,7 @@ default-search-field
     explicitly given. See http://wiki.apache.org/solr/SchemaXml.
 
 max-num-results
-    The maximum number of results the Solr server returns. Defaults to 10.
+    The maximum number of results the Solr server returns. Defaults to 500.
 
 section-name
     Name of the product-config section to be generated for ``zope.conf``.
