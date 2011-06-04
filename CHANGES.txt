@@ -4,6 +4,9 @@ Change History
 3.0 (unreleased)
 ================
 
+- Use the standard libraries doctest module.
+  [hannosch]
+
 - Increase the `max-num-results` default value from 10 to 500 to avoid
   restricting search results on this low level. The application layer should
   be responsible for making such restrictions.
