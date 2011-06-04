@@ -1,8 +1,8 @@
 Simple example
 ==============
 
-Testting single solr instance
------------------------------
+Testing single solr instance
+----------------------------
 
     >>> import os
 
@@ -838,5 +838,3 @@ See if name is set in `schema.xml`:
            stored="true" required="false" multiValued="false"
            omitNorms="false"/>
     ...
-
-

@@ -42,12 +42,10 @@ setup(name='collective.recipe.solrinstance',
       install_requires=[
         'setuptools',
         'iw.recipe.template',
-        'elementtree',
         'zc.buildout'],
       tests_require=[
         'zope.testing',
         'zope.interface',
-        'elementtree',
         'iw.recipe.template'],
       test_suite = 'collective.recipe.solrinstance.tests.test_suite',
       entry_points = {

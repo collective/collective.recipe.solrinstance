@@ -4,6 +4,9 @@ Change History
 3.0 (unreleased)
 ================
 
+- We no longer require elementtree.
+  [hannosch]
+
 - Use the standard libraries doctest module.
   [hannosch]
 

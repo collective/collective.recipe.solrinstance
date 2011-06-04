@@ -1,8 +1,8 @@
-from doctest import COMPARISON_FLAGS, NORMALIZE_WHITESPACE
+from doctest import ELLIPSIS, NORMALIZE_WHITESPACE, REPORT_UDIFF
 from doctest import DocFileSuite
-from unittest import TestSuite
 
-from zc.buildout.testing import buildoutSetUp, install_develop
+from zc.buildout.testing import buildoutSetUp, buildoutTearDown
+from zc.buildout.testing import install_develop
 
 
 def setUp(test):
@@ -14,12 +14,10 @@ def setUp(test):
     install_develop('Markdown', test)
     install_develop('iw.recipe.template', test)
     install_develop('collective.recipe.solrinstance', test)
-    install_develop('elementtree', test)
+
 
 def test_suite():
-    """ returns the test suite """
-    return TestSuite([
-        DocFileSuite(
-           'README.txt', package='collective.recipe.solrinstance',
-           optionflags=COMPARISON_FLAGS | NORMALIZE_WHITESPACE, setUp=setUp)
-    ])
+    return DocFileSuite(
+           'README.txt',
+           setUp=setUp, tearDown=buildoutTearDown,
+           optionflags=ELLIPSIS | NORMALIZE_WHITESPACE | REPORT_UDIFF)
