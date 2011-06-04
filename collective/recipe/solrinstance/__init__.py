@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Recipe solrinstance"""
 
 import zc.buildout
 import iw.recipe.template
