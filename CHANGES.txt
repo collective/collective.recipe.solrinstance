@@ -1,9 +1,11 @@
 Change History
 **************
 
-3.0.1 (unreleased)
-==================
+3.1 (unreleased)
+================
 
+- Updated templates to match default found in Solr 3.2.
+  [hannosch]
 
 3.0 (2011-06-04)
 ================
