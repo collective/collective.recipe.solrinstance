@@ -36,6 +36,8 @@ downloaded before:
 
     >>> os.makedirs(join(sample_buildout, 'example', 'etc'))
     >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf'))
+    >>> os.makedirs(join(sample_buildout, 'dist'))
+    >>> os.makedirs(join(sample_buildout, 'contrib'))
     >>> open(join(sample_buildout, 'example', 'solr', 'conf', 'test1.txt'), 'w').close()
     >>> open(join(sample_buildout, 'example', 'solr', 'conf', 'test2.txt'), 'w').close()
 
@@ -684,7 +686,7 @@ with java_opts:
     START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
     ...
 
-Testting multicore 
+Testting multicore
 ------------------
 Testing multicore recipe without cores:
 
@@ -722,7 +724,7 @@ Testing multicore recipe with wrong cores:
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
     ... host = 127.0.0.1
-    ... cores = 
+    ... cores =
     ... port = 1234
     ... max-num-results = 99
     ... section-name = SOLR
@@ -738,7 +740,7 @@ Ok, let's run the buildout:
     ...
     Error: Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`
 
-Test a our first core 
+Test a our first core
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
