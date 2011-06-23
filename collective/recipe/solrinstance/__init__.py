@@ -50,6 +50,9 @@ class SolrBase(object):
         self.install_dir = os.path.join(buildout['buildout']['parts-directory'], name)
         self.instanceopts = self.initServerInstanceOpts(buildout, name, options_orig)
 
+        # let other recipies reference the destination path
+        options_orig['location'] = self.install_dir
+
     def initServerInstanceOpts(self, buildout, name, options_orig):
         #server instance opts
         options = {}
