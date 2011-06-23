@@ -15,7 +15,7 @@ SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.s
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-Note: This version of the recipe only supports Solr 3.1. Please use a release
+Note: This version of the recipe only supports Solr 3.2. Please use a release
 from the 2.x series if you are using Solr 1.4.
 
 Supported options
@@ -67,6 +67,11 @@ schema-template
     Optional override for the template used to generate the ``schema.xml``
     file. Defaults to the template contained in the recipe, i.e.
     ``templates/schema.xml.tmpl``.
+
+stopwords-template
+    Optional override for the template used to generate the ``stopwords.txt``
+    file. Defaults to the template contained in the recipe, i.e.
+    ``templates/stopwords.txt.tmpl``.
 
 jetty-destination
     Optional override for the directory where the ``jetty.xml`` file

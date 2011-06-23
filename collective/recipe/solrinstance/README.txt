@@ -48,6 +48,7 @@ Ok, let's run the buildout:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
 Check if the run script is here and the template substitution worked:
@@ -73,6 +74,7 @@ Also check that the XML files are where we expect them to be:
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
     -  schema.xml
     -  solrconfig.xml
+    -  stopwords.txt
     -  test1.txt
     -  test2.txt
 
@@ -119,6 +121,14 @@ And make sure the substitution worked for all files.
     <dataDir>.../var/solr/data</dataDir>
     ...
     <int name="rows">99</int>
+    ...
+
+`stopwords.txt`:
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'stopwords.txt')
+    # Standard english stop words taken from Lucene's StopAnalyzer
+    a
+    an
     ...
 
 Let's check that the zope-conf snippet was correctly generated:
@@ -241,6 +251,7 @@ With the index set up correctly, things work again:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
@@ -270,6 +281,7 @@ There's no default for the default search field, however:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
@@ -308,6 +320,7 @@ You can also define extra field types:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
@@ -358,6 +371,7 @@ to be used to generate `schema.xml`:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
@@ -396,6 +410,7 @@ variable that can then be conveniently used in the template:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
@@ -449,6 +464,7 @@ Additional solrconfig should also be allowed:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
@@ -483,6 +499,7 @@ Test autoCommit arguments:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
@@ -516,6 +533,7 @@ Testing the request parsers default limit:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
@@ -547,6 +565,7 @@ Test changing the request parsers limit:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
@@ -581,6 +600,7 @@ alternative template to be used to generate `solrconfig.xml`:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
@@ -624,12 +644,14 @@ Solr instances to coexist in a single buildout:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-main: Generated script 'solr-main'.
     Installing solr-functest.
     jetty.xml: Generated file 'jetty.xml'.
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
 
     >>> ls(sample_buildout, 'var')
     d  solr-functest
@@ -669,6 +691,7 @@ Ok, let's run the buildout:
     logging.properties: Generated file 'logging.properties'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
     schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     solr-instance: Generated script 'solr-instance'.
 
 Check if the run script is here and the template substitution worked
@@ -684,8 +707,9 @@ with java_opts:
     START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
     ...
 
-Testting multicore 
-------------------
+Testing multicore
+-----------------
+
 Testing multicore recipe without cores:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
@@ -788,8 +812,10 @@ Ok, let's run the buildout:
     Installing solr-mc.
     solr.xml: Generated file 'solr.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     schema.xml: Generated file 'schema.xml'.
     solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
     schema.xml: Generated file 'schema.xml'.
     jetty.xml: Generated file 'jetty.xml'.
     logging.properties: Generated file 'logging.properties'.
@@ -819,8 +845,9 @@ See if there are all needed files in `core1`:
     >>> ls(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf')
     - schema.xml
     - solrconfig.xml
-    -  test1.txt
-    -  test2.txt
+    - stopwords.txt
+    - test1.txt
+    - test2.txt
 
 See if name is set in `schema.xml`:
 

@@ -97,6 +97,8 @@ class SolrBase(object):
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
                 '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR)
+        options['stopwords-template']=  options_orig.get('stopwords-template',
+                '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
         options['config-destination'] = options_orig.get(
                 'config-destination', 
                 os.path.join(self.install_dir, 'solr', 'conf'))
@@ -279,6 +281,12 @@ class SolrBase(object):
             'schema.xml',
             kwargs).install()
 
+    def generate_stopwords(self, **kwargs):
+        iw.recipe.template.Template(
+            self.buildout,
+            'stopwords.txt',
+            kwargs).install()
+
     def create_bin_scripts(self, script, **kwargs):
         """ Create a runner for our solr instance """
         if script:
@@ -362,6 +370,11 @@ class SolrSingleRecipe(SolrBase):
             filters=self.parse_filter(self.solropts),
             indeces=self.parse_index(self.solropts),
             options=self.solropts)
+
+        self.generate_stopwords(
+            source=self.solropts.get('stopwords-template'),
+            destination=self.solropts['config-destination'],
+            )
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
@@ -458,6 +471,12 @@ class MultiCoreRecipe(SolrBase):
                 maxWarmingSearchers=options_core.get('maxWarmingSearchers', '4'),
                 requestParsers_multipartUploadLimitInKB=options_core['requestParsers-multipartUploadLimitInKB'],
                 autoCommit=self.parseAutoCommit(options_core),
+                )
+
+            self.generate_stopwords(
+                source=options_core.get('stopwords-template',
+                    '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR),
+                destination=conf_dir,
                 )
 
             self.generate_solr_schema(
