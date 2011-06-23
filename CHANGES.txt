@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.2 (unreleased)
+3.2 (2011-06-23)
 ================
 
 - Added a new option `stopwords-template` which allows you to specify a custom
