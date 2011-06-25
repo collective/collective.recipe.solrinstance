@@ -4,6 +4,9 @@ Change History
 3.3 (unreleased)
 ================
 
+- Removed the Velocity driven `/browse` request handler. The example config
+  we generated didn't match the schema.
+  [hannosch]
 
 3.2 (2011-06-23)
 ================
