@@ -36,8 +36,8 @@ ZOPE_CONF = """
 """
 TRUE_VALUES = set(['yes', 'true', '1', 'on'])
 TEMPLATE_DIR = os.path.dirname(__file__)
-NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results", 
-    "default-search-field", "default-operator", "additional-solrconfig", 
+NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
+    "default-search-field", "default-operator", "additional-solrconfig",
     "autoCommitMaxDocs", "autoCommitMaxTime" ,"requestParsers-multipartUploadLimitInKB",
     "cacheSize",
     ])
@@ -50,6 +50,9 @@ class SolrBase(object):
         self.install_dir = os.path.join(buildout['buildout']['parts-directory'], name)
         self.instanceopts = self.initServerInstanceOpts(buildout, name, options_orig)
 
+        # let other recipies reference the destination path
+        options_orig['location'] = self.install_dir
+
     def initServerInstanceOpts(self, buildout, name, options_orig):
         #server instance opts
         options = {}
@@ -59,7 +62,7 @@ class SolrBase(object):
         options['port'] = options_orig.get('port', '8983').strip()
         options['basepath'] = options_orig.get('basepath', '/solr').strip()
         options['solr-location'] = os.path.abspath(options_orig.get('solr-location', '').strip())
-        options['jetty-template'] = options_orig.get("jetty-template", 
+        options['jetty-template'] = options_orig.get("jetty-template",
                 '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR)
         options['logging-template'] = options_orig.get("logging-template",
                 '%s/templates/logging.properties.tmpl' % TEMPLATE_DIR)
@@ -76,9 +79,9 @@ class SolrBase(object):
 
         options['script'] = options_orig.get('script', 'solr-instance').strip()
 
-        #XXX this is ugly and should be removed 
+        #XXX this is ugly and should be removed
         options['section-name'] = options_orig.get('section-name', 'solr').strip()
-        options_orig['zope-conf'] = options_orig.get('zope-conf', 
+        options_orig['zope-conf'] = options_orig.get('zope-conf',
                 ZOPE_CONF % options).strip()
 
         # Solr startup commands
@@ -100,11 +103,11 @@ class SolrBase(object):
         options['stopwords-template']=  options_orig.get('stopwords-template',
                 '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
         options['config-destination'] = options_orig.get(
-                'config-destination', 
+                'config-destination',
                 os.path.join(self.install_dir, 'solr', 'conf'))
 
         options['schema-destination'] = options_orig.get(
-                'schema-destination', 
+                'schema-destination',
                 os.path.join(self.install_dir, 'solr', 'conf'))
 
         try:
@@ -305,7 +308,7 @@ class SolrBase(object):
                 shutil.copy(fname, dst_folder)
             except IOError,e:
                 print e
-    
+
     def create_mc_solr(self, path, cores, solr_var):
         """create a empty solr mc dir"""
         shutil.rmtree(os.path.join(path, 'solr'))
@@ -328,6 +331,10 @@ class SolrSingleRecipe(SolrBase):
 
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'], 'example'), self.install_dir)
+        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'dist'),
+                      os.path.join(self.install_dir, 'dist'))
+        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'contrib'),
+	                  os.path.join(self.install_dir, 'contrib'))
 
         solr_var = self.instanceopts['vardir']
         solr_data = os.path.join(solr_var, 'data')
@@ -423,7 +430,7 @@ class MultiCoreRecipe(SolrBase):
 
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'], 'example'), self.install_dir)
-        
+
         solr_var = self.instanceopts['vardir']
         if self.instanceopts['logdir']:
             solr_log = self.instanceopts['logdir']
@@ -452,7 +459,7 @@ class MultiCoreRecipe(SolrBase):
                 os.makedirs(conf_dir)
 
             self.copy_files(os.path.join(
-                self.instanceopts['solr-location'], 'example', 'solr', 'conf', '*.txt'), 
+                self.instanceopts['solr-location'], 'example', 'solr', 'conf', '*.txt'),
                 conf_dir)
 
             solr_data = os.path.join(solr_var, 'data', core)

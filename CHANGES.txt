@@ -4,6 +4,9 @@ Change History
 3.3 (unreleased)
 ================
 
+- Enable `Tika` data extraction and Solr Cell libraries.
+  [tom_gross]
+
 - Removed the Velocity driven `/browse` request handler. The example config
   we generated didn't match the schema.
   [hannosch]
