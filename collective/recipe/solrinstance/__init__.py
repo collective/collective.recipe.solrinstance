@@ -121,7 +121,7 @@ class SolrBase(object):
         options['defaultSearchField'] = options_orig.get('default-search-field', '').strip()
         options['defaultOperator'] = options_orig.get('default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options_orig.get('additional-solrconfig', '').strip()
-        options['requestParsers-multipartUploadLimitInKB'] = options_orig.get('requestParsers-multipartUploadLimitInKB', '2048').strip()
+        options['requestParsers-multipartUploadLimitInKB'] = options_orig.get('requestParsers-multipartUploadLimitInKB', '102400').strip()
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
 
         options['autoCommitMaxDocs'] = options_orig.get('autoCommitMaxDocs', '')

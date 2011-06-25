@@ -4,6 +4,10 @@ Change History
 3.3 (unreleased)
 ================
 
+- Increase the `requestParsers-multipartUploadLimitInKB` default value from
+  2mb to 100mb to allow the `update/extract` handler to accept large files.
+  [hannosch]
+
 - Increase Jetty's `maxFormContentSize` from 1mb to 100mb to allow indexing
   large files.
   [hannosch]
