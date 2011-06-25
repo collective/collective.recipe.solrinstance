@@ -19,7 +19,7 @@
         <Arg>$options.destination/logging.properties</Arg>
     </Call>
 
-    <!-- Increase the maximum POST size to 1 MB to be able to handle large shard requests -->
+    <!-- Increase the maximum POST size to 100 MB to be able to handle large shard requests -->
     <Call class="java.lang.System" name="setProperty">
       <Arg>org.mortbay.jetty.Request.maxFormContentSize</Arg>
       <Arg>100000000</Arg>
