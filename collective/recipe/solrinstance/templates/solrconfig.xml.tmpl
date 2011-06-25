@@ -63,16 +63,13 @@
 
               <lib dir="./lib" />
     -->
-  <!-- A dir option by itself adds any files found in the directory to
-       the classpath, this is useful for including all jars in a
-       directory.
-    -->
   <lib dir="../contrib/extraction/lib" />
-  <!-- When a regex is specified in addition to a directory, only the
-       files in that directory which completely match the regex
-       (anchored on both ends) will be included.
-    -->
+  <lib dir="../contrib/analysis-extras/lib" />
+  <lib dir="../contrib/analysis-extras/lucene-libs" />
+
   <lib dir="../dist/" regex="apache-solr-cell-\d.*\.jar" />
+  <lib dir="../dist/" regex="apache-solr-core-\d.*\.jar" />
+  <lib dir="../dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
 
   <!-- Data Directory
 

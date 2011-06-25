@@ -4,6 +4,10 @@ Change History
 3.3 (unreleased)
 ================
 
+- Load the `analysis-extras` libraries, so we can use the `ICU`-based filters
+  and tokenizers.
+  [hannosch]
+
 - Removed the clustering request handlers from the default config, as they
   didn't work anyways without us loading the `contrib/clustering` libraries.
   [hannosch]
