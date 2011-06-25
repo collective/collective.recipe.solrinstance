@@ -147,25 +147,15 @@
       </analyzer>
     </fieldType>
 
-    <!-- A text field that uses WordDelimiterFilter to enable splitting and matching of
-        words on case-change, alpha numeric boundaries, and non-alphanumeric chars,
-        so that a query of "wifi" or "wi fi" could match a document containing "Wi-Fi".
-        Synonyms and stopwords are customized by external files, and stemming is enabled.
-        The attribute autoGeneratePhraseQueries="true" (the default) causes words that get split to
-        form phrase queries. For example, WordDelimiterFilter splitting text:pdp-11 will cause the parser
-        to generate text:"pdp 11" rather than (text:PDP OR text:11).
-        NOTE: autoGeneratePhraseQueries="true" tends to not work well for non whitespace delimited languages.
-        -->
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
       <analyzer type="index">
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
         #for $filter in $options.filters.text
         <filter class="$filter.class" $filter.extra/>
         #end for
       </analyzer>
       <analyzer type="query">
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
         #for $filter in $options.filters.text
         <filter class="$filter.class" $filter.extra/>
         #end for
