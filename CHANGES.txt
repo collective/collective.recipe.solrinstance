@@ -4,6 +4,10 @@ Change History
 3.3 (unreleased)
 ================
 
+- Increase Jetty's `maxFormContentSize` from 1mb to 100mb to allow indexing
+  large files.
+  [hannosch]
+
 - Changed the field definition of the `text` type to avoid filters specific to
   the English language and instead use a default filter config that should work
   with most Western languages.
