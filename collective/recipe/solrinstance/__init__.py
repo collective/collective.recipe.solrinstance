@@ -26,7 +26,7 @@ DEFAULT_FILTERS = """
     text solr.ASCIIFoldingFilterFactory
     text solr.LowerCaseFilterFactory
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
-    text solr.RemoveDuplicatesTokenFilterFactory"
+    text solr.RemoveDuplicatesTokenFilterFactory
 """
 ZOPE_CONF = """
 <product-config %(section-name)s>
