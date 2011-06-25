@@ -686,7 +686,7 @@
        of SearchComponents (see below) and supports distributed
        queries across multiple shards
     -->
-  <requestHandler name="standard" class="solr.SearchHandler" default="true">
+  <requestHandler name="standard" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">$options.rows</int>
