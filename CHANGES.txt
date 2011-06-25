@@ -4,8 +4,11 @@ Change History
 3.3 (unreleased)
 ================
 
-- Enable `Tika` data extraction and Solr Cell libraries.
-  [tom_gross]
+- Enable `Tika` data extraction and Solr Cell libraries. Data is extracted into
+  a field called `tika_content` unless specified otherwise in each request via
+  the `fmap.content=` argument. All extracted fields which aren't in the schema
+  are put into dynamic fields prefixed with `tika_`.
+  [tom_gross, hannosch]
 
 - Removed the Velocity driven `/browse` request handler. The example config
   we generated didn't match the schema.
