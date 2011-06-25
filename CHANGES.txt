@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.3 (unreleased)
+3.3 (2011-06-25)
 ================
 
 - Increase the `requestParsers-multipartUploadLimitInKB` default value from
