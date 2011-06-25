@@ -148,14 +148,8 @@
     </fieldType>
 
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
-      <analyzer type="index">
-        <tokenizer class="solr.StandardTokenizerFactory"/>
-        #for $filter in $options.filters.text
-        <filter class="$filter.class" $filter.extra/>
-        #end for
-      </analyzer>
-      <analyzer type="query">
-        <tokenizer class="solr.StandardTokenizerFactory"/>
+      <analyzer>
+        <tokenizer class="solr.ICUTokenizerFactory"/>
         #for $filter in $options.filters.text
         <filter class="$filter.class" $filter.extra/>
         #end for

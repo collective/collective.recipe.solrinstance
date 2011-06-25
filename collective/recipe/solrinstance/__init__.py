@@ -22,11 +22,9 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'default' : '',
                     'keepinzope' : 'true'}
 DEFAULT_FILTERS = """
+    text solr.ICUFoldingFilterFactory
     text solr.TrimFilterFactory
-    text solr.ASCIIFoldingFilterFactory
-    text solr.LowerCaseFilterFactory
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
-    text solr.RemoveDuplicatesTokenFilterFactory
 """
 ZOPE_CONF = """
 <product-config %(section-name)s>

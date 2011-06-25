@@ -10,7 +10,7 @@ Change History
 
 - Changed the field definition of the `text` type to avoid filters specific to
   the English language and instead use a default filter config that should work
-  with most Western languages.
+  with most languages, based on the ICU tokenizer and folding filter.
   [hannosch]
 
 - Load the `analysis-extras` libraries, so we can use the `ICU`-based filters
