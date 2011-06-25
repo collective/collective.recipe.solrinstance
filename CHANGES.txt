@@ -4,6 +4,10 @@ Change History
 3.3 (unreleased)
 ================
 
+- Removed the clustering request handlers from the default config, as they
+  didn't work anyways without us loading the `contrib/clustering` libraries.
+  [hannosch]
+
 - Enable `Tika` data extraction and Solr Cell libraries. Data is extracted into
   a field called `tika_content` unless specified otherwise in each request via
   the `fmap.content=` argument. All extracted fields which aren't in the schema
