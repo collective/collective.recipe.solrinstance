@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.4 (unreleased)
+3.4 (2011-07-09)
 ================
 
 - Update generated config files to match and require Solr 3.3.
