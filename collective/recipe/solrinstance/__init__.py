@@ -23,6 +23,7 @@ INDEX_ATTRIBUTES = {'name' : '',
                     'keepinzope' : 'true'}
 DEFAULT_FILTERS = """
     text solr.ICUFoldingFilterFactory
+    text solr.WordDelimiterFilterFactory splitOnCaseChange="0" splitOnNumerics="0" stemEnglishPossessive="0" preserveOriginal="1"
     text solr.TrimFilterFactory
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
 """

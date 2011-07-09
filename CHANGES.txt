@@ -4,6 +4,9 @@ Change History
 3.4 (unreleased)
 ================
 
+- Add `solr.WordDelimiterFilterFactory` to the standard text field, to split on
+  intra-word delimiters such as `-_:`.
+  [hannosch]
 
 3.3 (2011-06-25)
 ================
