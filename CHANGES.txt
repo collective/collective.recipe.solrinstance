@@ -4,6 +4,9 @@ Change History
 3.4 (unreleased)
 ================
 
+- Update generated config files to match and require Solr 3.3.
+  [hannosch]
+
 - Add `solr.WordDelimiterFilterFactory` to the standard text field, to split on
   intra-word delimiters such as `-_:`.
   [hannosch]
