@@ -142,6 +142,18 @@ useColdSearcher
     If a request comes in without a warm searcher available, immediately use
     one of the warming searchers to handle the request. Defaults to ``false``.
 
+mergeFactor
+    Specify the index defaults merge factor. This value determines how many
+    segments of equal size exist before being merged to a larger segment. With
+    the default of `10`, nine segments of 1000 documents will be created before
+    they are merged into one containing 10000 documents, which in turn will be
+    merged into one containing 100000 documents once that size is reached.
+
+ramBufferSizeMB
+  Sets the amount of RAM that may be used by Lucene indexing for buffering
+  added documents and deletions before they are flushed to the directory.
+  Defaults to 16mb.
+
 autoCommitMaxDocs
     Let's you enable auto commit handling and force a commit after at least
     the number of documents were added. This is disabled by default.

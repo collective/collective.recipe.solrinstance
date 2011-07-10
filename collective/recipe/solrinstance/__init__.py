@@ -125,6 +125,8 @@ class SolrBase(object):
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get('requestParsers-multipartUploadLimitInKB', '102400').strip()
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
 
+        options['mergeFactor'] = options_orig.get('mergeFactor', '10')
+        options['ramBufferSizeMB'] = options_orig.get('ramBufferSizeMB', '16')
         options['autoCommitMaxDocs'] = options_orig.get('autoCommitMaxDocs', '')
         options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime', '')
         return options
@@ -368,6 +370,8 @@ class SolrSingleRecipe(SolrBase):
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=self.solropts['requestParsers-multipartUploadLimitInKB'],
             autoCommit=self.parseAutoCommit(self.solropts),
+            mergeFactor=self.solropts['mergeFactor'],
+            ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
             )
 
         self.generate_solr_schema(
@@ -477,6 +481,8 @@ class MultiCoreRecipe(SolrBase):
                 maxWarmingSearchers=options_core.get('maxWarmingSearchers', '4'),
                 requestParsers_multipartUploadLimitInKB=options_core['requestParsers-multipartUploadLimitInKB'],
                 autoCommit=self.parseAutoCommit(options_core),
+                mergeFactor=options_core['mergeFactor'],
+                ramBufferSizeMB=options_core['ramBufferSizeMB'],
                 )
 
             self.generate_stopwords(

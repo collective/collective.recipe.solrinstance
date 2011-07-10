@@ -4,6 +4,8 @@ Change History
 3.5 (unreleased)
 ================
 
+- Added new `mergeFactor`, `ramBufferSizeMB` options.
+  [hannosch]
 
 3.4 (2011-07-09)
 ================

@@ -101,18 +101,6 @@
     -->
   <indexDefaults>
 
-    <useCompoundFile>false</useCompoundFile>
-
-    <mergeFactor>10</mergeFactor>
-    <!-- Sets the amount of RAM that may be used by Lucene indexing
-         for buffering added documents and deletions before they are
-         flushed to the Directory.  -->
-    <ramBufferSizeMB>32</ramBufferSizeMB>
-    <!-- If both ramBufferSizeMB and maxBufferedDocs is set, then
-         Lucene will flush based on whichever limit is hit first.
-      -->
-    <!-- <maxBufferedDocs>1000</maxBufferedDocs> -->
-
     <maxFieldLength>1000000000</maxFieldLength>
     <writeLockTimeout>1000</writeLockTimeout>
     <commitLockTimeout>10000</commitLockTimeout>
@@ -182,8 +170,9 @@
   <mainIndex>
 
     <useCompoundFile>false</useCompoundFile>
-    <ramBufferSizeMB>32</ramBufferSizeMB>
-    <mergeFactor>10</mergeFactor>
+
+    <mergeFactor>$options.mergeFactor</mergeFactor>
+    <ramBufferSizeMB>$options.ramBufferSizeMB</ramBufferSizeMB>
 
     <!-- Unlock On Startup
 
