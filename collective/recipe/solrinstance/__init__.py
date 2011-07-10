@@ -127,6 +127,7 @@ class SolrBase(object):
 
         options['mergeFactor'] = options_orig.get('mergeFactor', '10')
         options['ramBufferSizeMB'] = options_orig.get('ramBufferSizeMB', '16')
+        options['unlockOnStartup'] = options_orig.get('unlockOnStartup', 'true')
         options['autoCommitMaxDocs'] = options_orig.get('autoCommitMaxDocs', '')
         options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime', '')
         return options
@@ -372,6 +373,7 @@ class SolrSingleRecipe(SolrBase):
             autoCommit=self.parseAutoCommit(self.solropts),
             mergeFactor=self.solropts['mergeFactor'],
             ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
+            unlockOnStartup=self.solropts['unlockOnStartup'],
             )
 
         self.generate_solr_schema(
@@ -483,6 +485,7 @@ class MultiCoreRecipe(SolrBase):
                 autoCommit=self.parseAutoCommit(options_core),
                 mergeFactor=options_core['mergeFactor'],
                 ramBufferSizeMB=options_core['ramBufferSizeMB'],
+                unlockOnStartup=options_core['unlockOnStartup'],
                 )
 
             self.generate_stopwords(

@@ -7,7 +7,7 @@ Change History
 - Clean up solrconfig template and remove an example `firstSearcher` query.
   [hannosch]
 
-- Added new `mergeFactor`, `ramBufferSizeMB` options.
+- Added new `mergeFactor`, `ramBufferSizeMB`, `unlockOnStartup` options.
   [hannosch]
 
 3.4 (2011-07-09)

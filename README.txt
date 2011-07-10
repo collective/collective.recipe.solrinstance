@@ -154,6 +154,11 @@ ramBufferSizeMB
   added documents and deletions before they are flushed to the directory.
   Defaults to 16mb.
 
+unlockOnStartup
+  If `true` (the recipes default), unlock any held write or commit locks on
+  startup. This defeats the locking mechanism that allows multiple processes to
+  safely access a Lucene index.
+
 autoCommitMaxDocs
     Let's you enable auto commit handling and force a commit after at least
     the number of documents were added. This is disabled by default.
