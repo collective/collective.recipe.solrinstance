@@ -4,6 +4,9 @@ Change History
 3.5 (unreleased)
 ================
 
+- Removed the example `tvrh`, `terms` and `elevate` request handlers.
+  [hannosch]
+
 - Removed the example `spell` request handler and enabled spell checking based
   on the `default` field for the `search` request handler.
   [hannosch]
