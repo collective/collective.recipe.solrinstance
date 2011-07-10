@@ -4,6 +4,9 @@ Change History
 3.5 (unreleased)
 ================
 
+- Clean up solrconfig template and remove an example `firstSearcher` query.
+  [hannosch]
+
 - Added new `mergeFactor`, `ramBufferSizeMB` options.
   [hannosch]
 
