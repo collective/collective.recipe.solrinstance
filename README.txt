@@ -15,7 +15,7 @@ SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.s
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-Note: This version of the recipe only supports Solr 3.2. Please use a release
+Note: This version of the recipe only supports Solr 3.3. Please use a release
 from the 2.x series if you are using Solr 1.4.
 
 Supported options
