@@ -159,6 +159,10 @@ unlockOnStartup
   startup. This defeats the locking mechanism that allows multiple processes to
   safely access a Lucene index.
 
+spellcheckField
+  Configures the field used as a source for the spellcheck search component.
+  Defaults to `default`.
+
 autoCommitMaxDocs
     Let's you enable auto commit handling and force a commit after at least
     the number of documents were added. This is disabled by default.

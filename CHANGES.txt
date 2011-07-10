@@ -4,6 +4,10 @@ Change History
 3.5 (unreleased)
 ================
 
+- Added new `spellcheckField` option, to configure the source field for the
+  spellcheck search component.
+  [hannosch]
+
 - Removed the example `tvrh`, `terms` and `elevate` request handlers.
   [hannosch]
 
