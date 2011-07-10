@@ -237,7 +237,15 @@
      <lst name="defaults">
        <str name="echoParams">explicit</str>
        <int name="rows">$options.rows</int>
+       <str name="spellcheck.onlyMorePopular">false</str>
+       <str name="spellcheck.extendedResults">false</str>
+       <str name="spellcheck.count">1</str>
      </lst>
+
+    <arr name="last-components">
+      <str>spellcheck</str>
+    </arr>
+
   </requestHandler>
 
   <!-- XML Update Request Handler.
@@ -384,36 +392,13 @@
 
     <lst name="spellchecker">
       <str name="name">default</str>
-      <str name="field">name</str>
+      <str name="field">default</str>
       <str name="spellcheckIndexDir">spellchecker</str>
       <float name="thresholdTokenFrequency">.001</float>
+      <str name="buildOnOptimize">true</str>
     </lst>
 
   </searchComponent>
-
-  <!-- A request handler for demonstrating the spellcheck component.
-
-       NOTE: This is purely as an example.  The whole purpose of the
-       SpellCheckComponent is to hook it into the request handler that
-       handles your normal user queries so that a separate request is
-       not needed to get suggestions.
-
-       IN OTHER WORDS, THERE IS REALLY GOOD CHANCE THE SETUP BELOW IS
-       NOT WHAT YOU WANT FOR YOUR PRODUCTION SYSTEM!
-
-       See http://wiki.apache.org/solr/SpellCheckComponent for details
-       on the request parameters.
-    -->
-  <requestHandler name="/spell" class="solr.SearchHandler" startup="lazy">
-    <lst name="defaults">
-      <str name="spellcheck.onlyMorePopular">false</str>
-      <str name="spellcheck.extendedResults">false</str>
-      <str name="spellcheck.count">1</str>
-    </lst>
-    <arr name="last-components">
-      <str>spellcheck</str>
-    </arr>
-  </requestHandler>
 
   <!-- Term Vector Component
 

@@ -4,6 +4,10 @@ Change History
 3.5 (unreleased)
 ================
 
+- Removed the example `spell` request handler and enabled spell checking based
+  on the `default` field for the `search` request handler.
+  [hannosch]
+
 - Clean up solrconfig template and remove an example `firstSearcher` query.
   [hannosch]
 
