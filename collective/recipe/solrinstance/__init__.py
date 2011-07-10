@@ -38,7 +38,6 @@ TEMPLATE_DIR = os.path.dirname(__file__)
 NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
     "default-search-field", "default-operator", "additional-solrconfig",
     "autoCommitMaxDocs", "autoCommitMaxTime" ,"requestParsers-multipartUploadLimitInKB",
-    "cacheSize",
     ])
 
 class SolrBase(object):
@@ -131,6 +130,16 @@ class SolrBase(object):
         options['spellcheckField'] = options_orig.get('spellcheckField', 'default')
         options['autoCommitMaxDocs'] = options_orig.get('autoCommitMaxDocs', '')
         options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime', '')
+
+        options['filterCacheSize'] = options_orig.get('filterCacheSize', '16384')
+        options['filterCacheInitialSize'] = options_orig.get('filterCacheInitialSize', '4096')
+        options['filterCacheAutowarmCount'] = options_orig.get('filterCacheAutowarmCount', '4096')
+        options['queryResultCacheSize'] = options_orig.get('queryResultCacheSize', '128')
+        options['queryResultCacheInitialSize'] = options_orig.get('queryResultCacheInitialSize', '64')
+        options['queryResultCacheAutowarmCount'] = options_orig.get('queryResultCacheAutowarmCount', '32')
+        options['documentCacheSize'] = options_orig.get('documentCacheSize', '512')
+        options['documentCacheInitialSize'] = options_orig.get('documentCacheInitialSize', '512')
+
         return options
 
     def parse_filter(self, options):
@@ -367,7 +376,6 @@ class SolrSingleRecipe(SolrBase):
             destination=self.solropts['config-destination'],
             rows=self.solropts['max-num-results'],
             additional_solrconfig=self.solropts['additional-solrconfig'],
-            cacheSize=self.solropts.get('cacheSize', '512'),
             useColdSearcher=self.solropts.get('useColdSearcher', 'false'),
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=self.solropts['requestParsers-multipartUploadLimitInKB'],
@@ -376,6 +384,14 @@ class SolrSingleRecipe(SolrBase):
             ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
             unlockOnStartup=self.solropts['unlockOnStartup'],
             spellcheckField=self.solropts['spellcheckField'],
+            filterCacheSize=self.solropts['filterCacheSize'],
+            filterCacheInitialSize=self.solropts['filterCacheInitialSize'],
+            filterCacheAutowarmCount=self.solropts['filterCacheAutowarmCount'],
+            queryResultCacheSize=self.solropts['queryResultCacheSize'],
+            queryResultCacheInitialSize=self.solropts['queryResultCacheInitialSize'],
+            queryResultCacheAutowarmCount=self.solropts['queryResultCacheAutowarmCount'],
+            documentCacheSize=self.solropts['documentCacheSize'],
+            documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
             )
 
         self.generate_solr_schema(
@@ -480,7 +496,6 @@ class MultiCoreRecipe(SolrBase):
                 destination=conf_dir,
                 rows=options_core['max-num-results'],
                 additional_solrconfig=options_core['additional-solrconfig'],
-                cacheSize=options_core.get('cacheSize', '512'),
                 useColdSearcher=options_core.get('useColdSearcher', 'false'),
                 maxWarmingSearchers=options_core.get('maxWarmingSearchers', '4'),
                 requestParsers_multipartUploadLimitInKB=options_core['requestParsers-multipartUploadLimitInKB'],
@@ -489,6 +504,14 @@ class MultiCoreRecipe(SolrBase):
                 ramBufferSizeMB=options_core['ramBufferSizeMB'],
                 unlockOnStartup=options_core['unlockOnStartup'],
                 spellcheckField=options_core['spellcheckField'],
+                filterCacheSize=options_core['filterCacheSize'],
+                filterCacheInitialSize=options_core['filterCacheInitialSize'],
+                filterCacheAutowarmCount=options_core['filterCacheAutowarmCount'],
+                queryResultCacheSize=options_core['queryResultCacheSize'],
+                queryResultCacheInitialSize=options_core['queryResultCacheInitialSize'],
+                queryResultCacheAutowarmCount=options_core['queryResultCacheAutowarmCount'],
+                documentCacheSize=options_core['documentCacheSize'],
+                documentCacheInitialSize=options_core['documentCacheInitialSize'],
                 )
 
             self.generate_stopwords(

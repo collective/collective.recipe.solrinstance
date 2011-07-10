@@ -4,6 +4,10 @@ Change History
 3.5 (unreleased)
 ================
 
+- Removed the `cacheSize` option in favor of 8 specific options to configure
+  every aspect of the query caches on their own.
+  [hannosch]
+
 - Added new `spellcheckField` option, to configure the source field for the
   spellcheck search component.
   [hannosch]

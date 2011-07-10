@@ -130,10 +130,6 @@ additional-solrconfig
     Optional additional configuration to be included inside the
     solrconfig.xml. For instance, ``<requestHandler />`` directives.
 
-cacheSize
-    Number of cache entries for the various caches (filterCache,
-    fieldValueCache, queryResultCache and documentCache). Defaults to ``512``.
-
 maxWarmingSearchers
     Maximum number of searchers that may be warming in the background.
     Defaults to 4. For read-only slaves recommend to set to 1 or 2.
@@ -211,6 +207,24 @@ cores
     Optional. If ``collective.recipe.solrinstance:mc`` is specified for every 
     section in ``cores`` a multicore solr instance is created with it's own 
     configuration.
+
+Cache options
+*************
+
+Fine grained control of query caching as described at
+http://wiki.apache.org/solr/SolrCaching.
+
+The supported options are:
+
+- filterCacheSize
+- filterCacheInitialSize
+- filterCacheAutowarmCount
+- queryResultCacheSize
+- queryResultCacheInitialSize
+- queryResultCacheAutowarmCount
+- documentCacheSize
+- documentCacheInitialSize
+
 
 Examples single solr
 ====================

@@ -124,19 +124,19 @@
                and old cache.
       -->
     <filterCache class="solr.FastLRUCache"
-                 size="$options.cacheSize"
-                 initialSize="$options.cacheSize"
-                 autowarmCount="128"/>
+                 size="$options.filterCacheSize"
+                 initialSize="$options.filterCacheInitialSize"
+                 autowarmCount="$options.filterCacheAutowarmCount"/>
 
     <!-- Query Result Cache
 
          Caches results of searches - ordered lists of document ids
          (DocList) based on a query, a sort, and the range of documents requested.
       -->
-    <queryResultCache class="solr.LRUCache"
-                     size="$options.cacheSize"
-                     initialSize="$options.cacheSize"
-                     autowarmCount="32"/>
+    <queryResultCache class="solr.FastLRUCache"
+                     size="$options.queryResultCacheSize"
+                     initialSize="$options.queryResultCacheInitialSize"
+                     autowarmCount="$options.queryResultCacheAutowarmCount"/>
 
     <!-- Document Cache
 
@@ -144,10 +144,9 @@
          document).  Since Lucene internal document ids are transient,
          this cache will not be autowarmed.
       -->
-    <documentCache class="solr.LRUCache"
-                   size="$options.cacheSize"
-                   initialSize="$options.cacheSize"
-                   autowarmCount="0"/>
+    <documentCache class="solr.FastLRUCache"
+                   size="$options.documentCacheSize"
+                   initialSize="$options.documentCacheInitialSize"/>
 
     <enableLazyFieldLoading>true</enableLazyFieldLoading>
 
@@ -160,12 +159,12 @@
         then documents 0 through 49 will be collected and cached.  Any further
         requests in that range can be satisfied via the cache.
      -->
-   <queryResultWindowSize>30</queryResultWindowSize>
+   <queryResultWindowSize>10</queryResultWindowSize>
 
    <!-- Maximum number of documents to cache for any entry in the
         queryResultCache.
      -->
-   <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+   <queryResultMaxDocsCached>100</queryResultMaxDocsCached>
 
     <!-- Use Cold Searcher
 
