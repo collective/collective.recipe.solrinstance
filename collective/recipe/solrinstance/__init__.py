@@ -8,45 +8,55 @@ import glob
 
 INDEX_TYPES = set(['text', 'text_ws', 'ignored', 'date', 'string',
                    'boolean', 'integer', 'long', 'float', 'double'])
-INDEX_ATTRIBUTES = {'name' : '',
-                    'type' : '',
-                    'copyfield' : [],
-                    'sortable' : 'false',
-                    'auto' : 'false',
-                    'omitnorms' : 'false',
-                    'multivalued' : 'false',
-                    'required' : 'false',
-                    'indexed' : 'true',
-                    'stored' : 'true',
-                    'extras' : '',
-                    'default' : '',
-                    'keepinzope' : 'true'}
+
+INDEX_ATTRIBUTES = {'name': '',
+                    'type': '',
+                    'copyfield': [],
+                    'sortable': 'false',
+                    'auto': 'false',
+                    'omitnorms': 'false',
+                    'multivalued': 'false',
+                    'required': 'false',
+                    'indexed': 'true',
+                    'stored': 'true',
+                    'extras': '',
+                    'default': '',
+                    'keepinzope': 'true'}
+
 DEFAULT_FILTERS = """
     text solr.ICUFoldingFilterFactory
     text solr.WordDelimiterFilterFactory splitOnCaseChange="0" splitOnNumerics="0" stemEnglishPossessive="0" preserveOriginal="1"
     text solr.TrimFilterFactory
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
 """
+
 ZOPE_CONF = """
 <product-config %(section-name)s>
     address %(host)s:%(port)s
     basepath %(basepath)s
 </product-config>
 """
+
 TRUE_VALUES = set(['yes', 'true', '1', 'on'])
 TEMPLATE_DIR = os.path.dirname(__file__)
 NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
-    "default-search-field", "default-operator", "additional-solrconfig",
-    "autoCommitMaxDocs", "autoCommitMaxTime" ,"requestParsers-multipartUploadLimitInKB",
-    ])
+                        "default-search-field", "default-operator",
+                        "additional-solrconfig",
+                        "autoCommitMaxDocs", "autoCommitMaxTime",
+                        "requestParsers-multipartUploadLimitInKB"])
+
 
 class SolrBase(object):
     """This class hold every base functions """
 
     def __init__(self, buildout, name, options_orig):
-        self.name, self.options_orig, self.buildout = name, options_orig, buildout
-        self.install_dir = os.path.join(buildout['buildout']['parts-directory'], name)
-        self.instanceopts = self.initServerInstanceOpts(buildout, name, options_orig)
+        self.name = name
+        self.options_orig = options_orig
+        self.buildout = buildout
+        self.install_dir = os.path.join(
+            buildout['buildout']['parts-directory'], name)
+        self.instanceopts = self.initServerInstanceOpts(buildout, name,
+                                                        options_orig)
 
         # let other recipies reference the destination path
         options_orig['location'] = self.install_dir
@@ -59,7 +69,8 @@ class SolrBase(object):
         options['host'] = options_orig.get('host', 'localhost').strip()
         options['port'] = options_orig.get('port', '8983').strip()
         options['basepath'] = options_orig.get('basepath', '/solr').strip()
-        options['solr-location'] = os.path.abspath(options_orig.get('solr-location', '').strip())
+        options['solr-location'] = os.path.abspath(
+            options_orig.get('solr-location', '').strip())
         options['jetty-template'] = options_orig.get("jetty-template",
                 '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR)
         options['logging-template'] = options_orig.get("logging-template",
@@ -72,13 +83,13 @@ class SolrBase(object):
                 'vardir',
                 os.path.join(buildout['buildout']['directory'], 'var', 'solr'))
 
-        options['logdir'] = options_orig.get(
-                'logdir','')
+        options['logdir'] = options_orig.get('logdir', '')
 
         options['script'] = options_orig.get('script', 'solr-instance').strip()
 
         #XXX this is ugly and should be removed
-        options['section-name'] = options_orig.get('section-name', 'solr').strip()
+        options['section-name'] = options_orig.get('section-name',
+                                                   'solr').strip()
         options_orig['zope-conf'] = options_orig.get('zope-conf',
                 ZOPE_CONF % options).strip()
 
@@ -93,13 +104,15 @@ class SolrBase(object):
         options['name'] = name
         options['index'] = options_orig.get('index')
         options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
-        options['config-template']=  options_orig.get('config-template',
-                '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR)
+        options['config-template'] = options_orig.get(
+            'config-template',
+            '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR)
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
                 '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR)
-        options['stopwords-template']=  options_orig.get('stopwords-template',
-                '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
+        options['stopwords-template'] = options_orig.get(
+            'stopwords-template',
+            '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
         options['config-destination'] = options_orig.get(
                 'config-destination',
                 os.path.join(self.install_dir, 'solr', 'conf'))
@@ -109,36 +122,53 @@ class SolrBase(object):
                 os.path.join(self.install_dir, 'solr', 'conf'))
 
         try:
-            num_results = int(options_orig.get('max-num-results', '500').strip())
+            num_results = int(options_orig.get('max-num-results',
+                                               '500').strip())
             if num_results < 1:
                 raise ValueError
             options['max-num-results'] = str(num_results)
         except (ValueError, TypeError):
-            raise zc.buildout.UserError(
-                'Please use a positive integer for the number of default results')
+            raise zc.buildout.UserError('Please use a positive integer '
+                                        'for the number of default results')
 
         options['uniqueKey'] = options_orig.get('unique-key', 'uid').strip()
-        options['defaultSearchField'] = options_orig.get('default-search-field', '').strip()
-        options['defaultOperator'] = options_orig.get('default-operator', 'OR').strip().upper()
-        options['additional-solrconfig'] = options_orig.get('additional-solrconfig', '').strip()
-        options['requestParsers-multipartUploadLimitInKB'] = options_orig.get('requestParsers-multipartUploadLimitInKB', '102400').strip()
+        options['defaultSearchField'] = options_orig.get(
+            'default-search-field', '').strip()
+        options['defaultOperator'] = options_orig.get(
+            'default-operator', 'OR').strip().upper()
+        options['additional-solrconfig'] = options_orig.get(
+            'additional-solrconfig', '').strip()
+        options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
+            'requestParsers-multipartUploadLimitInKB', '102400').strip()
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
 
         options['mergeFactor'] = options_orig.get('mergeFactor', '10')
         options['ramBufferSizeMB'] = options_orig.get('ramBufferSizeMB', '16')
-        options['unlockOnStartup'] = options_orig.get('unlockOnStartup', 'true')
-        options['spellcheckField'] = options_orig.get('spellcheckField', 'default')
-        options['autoCommitMaxDocs'] = options_orig.get('autoCommitMaxDocs', '')
-        options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime', '')
+        options['unlockOnStartup'] = options_orig.get('unlockOnStartup',
+                                                      'true')
+        options['spellcheckField'] = options_orig.get('spellcheckField',
+                                                      'default')
+        options['autoCommitMaxDocs'] = options_orig.get('autoCommitMaxDocs',
+                                                        '')
+        options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime',
+                                                        '')
 
-        options['filterCacheSize'] = options_orig.get('filterCacheSize', '16384')
-        options['filterCacheInitialSize'] = options_orig.get('filterCacheInitialSize', '4096')
-        options['filterCacheAutowarmCount'] = options_orig.get('filterCacheAutowarmCount', '4096')
-        options['queryResultCacheSize'] = options_orig.get('queryResultCacheSize', '128')
-        options['queryResultCacheInitialSize'] = options_orig.get('queryResultCacheInitialSize', '64')
-        options['queryResultCacheAutowarmCount'] = options_orig.get('queryResultCacheAutowarmCount', '32')
-        options['documentCacheSize'] = options_orig.get('documentCacheSize', '512')
-        options['documentCacheInitialSize'] = options_orig.get('documentCacheInitialSize', '512')
+        options['filterCacheSize'] = options_orig.get('filterCacheSize',
+                                                      '16384')
+        options['filterCacheInitialSize'] = options_orig.get(
+            'filterCacheInitialSize', '4096')
+        options['filterCacheAutowarmCount'] = options_orig.get(
+            'filterCacheAutowarmCount', '4096')
+        options['queryResultCacheSize'] = options_orig.get(
+            'queryResultCacheSize', '128')
+        options['queryResultCacheInitialSize'] = options_orig.get(
+            'queryResultCacheInitialSize', '64')
+        options['queryResultCacheAutowarmCount'] = options_orig.get(
+            'queryResultCacheAutowarmCount', '32')
+        options['documentCacheSize'] = options_orig.get(
+            'documentCacheSize', '512')
+        options['documentCacheInitialSize'] = options_orig.get(
+            'documentCacheInitialSize', '512')
 
         return options
 
@@ -169,7 +199,7 @@ class SolrBase(object):
                 if len(params) == 0:
                     raise zc.buildout.UserError(
                         'Invalid index definition: %s' % line)
-                params[len(params)-1] += ' ' + each
+                params[len(params) - 1] += ' ' + each
             else:
                 params.append(each)
         return params
@@ -218,7 +248,8 @@ class SolrBase(object):
 
             if entry['name'] in names:
                 raise zc.buildout.UserError(
-                    'Duplicate name error: "%s" already defined.' % entry['name'])
+                    'Duplicate name error: "%s" already defined.' %
+                    entry['name'])
             names.append(entry['name'])
 
             for key in INDEX_ATTRIBUTES:
@@ -242,14 +273,19 @@ class SolrBase(object):
 
         unique = options['uniqueKey']
         if unique and not unique in names:
-            raise zc.buildout.UserError('Unique key without matching index: %s' % unique)
-        if unique and not indeces[names.index(unique)].get('required', None) == 'true'\
-                and indeces[names.index(unique)].get('default', "") == "":
-            raise zc.buildout.UserError('Unique key needs to declared "required"=true or "default"=NEW: %s' % unique)
+            raise zc.buildout.UserError('Unique key without matching '
+                                        'index: %s' % unique)
+        if (unique and not
+            indeces[names.index(unique)].get('required', None) == 'true' and
+            indeces[names.index(unique)].get('default', "") == ""):
+            raise zc.buildout.UserError('Unique key needs to declared '
+                                        '"required"=true or "default"=NEW: '
+                                        '%s' % unique)
 
         default = options['defaultSearchField']
         if default and not default in names:
-            raise zc.buildout.UserError('Default search field without matching index: %s' % default)
+            raise zc.buildout.UserError('Default search field without '
+                                        'matching index: %s' % default)
 
         return indeces
 
@@ -318,7 +354,7 @@ class SolrBase(object):
         for fname in glob.iglob(src_glob):
             try:
                 shutil.copy(fname, dst_folder)
-            except IOError,e:
+            except IOError, e:
                 print e
 
     def create_mc_solr(self, path, cores, solr_var):
@@ -342,11 +378,13 @@ class SolrSingleRecipe(SolrBase):
             shutil.rmtree(self.install_dir)
 
         # Copy the instance files
-        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'example'), self.install_dir)
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
+                                   'example'), self.install_dir)
         self.copysolr(os.path.join(self.instanceopts['solr-location'], 'dist'),
                       os.path.join(self.install_dir, 'dist'))
-        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'contrib'),
-	                  os.path.join(self.install_dir, 'contrib'))
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
+                                   'contrib'),
+                      os.path.join(self.install_dir, 'contrib'))
 
         solr_var = self.instanceopts['vardir']
         solr_data = os.path.join(solr_var, 'data')
@@ -378,7 +416,8 @@ class SolrSingleRecipe(SolrBase):
             additional_solrconfig=self.solropts['additional-solrconfig'],
             useColdSearcher=self.solropts.get('useColdSearcher', 'false'),
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
-            requestParsers_multipartUploadLimitInKB=self.solropts['requestParsers-multipartUploadLimitInKB'],
+            requestParsers_multipartUploadLimitInKB=self.solropts[
+                'requestParsers-multipartUploadLimitInKB'],
             autoCommit=self.parseAutoCommit(self.solropts),
             mergeFactor=self.solropts['mergeFactor'],
             ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
@@ -388,8 +427,10 @@ class SolrSingleRecipe(SolrBase):
             filterCacheInitialSize=self.solropts['filterCacheInitialSize'],
             filterCacheAutowarmCount=self.solropts['filterCacheAutowarmCount'],
             queryResultCacheSize=self.solropts['queryResultCacheSize'],
-            queryResultCacheInitialSize=self.solropts['queryResultCacheInitialSize'],
-            queryResultCacheAutowarmCount=self.solropts['queryResultCacheAutowarmCount'],
+            queryResultCacheInitialSize=self.solropts[
+                'queryResultCacheInitialSize'],
+            queryResultCacheAutowarmCount=self.solropts[
+                'queryResultCacheAutowarmCount'],
             documentCacheSize=self.solropts['documentCacheSize'],
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
             )
@@ -437,10 +478,12 @@ class MultiCoreRecipe(SolrBase):
             self.cores = [x for x in options["cores"].split(" ") if len(x) > 0]
         except:
             raise zc.buildout.UserError(
-                    'Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`')
+                    'Attribute `cores` not correct defined. Define as '
+                    'withespace seperated list `cores = X1 X2 X3`')
         if not self.cores:
             raise zc.buildout.UserError(
-                    'Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`')
+                    'Attribute `cores` not correct defined. Define as '
+                    'withespace seperated list `cores = X1 X2 X3`')
         not_allowed_attr = set(self.options_orig.keys()) & NOT_ALLOWED_ATTR
 
         if len(not_allowed_attr) != 0:
@@ -455,7 +498,8 @@ class MultiCoreRecipe(SolrBase):
             shutil.rmtree(self.install_dir)
 
         # Copy the instance files
-        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'example'), self.install_dir)
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
+                                   'example'), self.install_dir)
 
         solr_var = self.instanceopts['vardir']
         if self.instanceopts['logdir']:
@@ -478,15 +522,16 @@ class MultiCoreRecipe(SolrBase):
         #generate defined cores
         for core in self.cores:
             options_core = self.buildout[core]
-            options_core = self.initSolrOpts(self.buildout, core, self.buildout[core])
+            options_core = self.initSolrOpts(self.buildout, core,
+                                             self.buildout[core])
             conf_dir = os.path.join(solr_dir, core, "conf")
 
             if not os.path.exists(conf_dir):
                 os.makedirs(conf_dir)
 
-            self.copy_files(os.path.join(
-                self.instanceopts['solr-location'], 'example', 'solr', 'conf', '*.txt'),
-                conf_dir)
+            self.copy_files(os.path.join(self.instanceopts['solr-location'],
+                                         'example', 'solr', 'conf', '*.txt'),
+                            conf_dir)
 
             solr_data = os.path.join(solr_var, 'data', core)
             if not os.path.exists(solr_data):
@@ -500,8 +545,10 @@ class MultiCoreRecipe(SolrBase):
                 rows=options_core['max-num-results'],
                 additional_solrconfig=options_core['additional-solrconfig'],
                 useColdSearcher=options_core.get('useColdSearcher', 'false'),
-                maxWarmingSearchers=options_core.get('maxWarmingSearchers', '4'),
-                requestParsers_multipartUploadLimitInKB=options_core['requestParsers-multipartUploadLimitInKB'],
+                maxWarmingSearchers=options_core.get('maxWarmingSearchers',
+                                                     '4'),
+                requestParsers_multipartUploadLimitInKB=options_core[
+                    'requestParsers-multipartUploadLimitInKB'],
                 autoCommit=self.parseAutoCommit(options_core),
                 mergeFactor=options_core['mergeFactor'],
                 ramBufferSizeMB=options_core['ramBufferSizeMB'],
@@ -509,12 +556,16 @@ class MultiCoreRecipe(SolrBase):
                 spellcheckField=options_core['spellcheckField'],
                 filterCacheSize=options_core['filterCacheSize'],
                 filterCacheInitialSize=options_core['filterCacheInitialSize'],
-                filterCacheAutowarmCount=options_core['filterCacheAutowarmCount'],
+                filterCacheAutowarmCount=options_core[
+                    'filterCacheAutowarmCount'],
                 queryResultCacheSize=options_core['queryResultCacheSize'],
-                queryResultCacheInitialSize=options_core['queryResultCacheInitialSize'],
-                queryResultCacheAutowarmCount=options_core['queryResultCacheAutowarmCount'],
+                queryResultCacheInitialSize=options_core[
+                    'queryResultCacheInitialSize'],
+                queryResultCacheAutowarmCount=options_core[
+                    'queryResultCacheAutowarmCount'],
                 documentCacheSize=options_core['documentCacheSize'],
-                documentCacheInitialSize=options_core['documentCacheInitialSize'],
+                documentCacheInitialSize=options_core[
+                    'documentCacheInitialSize'],
                 )
 
             self.generate_stopwords(
