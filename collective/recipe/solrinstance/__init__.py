@@ -413,6 +413,9 @@ class SolrSingleRecipe(SolrBase):
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.install_dir,
+            updateurl='http://%s:%s/solr/update' % (
+                self.instanceopts['host'],
+                self.instanceopts['port']),
             startcmd=self.parse_java_opts(self.instanceopts))
 
         # returns installed files
@@ -547,6 +550,9 @@ class MultiCoreRecipe(SolrBase):
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.install_dir,
+            updateurl='http://%s:%s/solr/update' % (
+                self.instanceopts['host'],
+                self.instanceopts['port']),
             startcmd=self.parse_java_opts(self.instanceopts))
 
         # returns installed files

@@ -32,6 +32,7 @@ PID_FILE = r'$options.pidfile'
 SOLR_DIR = r'$options.solrdir'
 SOLR_LOG = r'$options.logfile'
 START_CMD = $options.startcmd
+UPDATE_URL = r'$options.updateurl'
 
 def start(daemonize=True):
     logfp = None
@@ -71,7 +72,9 @@ def stop():
 def purge():
     if status() > 0:
         postdir = os.path.join(SOLR_DIR, 'exampledocs')
-        call(['java', '-Ddata=args' ,'-jar', 'post.jar', '<delete><query>*:*</query></delete>'], cwd=postdir)
+        call(['java', '-Ddata=args' ,'-Durl=%s' % UPDATE_URL, 
+              '-jar', 'post.jar', '<delete><query>*:*</query></delete>'], 
+             cwd=postdir)
     else:
         print "Solr not running. Index can't be purged."
 

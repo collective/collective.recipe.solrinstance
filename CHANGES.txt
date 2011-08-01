@@ -4,6 +4,8 @@ Change History
 3.6 (unreleased)
 ================
 
+- Fix `solr-instance purge` to work with hosts/ports other than localhost:8983
+  [csenger]
 
 3.5 (2011-07-10)
 ================

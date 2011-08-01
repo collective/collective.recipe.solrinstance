@@ -65,6 +65,7 @@ Check if the run script is here and the template substitution worked:
     SOLR_DIR = r'.../parts/solr'
     ...
     START_CMD = ['java', '-jar', 'start.jar']
+    UPDATE_URL = r'http://127.0.0.1:1234/solr/update'
     ...
 
 Also check that the XML files are where we expect them to be:
