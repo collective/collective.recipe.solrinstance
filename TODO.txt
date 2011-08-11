@@ -3,7 +3,3 @@ TODO
 [] fix config-destination in multicore recipe 
 [] allow every name for type in filter
 [] add dynamic fields as attribute to recipe
-[x] add mapping-ISOLatin1Accent.txt, stopwords.txt, protwords.txt, 
-synonyms.txt, spellings.txt to conf folder
-[x] fix admin path
-
