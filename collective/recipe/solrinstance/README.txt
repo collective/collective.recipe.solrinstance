@@ -478,6 +478,42 @@ Additional solrconfig should also be allowed:
     </foo>
     ...
 
+Sometimes it is necessary to include extra libraries (e.g. DIH-handler,
+solr-cell, ...). You can do this with the `extralibs`-option.
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... unique-key = Foo
+    ... index =
+    ...     name:Foo type:text required:true
+    ... extralibs =
+    ...      /foo/bar:.*\.jarx
+    ...      /my/lava/libs
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    solr-instance: Generated script 'solr-instance'.
+
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+      <lib dir="/foo/bar" regex=".*\.jarx" />
+      <lib dir="/my/lava/libs" regex=".*\.jar" />
+    ...
+
 Test autoCommit arguments:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')

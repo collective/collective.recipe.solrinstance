@@ -32,6 +32,10 @@
   <lib dir="../dist/" regex="apache-solr-core-\d.*\.jar" />
   <lib dir="../dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
 
+  #for $filter in $options.extralibs
+  <lib dir="$filter.path" regex="$filter.regex" />
+  #end for
+
   <dataDir>$options.datadir</dataDir>
 
   <directoryFactory name="DirectoryFactory"

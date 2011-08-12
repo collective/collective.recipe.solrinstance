@@ -169,6 +169,16 @@ class SolrBase(object):
             'documentCacheSize', '512')
         options['documentCacheInitialSize'] = options_orig.get(
             'documentCacheInitialSize', '512')
+        options['extralibs'] = []
+        extralibs = options_orig.get('extralibs', '').strip()
+        for lib in extralibs.splitlines():
+            if ':' in lib:
+                path, regex = lib.split(':', 1)
+            else:
+                path = lib
+                regex = ".*\.jar"
+            if path.strip():
+                options['extralibs'].append({'path': path, 'regex': regex})
 
         return options
 
@@ -433,6 +443,7 @@ class SolrSingleRecipe(SolrBase):
                 'queryResultCacheAutowarmCount'],
             documentCacheSize=self.solropts['documentCacheSize'],
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
+            extralibs=self.solropts['extralibs']
             )
 
         self.generate_solr_schema(
@@ -566,6 +577,7 @@ class MultiCoreRecipe(SolrBase):
                 documentCacheSize=options_core['documentCacheSize'],
                 documentCacheInitialSize=options_core[
                     'documentCacheInitialSize'],
+                extralibs=options_core['extralibs']
                 )
 
             self.generate_stopwords(

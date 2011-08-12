@@ -7,6 +7,8 @@ Change History
 - Fix `solr-instance purge` to work with hosts/ports other than localhost:8983
   [csenger]
 
+- Added new `extralibs` option to include custom Java libraries
+
 3.5 (2011-07-10)
 ================
 
