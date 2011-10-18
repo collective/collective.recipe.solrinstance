@@ -189,10 +189,11 @@ extralibs
    Optional includes of custom Java libraries. The option takes
    a path and a regular expression per line seperated by a colon.
    The regular expression is optional and defaults to `.*\.jar`
-   (all jar-files in a directory). Example:
-   extralibs =
-      /my/global/java/path
-      some/special/libs:.*\.jarx
+   (all jar-files in a directory). Example::
+
+       extralibs =
+           /my/global/java/path
+           some/special/libs:.*\.jarx
 
 script
     Optional override for the name of the generated Solr instance
