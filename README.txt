@@ -9,7 +9,8 @@ is an open source enterprise search server based on the Lucene_ Java
 search library, with XML/HTTP and JSON APIs, hit highlighting, faceted
 search, caching, replication, and a web administration interface
 
-SVN Repository: http://svn.plone.org/svn/collective/buildout/collective.recipe.solrinstance/
+Git Repository and issue tracker:
+https://github.com/hannosch/collective.recipe.solrinstance
 
 .. _Solr : http://lucene.apache.org/solr/
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
