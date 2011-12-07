@@ -4,6 +4,9 @@ Change History
 3.6 (unreleased)
 ================
 
+- Account for new schema validation in Solr 3.4 related to `omitNorms` field.
+  [hannosch]
+
 - Update generated config files to match and require Solr 3.5.
   [hannosch]
 

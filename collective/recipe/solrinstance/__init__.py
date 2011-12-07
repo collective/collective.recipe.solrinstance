@@ -14,7 +14,7 @@ INDEX_ATTRIBUTES = {'name': '',
                     'copyfield': [],
                     'sortable': 'false',
                     'auto': 'false',
-                    'omitnorms': 'false',
+                    'omitnorms': '',
                     'multivalued': 'false',
                     'required': 'false',
                     'indexed': 'true',
@@ -272,6 +272,9 @@ class SolrBase(object):
                     entry[key] = value
                 elif key == 'type':
                     entry[key] = value.lower()
+                elif key == 'omitnorms' and not value:
+                    # don't override omitNorms default value
+                    entry[key] = value
                 else:
                     if value.strip() in TRUE_VALUES:
                         value = 'true'

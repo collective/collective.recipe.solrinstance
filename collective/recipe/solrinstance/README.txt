@@ -101,17 +101,14 @@ And make sure the substitution worked for all files.
     <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
     <field name="uniqueID" type="string" indexed="true"
-           stored="true" required="true" multiValued="false"
-           omitNorms="false"/>
+           stored="true" required="true" multiValued="false"/>
     <field name="Foo" type="text" indexed="true"
-           stored="true" required="false" multiValued="false"
-           omitNorms="false"/>
+           stored="true" required="false" multiValued="false"/>
     <field name="Bar" type="date" indexed="false"
            stored="false" required="true" multiValued="true"
            omitNorms="true"/>
     <field name="Foo bar" type="text" indexed="true"
-           stored="true" required="false" multiValued="false"
-           omitNorms="false"/>
+           stored="true" required="false" multiValued="false"/>
     ...
     <uniqueKey>uniqueID</uniqueKey>
     ...
@@ -341,11 +338,9 @@ You can also define extra field types:
     <fields>
     ...
     <field name="Foo" type="foo_type" indexed="true"
-           stored="true" required="false" multiValued="false"
-           omitNorms="false"/>
+           stored="true" required="false" multiValued="false"/>
     <field name="Bar" type="bar_type" indexed="true"
-           stored="true" required="false" multiValued="false"
-           omitNorms="false"/>
+           stored="true" required="false" multiValued="false"/>
     ...
 
 For more complex setups it's also possible to specify an alternative template
@@ -901,6 +896,5 @@ See if name is set in `schema.xml`:
     </fieldType>
     ...
     <field name="BlaWS" type="text_ws" indexed="true"
-           stored="true" required="false" multiValued="false"
-           omitNorms="false"/>
+           stored="true" required="false" multiValued="false"/>
     ...
