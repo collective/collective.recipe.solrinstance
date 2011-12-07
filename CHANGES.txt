@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.6 (unreleased)
+3.6 (2011-12-07)
 ================
 
 - Account for new schema validation in Solr 3.4 related to `omitNorms` field.
