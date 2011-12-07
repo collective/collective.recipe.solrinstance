@@ -4,6 +4,9 @@ Change History
 3.6 (unreleased)
 ================
 
+- Update generated config files to match and require Solr 3.5.
+  [hannosch]
+
 - Fix `solr-instance purge` to work with hosts/ports other than localhost:8983
   [csenger]
 
