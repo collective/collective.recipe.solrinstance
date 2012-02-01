@@ -514,6 +514,11 @@ class MultiCoreRecipe(SolrBase):
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'example'), self.install_dir)
+        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'dist'),
+                      os.path.join(self.install_dir, 'dist'))
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
+                                   'contrib'),
+                      os.path.join(self.install_dir, 'contrib'))
 
         solr_var = self.instanceopts['vardir']
         if self.instanceopts['logdir']:
