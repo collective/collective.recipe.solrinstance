@@ -182,6 +182,7 @@ class SolrBase(object):
                 regex = ".*\.jar"
             if path.strip():
                 options['extralibs'].append({'path': path, 'regex': regex})
+        options['abortOnConfigurationError'] = options_orig.get('abortOnConfigurationError', 'false')
 
         return options
 
@@ -450,7 +451,8 @@ class SolrSingleRecipe(SolrBase):
             documentCacheSize=self.solropts['documentCacheSize'],
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
             extralibs=self.solropts['extralibs'],
-            location=self.install_dir
+            location=self.install_dir,
+            abortOnConfigurationError=self.solropts['abortOnConfigurationError']
             )
 
         self.generate_solr_schema(
@@ -590,7 +592,8 @@ class MultiCoreRecipe(SolrBase):
                 documentCacheInitialSize=options_core[
                     'documentCacheInitialSize'],
                 extralibs=options_core['extralibs'],
-                location=self.install_dir
+                location=self.install_dir,
+                abortOnConfigurationError=options_core['abortOnConfigurationError']
                 )
 
             self.generate_stopwords(
