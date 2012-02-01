@@ -446,7 +446,8 @@ class SolrSingleRecipe(SolrBase):
                 'queryResultCacheAutowarmCount'],
             documentCacheSize=self.solropts['documentCacheSize'],
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
-            extralibs=self.solropts['extralibs']
+            extralibs=self.solropts['extralibs'],
+            location=self.install_dir
             )
 
         self.generate_solr_schema(
@@ -585,7 +586,8 @@ class MultiCoreRecipe(SolrBase):
                 documentCacheSize=options_core['documentCacheSize'],
                 documentCacheInitialSize=options_core[
                     'documentCacheInitialSize'],
-                extralibs=options_core['extralibs']
+                extralibs=options_core['extralibs'],
+                location=self.install_dir
                 )
 
             self.generate_stopwords(

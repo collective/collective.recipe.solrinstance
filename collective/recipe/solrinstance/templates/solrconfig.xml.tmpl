@@ -24,14 +24,14 @@
 
   <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
 
-  <lib dir="../contrib/extraction/lib" regex=".*\.jar" />
-  <lib dir="../contrib/analysis-extras/lib" regex=".*\.jar" />
-  <lib dir="../contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
+  <lib dir="$options.location/contrib/extraction/lib" regex=".*\.jar" />
+  <lib dir="$options.location/contrib/analysis-extras/lib" regex=".*\.jar" />
+  <lib dir="$options.location/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
 
-  <lib dir="../dist/" regex="apache-solr-cell-\d.*\.jar" />
-  <lib dir="../dist/" regex="apache-solr-core-\d.*\.jar" />
-  <lib dir="../dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
-  <lib dir="../dist/" regex="apache-solr-langid-\d.*\.jar" />
+  <lib dir="$options.location/dist/" regex="apache-solr-cell-\d.*\.jar" />
+  <lib dir="$options.location/dist/" regex="apache-solr-core-\d.*\.jar" />
+  <lib dir="$options.location/dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
+  <lib dir="$options.location/dist/" regex="apache-solr-langid-\d.*\.jar" />
 
   #for $filter in $options.extralibs
   <lib dir="$filter.path" regex="$filter.regex" />
