@@ -43,15 +43,15 @@ downloaded before:
 
 Ok, let's run the buildout:
 
-    >>> print system(buildout)
-    ...
-    Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    >>> install_output = """Installing solr.
+    ... jetty.xml: Generated file 'jetty.xml'.
+    ... logging.properties: Generated file 'logging.properties'.
+    ... solrconfig.xml: Generated file 'solrconfig.xml'.
+    ... schema.xml: Generated file 'schema.xml'.
+    ... stopwords.txt: Generated file 'stopwords.txt'.
+    ... solr-instance: Generated script 'solr-instance'"""
+    >>> install_output in system(buildout)
+    True
 
 Check if the run script is here and the template substitution worked:
 
@@ -101,14 +101,21 @@ And make sure the substitution worked for all files.
     <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
     <field name="uniqueID" type="string" indexed="true"
-           stored="true" required="true" multiValued="false"/>
+           stored="true" required="true" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     <field name="Foo" type="text" indexed="true"
-           stored="true" required="false" multiValued="false"/>
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     <field name="Bar" type="date" indexed="false"
            stored="false" required="true" multiValued="true"
-           omitNorms="true"/>
+           omitNorms="true" termVectors="false"
+           termPositions="false" termOffsets="false"/>
     <field name="Foo bar" type="text" indexed="true"
-           stored="true" required="false" multiValued="false"/>
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     ...
     <uniqueKey>uniqueID</uniqueKey>
     ...
@@ -338,9 +345,13 @@ You can also define extra field types:
     <fields>
     ...
     <field name="Foo" type="foo_type" indexed="true"
-           stored="true" required="false" multiValued="false"/>
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     <field name="Bar" type="bar_type" indexed="true"
-           stored="true" required="false" multiValued="false"/>
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     ...
 
 For more complex setups it's also possible to specify an alternative template
@@ -896,5 +907,7 @@ See if name is set in `schema.xml`:
     </fieldType>
     ...
     <field name="BlaWS" type="text_ws" indexed="true"
-           stored="true" required="false" multiValued="false"/>
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     ...
