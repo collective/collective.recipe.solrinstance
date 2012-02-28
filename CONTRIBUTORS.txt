@@ -15,3 +15,4 @@
 - David Blewett
 - Josip Delic
 - Carsten Senger
+- Gerhard Weis

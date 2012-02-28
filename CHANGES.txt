@@ -1,9 +1,28 @@
 Change History
 **************
 
-3.7 (unreleased)
+3.7 (2012-02-28)
 ================
 
+- Fixed tests.
+  [jod]
+
+- added option `abortOnConfigurationError` (makes config error diagnostics a lot
+  easier).
+  [gweis]
+
+- Add support for field options `termVectors`, `termPositions` and
+  `termOffsets`.
+  [gweis]
+
+- Use parts location to find additional jars.
+  [gweis]
+
+- Copy dist and contrib folder for Multicore setup (just like for Singlecore).
+  [gweis]
+
+- Diabled elevate.xml`, solar would fail to work if this is enabled.
+  [gweis]
 
 3.6 (2011-12-07)
 ================
