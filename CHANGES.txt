@@ -1,9 +1,11 @@
 Change History
 **************
 
-3.8 (unreleased)
-================
+3.7.1 (2012-02-28)
+==================
 
+- Fixed package missing files, without a MANIFEST.in we need setuptools-git.
+  [jod]
 
 3.7 (2012-02-28)
 ================
