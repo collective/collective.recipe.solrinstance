@@ -921,39 +921,18 @@ You can specify a default core with defaultCoreName:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... host = 127.0.0.1
-    ... port = 1234
-    ... section-name = SOLR
     ... cores = core1 core2
     ... defaultCoreName = core1
-    ... java_opts =
-    ...     -Xms512M
-    ...     -Xmx1024M
     ...
     ... [core1]
-    ... max-num-results = 55
     ... unique-key = uniqueID
     ... index =
     ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
-    ...     name:Foo type:text
-    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
-    ...     name:Foo bar type:text
-    ...     name:BlaWS type:text_ws
-    ... filter =
-    ...     text solr.ISOLatin1AccentFilterFactory
-    ...     text_ws Baz foo="bar" juca="bala"
     ...
     ... [core2]
-    ... max-num-results = 99
     ... unique-key = uniqueID
     ... index =
     ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
-    ...     name:Foo type:text
-    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
-    ...     name:Foo bar type:text
-    ... filter =
-    ...     text solr.ISOLatin1AccentFilterFactory
-    ...     text_ws Baz foo="bar" juca="bala"
     ... """)
 
 Ok, let's run the buildout:
