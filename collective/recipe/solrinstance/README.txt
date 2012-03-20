@@ -911,3 +911,76 @@ See if name is set in `schema.xml`:
            termVectors="false" termPositions="false"
            termOffsets="false"/>
     ...
+
+You can specify a default core with defaultCoreName:
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... host = 127.0.0.1
+    ... port = 1234
+    ... section-name = SOLR
+    ... cores = core1 core2
+    ... defaultCoreName = core1
+    ... java_opts =
+    ...     -Xms512M
+    ...     -Xmx1024M
+    ...
+    ... [core1]
+    ... max-num-results = 55
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ...     name:Foo type:text
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ...     name:Foo bar type:text
+    ...     name:BlaWS type:text_ws
+    ... filter =
+    ...     text solr.ISOLatin1AccentFilterFactory
+    ...     text_ws Baz foo="bar" juca="bala"
+    ...
+    ... [core2]
+    ... max-num-results = 99
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ...     name:Foo type:text
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ...     name:Foo bar type:text
+    ... filter =
+    ...     text solr.ISOLatin1AccentFilterFactory
+    ...     text_ws Baz foo="bar" juca="bala"
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    Uninstalling solr-mc.
+    Installing solr-mc.
+    solr.xml: Generated file 'solr.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    schema.xml: Generated file 'schema.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    schema.xml: Generated file 'schema.xml'.
+    jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
+    solr-instance: Generated script 'solr-instance'.
+
+The defaultCoreName parameter should end up in solr.xml:
+
+    >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'solr.xml')
+    <?xml...
+    <solr persistent="true">
+    ...
+      <cores adminPath="/admin/cores" defaultCoreName="core1">
+        <core name="core1" instanceDir="core1" />
+        <core name="core2" instanceDir="core2" />
+      </cores>
+    ...
+
