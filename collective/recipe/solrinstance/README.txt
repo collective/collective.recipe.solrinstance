@@ -27,9 +27,12 @@ extracted in the parts directory:
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
     ...     name:Foo bar type:text
     ...     name:Baz type:text
+    ...     name:Everything type:text
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... additional-schema-config =
+    ...      <copyField source="*" dest="Everything"/>
     ... """)
 
 Create the default structure. We assume the solr distribution was
@@ -121,11 +124,17 @@ And make sure the substitution worked for all files.
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
            termOffsets="false"/>
+    <field name="Everything" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     ...
     <uniqueKey>uniqueID</uniqueKey>
     ...
     <copyField source="Foo" dest="Baz"/>
     <copyField source="Bar" dest="Baz"/>
+    ...
+    <copyField source="*" dest="Everything"/>
     ...
 
 `solrconfig.xml`:

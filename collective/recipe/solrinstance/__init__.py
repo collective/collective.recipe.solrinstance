@@ -141,6 +141,8 @@ class SolrBase(object):
             'default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options_orig.get(
             'additional-solrconfig', '').strip()
+        options['additionalSchemaConfig'] = options_orig.get(
+            'additional-schema-config', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
             'requestParsers-multipartUploadLimitInKB', '102400').strip()
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')

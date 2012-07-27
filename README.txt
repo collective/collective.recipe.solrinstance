@@ -139,6 +139,12 @@ additional-solrconfig
     Optional additional configuration to be included inside the
     solrconfig.xml. For instance, ``<requestHandler />`` directives.
 
+additional-schema-config
+    Optional additional configuration to be included inside the
+    ``schema.xml``. For instance, custom ``<copyField />`` directives
+    and anything else that's part of the schema configuration (see
+    http://wiki.apache.org/solr/SchemaXml).
+
 maxWarmingSearchers
     Maximum number of searchers that may be warming in the background.
     Defaults to 4. For read-only slaves recommend to set to 1 or 2.
@@ -273,8 +279,11 @@ A simple example how a single solr could look like::
         name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
         name:Foo bar type:text
         name:Baz type:text
+        name:Everything type:text
     filter =
         text solr.LowerCaseFilterFactory
+    additional-schema-config =
+        <copyField source="*" dest="Everything"/>
 
 Example multicore solr
 ======================
@@ -309,8 +318,11 @@ solr could look like::
         name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
         name:Foo bar type:text
         name:Baz type:text
+        name:Everything type:text
     filter =
         text solr.LowerCaseFilterFactory
+    additional-schema-config =
+        <copyField source="*" dest="Everything"/>
 
     [core2]
     max-num-results = 66
