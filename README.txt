@@ -96,7 +96,15 @@ index
     Configures the different types of index fields provided by the
     Solr instance. Each field is configured on a separated line. Each
     line contains a white-space separated list of ``[key]:[value]``
-    pairs which define the index.
+    pairs which define options associated with the index. Common
+    field options are detailed at
+    `http://wiki.apache.org/solr/SchemaXml#Common_field_options`_ and
+    are illustrated in following examples. 
+    
+    A special ``[key]:[value]`` pair is supported here for supporting `Copy
+    Fields`; if you specify ``copyfield:dest_field``, then a ``<copyField>``
+    declaration will be included in the schema that copies the given field into
+    that of ``dest_field``.
 
 unique-key
     Optional override for declaring a field to be unique for all documents.
@@ -261,9 +269,10 @@ A simple example how a single solr could look like::
     unique-key = uniqueID
     index =
         name:uniqueID type:string indexed:true stored:true required:true
-        name:Foo type:text
-        name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+        name:Foo type:text copyfield:Baz
+        name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
         name:Foo bar type:text
+        name:Baz type:text
     filter =
         text solr.LowerCaseFilterFactory
 
@@ -296,9 +305,10 @@ solr could look like::
     unique-key = uniqueID
     index =
         name:uniqueID type:string indexed:true stored:true required:true
-        name:Foo type:text
-        name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+        name:Foo type:text copyfield:Baz
+        name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
         name:Foo bar type:text
+        name:Baz type:text
     filter =
         text solr.LowerCaseFilterFactory
 
