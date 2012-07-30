@@ -508,7 +508,7 @@ class MultiCoreRecipe(SolrBase):
                     'withespace seperated list `cores = X1 X2 X3`')
         not_allowed_attr = set(self.options_orig.keys()) & NOT_ALLOWED_ATTR
 
-        self.defaultCoreName = options.get('defaultCoreName', '').strip()
+        self.defaultCoreName = options.get('default-core-name', '').strip()
 
         if len(not_allowed_attr) != 0:
             raise zc.buildout.UserError(

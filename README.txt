@@ -233,6 +233,13 @@ cores
     section in ``cores`` a multicore solr instance is created with it's own 
     configuration.
 
+default-core-name
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
+    recipe, then this option controls which core is set as the default for
+    incoming requests that do not specify a core name. This corresponds to
+    the ``defaultCoreName`` option described at 
+    http://wiki.apache.org/solr/CoreAdmin#cores.
+
 Cache options
 *************
 

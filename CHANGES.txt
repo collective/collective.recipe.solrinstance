@@ -4,6 +4,10 @@ Change History
 3.8 (unreleased)
 ================
 
+- Support ``default-core-name`` for specifying the name of a core to
+  use for incoming Solr requests that do not specify a core. See
+  http://wiki.apache.org/solr/CoreAdmin#cores
+  [reinhardt]
 - Add ability to add arbitrary configuration to ``schema.xml`` using
   ``additional-schema-config`` option.
   [davidjb]

@@ -929,7 +929,7 @@ See if name is set in `schema.xml`:
            termOffsets="false"/>
     ...
 
-You can specify a default core with defaultCoreName:
+You can specify a default core with ``default-core-name``:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -939,7 +939,7 @@ You can specify a default core with defaultCoreName:
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
     ... cores = core1 core2
-    ... defaultCoreName = core1
+    ... default-core-name = core1
     ...
     ... [core1]
     ... unique-key = uniqueID
@@ -968,7 +968,7 @@ Ok, let's run the buildout:
     logging.properties: Generated file 'logging.properties'.
     solr-instance: Generated script 'solr-instance'.
 
-The defaultCoreName parameter should end up in solr.xml:
+The parameter should thus end up in ``solr.xml``:
 
     >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'solr.xml')
     <?xml...
