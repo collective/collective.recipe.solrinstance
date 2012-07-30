@@ -4,6 +4,12 @@ Change History
 3.8 (unreleased)
 ================
 
+- Add ability to add arbitrary configuration to ``schema.xml`` using
+  ``additional-schema-config`` option.
+  [davidjb]
+- Add documentation and tests for ``copyfield`` option for indexes to test
+  and clarify that this option is available.
+  [davidjb]
 
 3.7.1 (2012-02-28)
 ==================
