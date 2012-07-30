@@ -10,7 +10,7 @@ search library, with XML/HTTP and JSON APIs, hit highlighting, faceted
 search, caching, replication, and a web administration interface
 
 Git Repository and issue tracker:
-https://github.com/hannosch/collective.recipe.solrinstance
+https://github.com/collective/collective.recipe.solrinstance
 
 .. _Solr : http://lucene.apache.org/solr/
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
