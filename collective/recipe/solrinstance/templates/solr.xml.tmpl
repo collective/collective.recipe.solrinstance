@@ -28,7 +28,11 @@
   adminPath: RequestHandler path to manage cores.  
     If 'null' (or absent), cores will not be manageable via request handler
   -->
+  #if $options.defaultCoreName
+  <cores adminPath="/admin/cores" defaultCoreName="$options.defaultCoreName">
+  #else
   <cores adminPath="/admin/cores">
+  #end if
     #for $core in $options.cores
     <core name="$core" instanceDir="$core" />
     #end for

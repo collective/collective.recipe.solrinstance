@@ -506,6 +506,8 @@ class MultiCoreRecipe(SolrBase):
                     'withespace seperated list `cores = X1 X2 X3`')
         not_allowed_attr = set(self.options_orig.keys()) & NOT_ALLOWED_ATTR
 
+        self.defaultCoreName = options.get('defaultCoreName', '').strip()
+
         if len(not_allowed_attr) != 0:
             raise zc.buildout.UserError(
                     'Core attributes are not allowed in multicore recipe')
@@ -542,7 +544,8 @@ class MultiCoreRecipe(SolrBase):
         self.generate_solr_mc(
             source='%s/templates/solr.xml.tmpl' % TEMPLATE_DIR,
             cores=self.cores,
-            destination=solr_dir)
+            destination=solr_dir,
+            defaultCoreName=self.defaultCoreName)
 
         #generate defined cores
         for core in self.cores:
