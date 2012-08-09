@@ -98,7 +98,7 @@ index
     line contains a white-space separated list of ``[key]:[value]``
     pairs which define options associated with the index. Common
     field options are detailed at
-    `http://wiki.apache.org/solr/SchemaXml#Common_field_options`_ and
+    http://wiki.apache.org/solr/SchemaXml#Common_field_options and
     are illustrated in following examples. 
     
     A special ``[key]:[value]`` pair is supported here for supporting `Copy
