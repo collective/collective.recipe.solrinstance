@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.8 (unreleased)
+3.8 (2012-08-09)
 ================
 
 - Support ``default-core-name`` for specifying the name of a core to
