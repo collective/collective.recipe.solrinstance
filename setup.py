@@ -41,6 +41,7 @@ setup(name='collective.recipe.solrinstance',
       zip_safe=False,
       install_requires=[
         'setuptools',
+        'setuptools-git',
         'iw.recipe.template',
         'zc.buildout'],
       tests_require=[
