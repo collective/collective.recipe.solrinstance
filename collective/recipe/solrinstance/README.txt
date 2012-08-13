@@ -40,6 +40,9 @@ downloaded before:
 
     >>> os.makedirs(join(sample_buildout, 'example', 'etc'))
     >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf'))
+    >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf', 'lang'))
+    >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf', 'velocity'))
+    >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'conf', 'xslt'))
     >>> os.makedirs(join(sample_buildout, 'dist'))
     >>> os.makedirs(join(sample_buildout, 'contrib'))
     >>> open(join(sample_buildout, 'example', 'solr', 'conf', 'test1.txt'), 'w').close()
@@ -79,11 +82,14 @@ Also check that the XML files are where we expect them to be:
     -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
+    d  lang
     -  schema.xml
     -  solrconfig.xml
     -  stopwords.txt
     -  test1.txt
     -  test2.txt
+    d  velocity
+    d  xslt
 
 And make sure the substitution worked for all files.
 
@@ -350,16 +356,12 @@ You can also define extra field types:
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
-    <types>
-    ...
     <fieldType name="foo_type" class="FooField"/>
     <fieldType name="bar_type" class="BarField">
     <analyzer type="index">
     <tokenizer class="BarTokenizer"/>
     </analizer>
     </fieldType>
-    ...
-    <fields>
     ...
     <field name="Foo" type="foo_type" indexed="true"
            stored="true" required="false" multiValued="false"
@@ -896,7 +898,7 @@ See if there is ``solr.xml``:
     <?xml...
     <solr persistent="true">
     ...
-      <cores adminPath="/admin/cores">
+      <cores adminPath="/admin/cores" host="${host:}" hostPort="${jetty.port:}">
         <core name="core1" instanceDir="core1" />
         <core name="core2" instanceDir="core2" />
       </cores>
@@ -905,11 +907,14 @@ See if there is ``solr.xml``:
 See if there are all needed files in `core1`:
 
     >>> ls(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf')
-    - schema.xml
-    - solrconfig.xml
-    - stopwords.txt
-    - test1.txt
-    - test2.txt
+    d  lang
+    -  schema.xml
+    -  solrconfig.xml
+    -  stopwords.txt
+    -  test1.txt
+    -  test2.txt
+    d  velocity
+    d  xslt
 
 See if name is set in `schema.xml`:
 
@@ -974,7 +979,7 @@ The parameter should thus end up in ``solr.xml``:
     <?xml...
     <solr persistent="true">
     ...
-      <cores adminPath="/admin/cores" defaultCoreName="core1">
+      <cores adminPath="/admin/cores" defaultCoreName="core1" host="${host:}" hostPort="${jetty.port:}">
         <core name="core1" instanceDir="core1" />
         <core name="core2" instanceDir="core2" />
       </cores>

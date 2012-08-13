@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 
 version = '4.0.0alpha'
 
+
 def read(name):
     return open(os.path.join(os.path.dirname(__file__), name)).read()
 
@@ -12,7 +13,7 @@ def read(name):
 setup(name='collective.recipe.solrinstance',
       version=version,
       description="zc.buildout to configure a solr instance",
-      long_description= (
+      long_description=(
         read('README.txt')
         + '\n' +
         read('CHANGES.txt')
@@ -48,10 +49,11 @@ setup(name='collective.recipe.solrinstance',
         'zope.exceptions',
         'zope.interface',
         'zope.testing'],
-      test_suite = 'collective.recipe.solrinstance.tests.test_suite',
-      entry_points = {
-        "zc.buildout": ["default = collective.recipe.solrinstance:SolrSingleRecipe",
-                        "mc = collective.recipe.solrinstance:MultiCoreRecipe",
-                        ]
+      test_suite='collective.recipe.solrinstance.tests.test_suite',
+      entry_points={
+        "zc.buildout": [
+            "default = collective.recipe.solrinstance:SolrSingleRecipe",
+            "mc = collective.recipe.solrinstance:MultiCoreRecipe",
+            ]
         },
       )
