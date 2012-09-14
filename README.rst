@@ -170,6 +170,11 @@ unlockOnStartup
   startup. This defeats the locking mechanism that allows multiple processes to
   safely access a Lucene index.
 
+abortOnConfigurationError
+    If set to ``true``, the Solr instance will not start up if there are
+    configuration errors. This is useful in development environments to debug
+    potential issues with schema and solrconfig. Defaults to ``false``.
+
 spellcheckField
   Configures the field used as a source for the spellcheck search component.
   Defaults to `default`.
