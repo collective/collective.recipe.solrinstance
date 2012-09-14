@@ -22,7 +22,10 @@ from the 2.x series if you are using Solr 1.4.
 Supported options
 *****************
 
-The recipe supports the following options:
+The recipe supports the following options.
+
+Solr Server
+===========
 
 solr-location
     Path to the location of the Solr installation. This should be
@@ -43,14 +46,17 @@ basepath
 
     to which the actual commands will be appended. Defaults to ``/solr``.
 
-config-destination
-    Optional override for the directory where the ``solrconfig.xml``
-    file will be generated. Defaults to the Solr default location.
+vardir
+    Optional override for the location of the directory where Solr
+    stores its indexes and log files. Defaults to
+    ``${buildout:directory}/var/solr``. This option and the ``script``
+    option make it possible to create multiple Solr instances in a
+    single buildout and dedicate one or more of the instances to
+    automated functional testing.
 
-config-template
-    Optional override for the template used to generate the ``solrconfig.xml``
-    file. Defaults to the template contained in the recipe, i.e.
-    ``templates/solrconfig.xml.tmpl``.
+logdir 
+    Optional override for the location of the Solr logfiles.
+    Defaults to ``${buildout:directory}/var/solr``.
 
 jetty-template
     Optional override for the ``jetty.xml`` template. Defaults to 
@@ -60,90 +66,54 @@ logging-template
     Optional override for the ``logging.properties`` template. Defaults to
     ``templates/logging.properties.tmpl``.
 
-schema-destination
-    Optional override for the directory where the ``schema.xml`` file
-    will be generated. Defaults to the Solr default location.
-
-schema-template
-    Optional override for the template used to generate the ``schema.xml``
-    file. Defaults to the template contained in the recipe, i.e.
-    ``templates/schema.xml.tmpl``.
-
-stopwords-template
-    Optional override for the template used to generate the ``stopwords.txt``
-    file. Defaults to the template contained in the recipe, i.e.
-    ``templates/stopwords.txt.tmpl``.
-
 jetty-destination
     Optional override for the directory where the ``jetty.xml`` file
     will be generated. Defaults to the Solr default location.
 
-extra-field-types
-    Configure the extra field types available to be used in the
-    ``index`` option. You can create custom field types with special
-    analysers and tokenizers, check Solr's complete reference:
-    http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
+extralibs
+    Optional includes of custom Java libraries. The option takes
+    a path and a regular expression per line seperated by a colon.
+    The regular expression is optional and defaults to ``.*\.jar``
+    (all jar-files in a directory). Example::
 
-filter
-    Configure the additional filters for the default field types.
-    Each filter is configured on a separated line. Each line contains
-    a ``index params`` pair, where ``index`` is one of the existing
-    index types and ``params`` contains ``[key]:[value]`` items to
-    configure the filter. Check the available filters in Solr's
-    docs: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
+        extralibs =
+            /my/global/java/path
+            some/special/libs:.*\.jarx
 
-index
-    Configures the different types of index fields provided by the
-    Solr instance. Each field is configured on a separated line. Each
-    line contains a white-space separated list of ``[key]:[value]``
-    pairs which define options associated with the index. Common
-    field options are detailed at
-    http://wiki.apache.org/solr/SchemaXml#Common_field_options and
-    are illustrated in following examples. 
-    
-    A special ``[key]:[value]`` pair is supported here for supporting `Copy
-    Fields`; if you specify ``copyfield:dest_field``, then a ``<copyField>``
-    declaration will be included in the schema that copies the given field into
-    that of ``dest_field``.
+script
+    Optional override for the name of the generated Solr instance
+    control script. Defaults to ``solr-instance``. This option and the
+    ``vardir`` option make it possible to create multiple Solr
+    instances in a single buildout and dedicate one or more of the
+    instances to automated functional testing.
 
-unique-key
-    Optional override for declaring a field to be unique for all documents.
-    See http://wiki.apache.org/solr/SchemaXml for more information
-    Defaults to 'uid'.
+java_opts
+    Optional. Parameters to pass to the Java Virtual Machine (JVM) used to
+    run Solr. Each option is specified on a separated line.
+    For example::
 
-default-search-field
-    Configure a default search field, which is used when no field was
-    explicitly given. See http://wiki.apache.org/solr/SchemaXml.
+        [solr-instance]
+        ...
+        java_opts =
+          -Xms512M
+          -Xmx1024M
+        ...
+
+Config
+======
+
+config-destination
+    Optional override for the directory where the ``solrconfig.xml``
+    file will be generated. Defaults to the Solr default location.
+
+config-template
+    Optional override for the template used to generate the ``solrconfig.xml``
+    file. Defaults to the template contained in the recipe, i.e.
+    ``templates/solrconfig.xml.tmpl``.
 
 max-num-results
-    The maximum number of results the Solr server returns. Defaults to 500.
-
-section-name
-    Name of the product-config section to be generated for ``zope.conf``.
-    Defaults to ``solr``.
-
-zope-conf
-    Optional override for the configuration snippet that is generated to
-    be included in ``zope.conf`` by other recipes. Defaults to::
-
-        <product-config ${part:section-name}>
-            address ${part:host}:${part:port}
-            basepath ${part:basepath}
-        </product-config>
-
-default-operator
-    The default operator to use for queries.  Valid values are ``AND``
-    and ``OR``. Defaults to ``OR``.
-
-additional-solrconfig
-    Optional additional configuration to be included inside the
-    ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
-
-additional-schema-config
-    Optional additional configuration to be included inside the
-    ``schema.xml``. For instance, custom ``<copyField />`` directives
-    and anything else that's part of the schema configuration (see
-    http://wiki.apache.org/solr/SchemaXml).
+    The maximum number of results the Solr server returns. This sets the
+    ``rows`` option for the request handlers. Defaults to 500.
 
 maxWarmingSearchers
     Maximum number of searchers that may be warming in the background.
@@ -192,61 +162,12 @@ requestParsers-multipartUploadLimitInKB
     very large documents to Solr. May be the case if Solr is indexing binaries
     extracted from request.
 
-vardir
-    Optional override for the location of the directory where Solr
-    stores its indexes and log files. Defaults to
-    ``${buildout:directory}/var/solr``. This option and the ``script``
-    option make it possible to create multiple Solr instances in a
-    single buildout and dedicate one or more of the instances to
-    automated functional testing.
-
-logdir 
-    Optional override for the location of the Solr logfiles.
-    Defaults to ``${buildout:directory}/var/solr``.
-
-extralibs
-    Optional includes of custom Java libraries. The option takes
-    a path and a regular expression per line seperated by a colon.
-    The regular expression is optional and defaults to ``.*\.jar``
-    (all jar-files in a directory). Example::
-
-        extralibs =
-            /my/global/java/path
-            some/special/libs:.*\.jarx
-
-script
-    Optional override for the name of the generated Solr instance
-    control script. Defaults to ``solr-instance``. This option and the
-    ``vardir`` option make it possible to create multiple Solr
-    instances in a single buildout and dedicate one or more of the
-    instances to automated functional testing.
-
-java_opts
-    Optional. Parameters to pass to the Java Virtual Machine (JVM) used to
-    run Solr. Each option is specified on a separated line.
-    For example::
-
-        [solr-instance]
-        ...
-        java_opts =
-          -Xms512M
-          -Xmx1024M
-        ...
-
-cores
-    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every 
-    section in ``cores`` a multicore solr instance is created with it's own 
-    configuration.
-
-default-core-name
-    Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
-    recipe, then this option controls which core is set as the default for
-    incoming requests that do not specify a core name. This corresponds to
-    the ``defaultCoreName`` option described at 
-    http://wiki.apache.org/solr/CoreAdmin#cores.
+additional-solrconfig
+    Optional additional configuration to be included inside the
+    ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
 
 Cache options
-*************
++++++++++++++
 
 Fine grained control of query caching as described at
 http://wiki.apache.org/solr/SolrCaching.
@@ -262,6 +183,100 @@ The supported options are:
 - documentCacheSize
 - documentCacheInitialSize
 
+Schema
+======
+
+schema-destination
+    Optional override for the directory where the ``schema.xml`` file
+    will be generated. Defaults to the Solr default location.
+
+schema-template
+    Optional override for the template used to generate the ``schema.xml``
+    file. Defaults to the template contained in the recipe, i.e.
+    ``templates/schema.xml.tmpl``.
+
+stopwords-template
+    Optional override for the template used to generate the ``stopwords.txt``
+    file. Defaults to the template contained in the recipe, i.e.
+    ``templates/stopwords.txt.tmpl``.
+
+extra-field-types
+    Configure the extra field types available to be used in the
+    ``index`` option. You can create custom field types with special
+    analysers and tokenizers, check Solr's complete reference:
+    http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
+
+filter
+    Configure the additional filters for the default field types.
+    Each filter is configured on a separated line. Each line contains
+    a ``index params`` pair, where ``index`` is one of the existing
+    index types and ``params`` contains ``[key]:[value]`` items to
+    configure the filter. Check the available filters in Solr's
+    docs: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
+
+index
+    Configures the different types of index fields provided by the
+    Solr instance. Each field is configured on a separated line. Each
+    line contains a white-space separated list of ``[key]:[value]``
+    pairs which define options associated with the index. Common
+    field options are detailed at
+    http://wiki.apache.org/solr/SchemaXml#Common_field_options and
+    are illustrated in following examples. 
+    
+    A special ``[key]:[value]`` pair is supported here for supporting `Copy
+    Fields`; if you specify ``copyfield:dest_field``, then a ``<copyField>``
+    declaration will be included in the schema that copies the given field into
+    that of ``dest_field``.
+
+unique-key
+    Optional override for declaring a field to be unique for all documents.
+    See http://wiki.apache.org/solr/SchemaXml for more information
+    Defaults to 'uid'.
+
+default-search-field
+    Configure a default search field, which is used when no field was
+    explicitly given. See http://wiki.apache.org/solr/SchemaXml.
+
+default-operator
+    The default operator to use for queries.  Valid values are ``AND``
+    and ``OR``. Defaults to ``OR``.
+
+additional-schema-config
+    Optional additional configuration to be included inside the
+    ``schema.xml``. For instance, custom ``<copyField />`` directives
+    and anything else that's part of the schema configuration (see
+    http://wiki.apache.org/solr/SchemaXml).
+
+Multi-core
+==========
+
+cores
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every 
+    section in ``cores`` a multicore solr instance is created with it's own 
+    configuration.
+
+default-core-name
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
+    recipe, then this option controls which core is set as the default for
+    incoming requests that do not specify a core name. This corresponds to
+    the ``defaultCoreName`` option described at 
+    http://wiki.apache.org/solr/CoreAdmin#cores.
+
+Zope Integration
+================
+
+section-name
+    Name of the product-config section to be generated for ``zope.conf``.
+    Defaults to ``solr``.
+
+zope-conf
+    Optional override for the configuration snippet that is generated to
+    be included in ``zope.conf`` by other recipes. Defaults to::
+
+        <product-config ${part:section-name}>
+            address ${part:host}:${part:port}
+            basepath ${part:basepath}
+        </product-config>
 
 Examples single solr
 ====================
