@@ -33,12 +33,12 @@ Change History
 - Fixed tests.
   [jod]
 
-- added option `abortOnConfigurationError` (makes config error diagnostics a lot
+- added option ``abortOnConfigurationError`` (makes config error diagnostics a lot
   easier).
   [gweis]
 
-- Add support for field options `termVectors`, `termPositions` and
-  `termOffsets`.
+- Add support for field options ``termVectors``, ``termPositions`` and
+  ``termOffsets``.
   [gweis]
 
 - Use parts location to find additional jars.
@@ -53,39 +53,39 @@ Change History
 3.6 (2011-12-07)
 ================
 
-- Account for new schema validation in Solr 3.4 related to `omitNorms` field.
+- Account for new schema validation in Solr 3.4 related to ``omitNorms`` field.
   [hannosch]
 
 - Update generated config files to match and require Solr 3.5.
   [hannosch]
 
-- Fix `solr-instance purge` to work with hosts/ports other than localhost:8983
+- Fix ``solr-instance purge`` to work with hosts/ports other than localhost:8983
   [csenger]
 
-- Added new `extralibs` option to include custom Java libraries
+- Added new ``extralibs`` option to include custom Java libraries
 
 3.5 (2011-07-10)
 ================
 
-- Removed the `cacheSize` option in favor of 8 specific options to configure
+- Removed the ``cacheSize`` option in favor of 8 specific options to configure
   every aspect of the query caches on their own.
   [hannosch]
 
-- Added new `spellcheckField` option, to configure the source field for the
+- Added new ``spellcheckField`` option, to configure the source field for the
   spellcheck search component.
   [hannosch]
 
-- Removed the example `tvrh`, `terms` and `elevate` request handlers.
+- Removed the example ``tvrh``, ``terms`` and ``elevate`` request handlers.
   [hannosch]
 
-- Removed the example `spell` request handler and enabled spell checking based
-  on the `default` field for the `search` request handler.
+- Removed the example ``spell`` request handler and enabled spell checking based
+  on the ``default`` field for the ``search`` request handler.
   [hannosch]
 
-- Clean up solrconfig template and remove an example `firstSearcher` query.
+- Clean up solrconfig template and remove an example ``firstSearcher`` query.
   [hannosch]
 
-- Added new `mergeFactor`, `ramBufferSizeMB`, `unlockOnStartup` options.
+- Added new ``mergeFactor``, ``ramBufferSizeMB``, ``unlockOnStartup`` options.
   [hannosch]
 
 3.4 (2011-07-09)
@@ -94,48 +94,48 @@ Change History
 - Update generated config files to match and require Solr 3.3.
   [hannosch]
 
-- Add `solr.WordDelimiterFilterFactory` to the standard text field, to split on
-  intra-word delimiters such as `-_:`.
+- Add ``solr.WordDelimiterFilterFactory`` to the standard text field, to split on
+  intra-word delimiters such as ``-_:``.
   [hannosch]
 
 3.3 (2011-06-25)
 ================
 
-- Increase the `requestParsers-multipartUploadLimitInKB` default value from
-  2mb to 100mb to allow the `update/extract` handler to accept large files.
+- Increase the ``requestParsers-multipartUploadLimitInKB`` default value from
+  2mb to 100mb to allow the ``update/extract`` handler to accept large files.
   [hannosch]
 
-- Increase Jetty's `maxFormContentSize` from 1mb to 100mb to allow indexing
+- Increase Jetty's ``maxFormContentSize`` from 1mb to 100mb to allow indexing
   large files.
   [hannosch]
 
-- Changed the field definition of the `text` type to avoid filters specific to
+- Changed the field definition of the ``text`` type to avoid filters specific to
   the English language and instead use a default filter config that should work
   with most languages, based on the ICU tokenizer and folding filter.
   [hannosch]
 
-- Load the `analysis-extras` libraries, so we can use the `ICU`-based filters
+- Load the ``analysis-extras`` libraries, so we can use the `ICU`-based filters
   and tokenizers.
   [hannosch]
 
 - Removed the clustering request handlers from the default config, as they
-  didn't work anyways without us loading the `contrib/clustering` libraries.
+  didn't work anyways without us loading the ``contrib/clustering`` libraries.
   [hannosch]
 
-- Enable `Tika` data extraction and Solr Cell libraries. Data is extracted into
-  a field called `tika_content` unless specified otherwise in each request via
-  the `fmap.content=` argument. All extracted fields which aren't in the schema
-  are put into dynamic fields prefixed with `tika_`.
+- Enable ``Tika`` data extraction and Solr Cell libraries. Data is extracted into
+  a field called ``tika_content`` unless specified otherwise in each request via
+  the ``fmap.content=`` argument. All extracted fields which aren't in the schema
+  are put into dynamic fields prefixed with ``tika_``.
   [tom_gross, hannosch]
 
-- Removed the Velocity driven `/browse` request handler. The example config
+- Removed the Velocity driven ``/browse`` request handler. The example config
   we generated didn't match the schema.
   [hannosch]
 
 3.2 (2011-06-23)
 ================
 
-- Added a new option `stopwords-template` which allows you to specify a custom
+- Added a new option ``stopwords-template`` which allows you to specify a custom
   stopwords file.
   [hannosch]
 
@@ -154,7 +154,7 @@ Change History
 - Use the standard libraries doctest module.
   [hannosch]
 
-- Increase the `max-num-results` default value from 10 to 500 to avoid
+- Increase the ``max-num-results`` default value from 10 to 500 to avoid
   restricting search results on this low level. The application layer should
   be responsible for making such restrictions.
   [hannosch]
@@ -162,22 +162,22 @@ Change History
 3.0a2 (2011-05-26)
 ==================
 
-- Added new `logging-template` option and instruct Jetty to use the
-  `logging.properties` file. The default logging level is set to `WARNING`.
+- Added new ``logging-template`` option and instruct Jetty to use the
+  ``logging.properties`` file. The default logging level is set to ``WARNING``.
   [hannosch]
 
-- Pass the `host` option to the Jetty config, so it can be configured to listen
+- Pass the ``host`` option to the Jetty config, so it can be configured to listen
   only on localhost or a specific IP.
   [hannosch]
 
 - Disabled Jetty request log.
   [hannosch]
 
-- Updated `jetty.xml` template to match new defaults found in the Solr 3.1
+- Updated ``jetty.xml`` template to match new defaults found in the Solr 3.1
   release.
   [hannosch]
 
-- Fixed syntax error introduced around `httpCaching` directive.
+- Fixed syntax error introduced around ``httpCaching`` directive.
   [hannosch]
 
 3.0a1 (2011-05-26)
@@ -194,8 +194,8 @@ Change History
 
   * Fields no longer have a compressed option.
 
-  * The default schema defines three new field types: `point`, `location` and
-    `geohash` useful for geospatial data.
+  * The default schema defines three new field types: ``point``, ``location`` and
+    ``geohash`` useful for geospatial data.
 
   If you have an older Solr 1.4 index, you should be able to continue using it
   without a full reindex.
