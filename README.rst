@@ -174,14 +174,14 @@ http://wiki.apache.org/solr/SolrCaching.
 
 The supported options are:
 
-- filterCacheSize
-- filterCacheInitialSize
-- filterCacheAutowarmCount
-- queryResultCacheSize
-- queryResultCacheInitialSize
-- queryResultCacheAutowarmCount
-- documentCacheSize
-- documentCacheInitialSize
+- ``filterCacheSize``
+- ``filterCacheInitialSize``
+- ``filterCacheAutowarmCount``
+- ``queryResultCacheSize``
+- ``queryResultCacheInitialSize``
+- ``queryResultCacheAutowarmCount``
+- ``documentCacheSize``
+- ``documentCacheInitialSize``
 
 Schema
 ======
