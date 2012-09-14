@@ -15,14 +15,14 @@ setup(
     version=version,
     description="zc.buildout to configure a solr instance",
     long_description=(
-        read('README.txt')
+        read('README.rst')
         + '\n' +
-        read('CHANGES.txt')
+        read('CHANGES.rst')
         + '\n' +
         'Contributors\n'
         '***********************\n'
         + '\n' +
-        read('CONTRIBUTORS.txt')
+        read('CONTRIBUTORS.rst')
         + '\n' +
         'Download\n'
         '***********************\n'),
