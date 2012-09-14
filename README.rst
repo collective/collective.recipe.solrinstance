@@ -278,8 +278,11 @@ zope-conf
             basepath ${part:basepath}
         </product-config>
 
-Examples single solr
-====================
+Examples
+********
+
+Single solr
+===========
 
 A simple example how a single solr could look like::
 
@@ -312,8 +315,8 @@ A simple example how a single solr could look like::
     additional-schema-config =
         <copyField source="*" dest="Everything"/>
 
-Example multicore solr
-======================
+Multicore solr
+==============
 
 To get multicore working it is needed to use 
 ``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore 
