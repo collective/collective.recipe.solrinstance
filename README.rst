@@ -30,18 +30,18 @@ solr-location
 
 host
     Name or IP address of the Solr server, e.g. some.server.com.
-    Defaults to 'localhost'.
+    Defaults to ``localhost``.
 
 port
-    Server port. Defaults to 8983.
+    Server port. Defaults to ``8983``.
 
 basepath
     Base path to the Solr service on the server. The final URL to the
-    Solr service will be made of
+    Solr service will be made of::
 
-       ``$host:$port/$basepath``
+       $host:$port/$basepath
 
-    to which the actual commands will be appended. Defaults to '/solr'.
+    to which the actual commands will be appended. Defaults to ``/solr``.
 
 config-destination
     Optional override for the directory where the ``solrconfig.xml``
@@ -120,7 +120,7 @@ max-num-results
 
 section-name
     Name of the product-config section to be generated for ``zope.conf``.
-    Defaults to 'solr'.
+    Defaults to ``solr``.
 
 zope-conf
     Optional override for the configuration snippet that is generated to
@@ -132,12 +132,12 @@ zope-conf
         </product-config>
 
 default-operator
-    The default operator to use for queries.  Valid values or AND and OR.
-    Defaults to OR.
+    The default operator to use for queries.  Valid values are ``AND``
+    and ``OR``. Defaults to ``OR``.
 
 additional-solrconfig
     Optional additional configuration to be included inside the
-    solrconfig.xml. For instance, ``<requestHandler />`` directives.
+    ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
 
 additional-schema-config
     Optional additional configuration to be included inside the
@@ -147,7 +147,7 @@ additional-schema-config
 
 maxWarmingSearchers
     Maximum number of searchers that may be warming in the background.
-    Defaults to 4. For read-only slaves recommend to set to 1 or 2.
+    Defaults to ``4``. For read-only slaves recommend to set to ``1`` or ``2``.
 
 useColdSearcher
     If a request comes in without a warm searcher available, immediately use
@@ -156,7 +156,7 @@ useColdSearcher
 mergeFactor
     Specify the index defaults merge factor. This value determines how many
     segments of equal size exist before being merged to a larger segment. With
-    the default of `10`, nine segments of 1000 documents will be created before
+    the default of ``10``, nine segments of 1000 documents will be created before
     they are merged into one containing 10000 documents, which in turn will be
     merged into one containing 100000 documents once that size is reached.
 
@@ -166,7 +166,7 @@ ramBufferSizeMB
   Defaults to 16mb.
 
 unlockOnStartup
-  If `true` (the recipes default), unlock any held write or commit locks on
+  If ``true`` (the recipes default), unlock any held write or commit locks on
   startup. This defeats the locking mechanism that allows multiple processes to
   safely access a Lucene index.
 
@@ -177,7 +177,7 @@ abortOnConfigurationError
 
 spellcheckField
   Configures the field used as a source for the spellcheck search component.
-  Defaults to `default`.
+  Defaults to ``default``.
 
 autoCommitMaxDocs
     Let's you enable auto commit handling and force a commit after at least
@@ -207,7 +207,7 @@ logdir
 extralibs
    Optional includes of custom Java libraries. The option takes
    a path and a regular expression per line seperated by a colon.
-   The regular expression is optional and defaults to `.*\.jar`
+   The regular expression is optional and defaults to ``.*\.jar``
    (all jar-files in a directory). Example::
 
        extralibs =
