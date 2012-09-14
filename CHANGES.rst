@@ -215,8 +215,9 @@ Change History
 
 - Multicore recipe ``collective.recipe.solrinstance:mc``. [jod]
 
-    * Refactured to get multicore working.
-    * Pinned buildout version to get tests working.
+  * Refactured to get multicore working.
+
+  * Pinned buildout version to get tests working.
 
 1.1 (2011-04-04)
 ================
