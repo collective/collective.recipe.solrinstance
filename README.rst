@@ -161,14 +161,14 @@ mergeFactor
     merged into one containing 100000 documents once that size is reached.
 
 ramBufferSizeMB
-  Sets the amount of RAM that may be used by Lucene indexing for buffering
-  added documents and deletions before they are flushed to the directory.
-  Defaults to 16mb.
+    Sets the amount of RAM that may be used by Lucene indexing for buffering
+    added documents and deletions before they are flushed to the directory.
+    Defaults to 16mb.
 
 unlockOnStartup
-  If ``true`` (the recipes default), unlock any held write or commit locks on
-  startup. This defeats the locking mechanism that allows multiple processes to
-  safely access a Lucene index.
+    If ``true`` (the recipes default), unlock any held write or commit locks on
+    startup. This defeats the locking mechanism that allows multiple processes to
+    safely access a Lucene index.
 
 abortOnConfigurationError
     If set to ``true``, the Solr instance will not start up if there are
@@ -176,8 +176,8 @@ abortOnConfigurationError
     potential issues with schema and solrconfig. Defaults to ``false``.
 
 spellcheckField
-  Configures the field used as a source for the spellcheck search component.
-  Defaults to ``default``.
+    Configures the field used as a source for the spellcheck search component.
+    Defaults to ``default``.
 
 autoCommitMaxDocs
     Let's you enable auto commit handling and force a commit after at least
@@ -201,18 +201,18 @@ vardir
     automated functional testing.
 
 logdir 
-   Optional override for the location of the Solr logfiles.
-   Defaults to ``${buildout:directory}/var/solr``.
+    Optional override for the location of the Solr logfiles.
+    Defaults to ``${buildout:directory}/var/solr``.
 
 extralibs
-   Optional includes of custom Java libraries. The option takes
-   a path and a regular expression per line seperated by a colon.
-   The regular expression is optional and defaults to ``.*\.jar``
-   (all jar-files in a directory). Example::
+    Optional includes of custom Java libraries. The option takes
+    a path and a regular expression per line seperated by a colon.
+    The regular expression is optional and defaults to ``.*\.jar``
+    (all jar-files in a directory). Example::
 
-       extralibs =
-           /my/global/java/path
-           some/special/libs:.*\.jarx
+        extralibs =
+            /my/global/java/path
+            some/special/libs:.*\.jarx
 
 script
     Optional override for the name of the generated Solr instance
