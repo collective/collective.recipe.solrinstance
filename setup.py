@@ -43,9 +43,11 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'setuptools-git',
         'iw.recipe.template',
         'zc.buildout',
+    ],
+    setup_requires=[
+        'setuptools-git',
     ],
     tests_require=[
         'zope.exceptions',
