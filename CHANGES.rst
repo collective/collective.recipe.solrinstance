@@ -4,7 +4,8 @@ Change History
 3.9 (unreleased)
 ================
 
-- Nothing changed yet.
+- Allow ``cores`` to be separated by newlines rather than just spaces.
+  [domruf]
 
 
 3.8 (2012-08-09)
