@@ -497,7 +497,7 @@ class MultiCoreRecipe(SolrBase):
         if "cores" not in options:
             raise zc.buildout.UserError('Attribute `cores` not defined.')
         try:
-            self.cores = [x for x in options["cores"].split(" ") if len(x) > 0]
+            self.cores = [x for x in options["cores"].split() if len(x) > 0]
         except:
             raise zc.buildout.UserError(
                     'Attribute `cores` not correct defined. Define as '
