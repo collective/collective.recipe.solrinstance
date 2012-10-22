@@ -509,6 +509,7 @@ class MultiCoreRecipe(SolrBase):
         not_allowed_attr = set(self.options_orig.keys()) & NOT_ALLOWED_ATTR
 
         self.defaultCoreName = options.get('default-core-name', '').strip()
+        self.fallback_template = options.get('fallback-template', '').strip()
 
         if len(not_allowed_attr) != 0:
             raise zc.buildout.UserError(
@@ -551,8 +552,12 @@ class MultiCoreRecipe(SolrBase):
 
         #generate defined cores
         for core in self.cores:
-            options_core = self.buildout[core]
-            options_core = self.initSolrOpts(self.buildout, core,
+            if(self.fallback_template and core not in self.buildout):
+                options_core = self.initSolrOpts(self.buildout, core,
+                                             self.buildout[self.fallback_template])
+            else:
+                options_core = self.buildout[core]
+                options_core = self.initSolrOpts(self.buildout, core,
                                              self.buildout[core])
             conf_dir = os.path.join(solr_dir, core, "conf")
 
