@@ -824,7 +824,10 @@ Ok, let's run the buildout:
     ...
     Error: Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`
 
-Test a our first core
+Note that you can specify the ``cores`` option as either newline separated or
+other whitespace separated.
+
+Test our first core:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -938,7 +941,9 @@ You can specify a default core with ``default-core-name``:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... cores = core1 core2
+    ... cores = 
+    ...     core1
+    ...     core2
     ... default-core-name = core1
     ...
     ... [core1]
