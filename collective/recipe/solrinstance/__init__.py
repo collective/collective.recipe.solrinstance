@@ -500,12 +500,12 @@ class MultiCoreRecipe(SolrBase):
             self.cores = [x for x in options["cores"].split() if len(x) > 0]
         except:
             raise zc.buildout.UserError(
-                    'Attribute `cores` not correct defined. Define as '
-                    'withespace seperated list `cores = X1 X2 X3`')
+                    'Attribute `cores` is not correctly defined. Define as a '
+                    'whitespace separated list like `cores = X1 X2 X3`')
         if not self.cores:
             raise zc.buildout.UserError(
-                    'Attribute `cores` not correct defined. Define as '
-                    'withespace seperated list `cores = X1 X2 X3`')
+                    'Attribute `cores` is not correctly defined. Define as a '
+                    'whitespace separated list like `cores = X1 X2 X3`')
         not_allowed_attr = set(self.options_orig.keys()) & NOT_ALLOWED_ATTR
 
         self.defaultCoreName = options.get('default-core-name', '').strip()

@@ -822,7 +822,8 @@ Ok, let's run the buildout:
     >>> print system(buildout)
     While:
     ...
-    Error: Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`
+    Error: Attribute `cores` is not correctly defined. Define as a whitespace
+    separated list like `cores = X1 X2 X3`
 
 Note that you can specify the ``cores`` option as either newline separated or
 other whitespace separated.
