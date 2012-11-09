@@ -266,7 +266,7 @@ fallback-template
     Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
     recipe, then this option allows you to specify the settings that should
     be used if there is no section with the name of a core.
-    This a allows configurations like this:
+    This a allows configurations like this::
     
         [solr-instance]
         ...
