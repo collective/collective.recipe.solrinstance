@@ -24,6 +24,7 @@ class TestSolr4(unittest.TestCase):
                 max-num-results = 99
                 section-name = SOLR
                 unique-key = uniqueID
+                solr-version = 4
                 index =
                     name:uniqueID type:string indexed:true stored:true required:true
                     name:Foo type:text

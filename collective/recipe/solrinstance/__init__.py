@@ -101,6 +101,9 @@ class SolrBase(object):
         return options
 
     def is_solr_4(self):
+        if 'solr-version' in self.options_orig:
+            return self.options_orig['solr-version'].startswith('4')
+        # Now try to guess (probably broken)
         sol4_dir = os.path.join('example', 'solr', 'collection1')
         return os.path.isdir(os.path.join(
                              self.instanceopts['solr-location'], sol4_dir))
