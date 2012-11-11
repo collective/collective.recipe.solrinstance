@@ -100,6 +100,11 @@ class SolrBase(object):
         options['java_opts'] = options_orig.get('java_opts', '')
         return options
 
+    def is_solr_4(self):
+        sol4_dir = os.path.join('example', 'solr', 'collection1')
+        return os.path.isdir(os.path.join(
+                             self.instanceopts['solr-location'], sol4_dir))
+
     def initSolrOpts(self, buildout, name, options_orig):
         #solr opts
         options = {}
@@ -116,13 +121,16 @@ class SolrBase(object):
         options['stopwords-template'] = options_orig.get(
             'stopwords-template',
             '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
+        default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
+        if self.is_solr_4():
+            default_config_destination = os.path.join(
+                self.install_dir, 'solr', 'collection1', 'conf')
         options['config-destination'] = options_orig.get(
                 'config-destination',
-                os.path.join(self.install_dir, 'solr', 'conf'))
-
+                default_config_destination)
         options['schema-destination'] = options_orig.get(
                 'schema-destination',
-                os.path.join(self.install_dir, 'solr', 'conf'))
+                default_config_destination)
 
         try:
             num_results = int(options_orig.get('max-num-results',
