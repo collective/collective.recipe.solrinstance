@@ -1,0 +1,10 @@
+language: python
+python:
+  - 2.7
+install:
+  - mkdir -p buildout-cache/eggs
+  - mkdir -p buildout-cache/downloads
+  - python bootstrap.py
+  - bin/buildout
+script:
+  - bin/test
