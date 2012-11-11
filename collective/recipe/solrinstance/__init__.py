@@ -55,6 +55,8 @@ class SolrBase(object):
     def __init__(self, buildout, name, options_orig):
         self.name = name
         self.options_orig = options_orig
+        self.solr_location = os.path.abspath(
+            options_orig.get('solr-location', '').strip())
         self.buildout = buildout
         self.install_dir = os.path.join(
             buildout['buildout']['parts-directory'], name)
@@ -75,9 +77,9 @@ class SolrBase(object):
         options['solr-location'] = os.path.abspath(
             options_orig.get('solr-location', '').strip())
         options['jetty-template'] = options_orig.get("jetty-template",
-                '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR)
+                '%s/jetty.xml.tmpl' % self.tpldir)
         options['logging-template'] = options_orig.get("logging-template",
-                '%s/templates/logging.properties.tmpl' % TEMPLATE_DIR)
+                '%s/logging.properties.tmpl' % self.tpldir)
 
         options['jetty-destination'] = options_orig.get(
                 'jetty-destination', os.path.join(self.install_dir, 'etc'))
@@ -105,8 +107,14 @@ class SolrBase(object):
             return self.options_orig['solr-version'].startswith('4')
         # Now try to guess (probably broken)
         sol4_dir = os.path.join('example', 'solr', 'collection1')
-        return os.path.isdir(os.path.join(
-                             self.instanceopts['solr-location'], sol4_dir))
+        return os.path.isdir(os.path.join(self.solr_location, sol4_dir))
+
+    @property
+    def tpldir(self):
+        value = os.path.join(TEMPLATE_DIR, 'templates')
+        if self.is_solr_4():
+            value += '4'
+        return value
 
     def initSolrOpts(self, buildout, name, options_orig):
         #solr opts
@@ -117,13 +125,13 @@ class SolrBase(object):
         options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
         options['config-template'] = options_orig.get(
             'config-template',
-            '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR)
+            '%s/solrconfig.xml.tmpl' % self.tpldir)
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
-                '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR)
+                '%s/schema.xml.tmpl' % self.tpldir)
         options['stopwords-template'] = options_orig.get(
             'stopwords-template',
-            '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
+            '%s/stopwords.txt.tmpl' % self.tpldir)
         default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
         if self.is_solr_4():
             default_config_destination = os.path.join(
@@ -183,6 +191,9 @@ class SolrBase(object):
             'documentCacheSize', '512')
         options['documentCacheInitialSize'] = options_orig.get(
             'documentCacheInitialSize', '512')
+        options['documentCacheAutowarmCount'] = options_orig.get(
+            'documentCacheAutowarmCount', '0')
+
         options['extralibs'] = []
         extralibs = options_orig.get('extralibs', '').strip()
         for lib in extralibs.splitlines():
@@ -461,6 +472,7 @@ class SolrSingleRecipe(SolrBase):
                 'queryResultCacheAutowarmCount'],
             documentCacheSize=self.solropts['documentCacheSize'],
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
+            documentCacheAutowarmCount=self.solropts['documentCacheAutowarmCount'],
             extralibs=self.solropts['extralibs'],
             location=self.install_dir,
             abortOnConfigurationError=self.solropts['abortOnConfigurationError']
@@ -480,7 +492,7 @@ class SolrSingleRecipe(SolrBase):
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
-            source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
+            source='%s/solr-instance.tmpl' % self.tpldir,
             pidfile=os.path.join(solr_var, 'solr.pid'),
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
@@ -551,7 +563,7 @@ class MultiCoreRecipe(SolrBase):
 
         solr_dir = os.path.join(self.install_dir, 'solr')
         self.generate_solr_mc(
-            source='%s/templates/solr.xml.tmpl' % TEMPLATE_DIR,
+            source='%s/solr.xml.tmpl' % self.tpldir,
             cores=self.cores,
             destination=solr_dir)
 
@@ -575,7 +587,7 @@ class MultiCoreRecipe(SolrBase):
 
             self.generate_solr_conf(
                 source=options_core.get('config-template',
-                    '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR),
+                    '%s/solrconfig.xml.tmpl' % self.tpldir),
                 datadir=solr_data,
                 destination=conf_dir,
                 rows=options_core['max-num-results'],
@@ -602,6 +614,7 @@ class MultiCoreRecipe(SolrBase):
                 documentCacheSize=options_core['documentCacheSize'],
                 documentCacheInitialSize=options_core[
                     'documentCacheInitialSize'],
+                documentCacheAutowarmCount=options_core['documentCacheAutowarmCount'],
                 extralibs=options_core['extralibs'],
                 location=self.install_dir,
                 abortOnConfigurationError=options_core['abortOnConfigurationError']
@@ -609,13 +622,13 @@ class MultiCoreRecipe(SolrBase):
 
             self.generate_stopwords(
                 source=options_core.get('stopwords-template',
-                    '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR),
+                    '%s/stopwords.txt.tmpl' % self.tpldir),
                 destination=conf_dir,
                 )
 
             self.generate_solr_schema(
                 source=options_core.get('schema-template',
-                    '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR),
+                    '%s/schema.xml.tmpl' % self.tpldir),
                 destination=conf_dir,
                 filters=self.parse_filter(options_core),
                 indeces=self.parse_index(options_core),
@@ -623,7 +636,7 @@ class MultiCoreRecipe(SolrBase):
 
         self.generate_jetty(
             source=self.instanceopts.get('jetty-template',
-                     '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR),
+                     '%s/jetty.xml.tmpl' % self.tpldir),
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
@@ -635,7 +648,7 @@ class MultiCoreRecipe(SolrBase):
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
-            source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
+            source='%s/solr-instance.tmpl' % self.tpldir,
             pidfile=os.path.join(solr_var, 'solr.pid'),
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],

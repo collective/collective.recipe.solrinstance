@@ -44,14 +44,23 @@ class TestSolr4(unittest.TestCase):
         install_develop('collective.recipe.solrinstance', self)
         sample_buildout = self.globs['sample_buildout']
         os.makedirs(join(sample_buildout, 'example', 'etc'))
-        os.makedirs(join(sample_buildout, 'example', 'solr', 'collection1', 'conf'))
+        os.makedirs(join(
+            sample_buildout, 'example', 'solr', 'collection1', 'conf'))
         os.makedirs(join(sample_buildout, 'dist'))
         os.makedirs(join(sample_buildout, 'contrib'))
 
     def tearDown(self):
         buildoutTearDown(self)
 
+    def getfile(self, *args):
+        filepath = os.path.join(*(
+            [self.globs['sample_buildout']] + list(args)
+        ))
+        with open(filepath) as fh:
+            return fh.read()
+
     def test_basic_install(self):
+        sample_buildout = self.globs['sample_buildout']
         buildout = self.globs['buildout']
         install_output = dedent("""
             Installing solr.
@@ -64,6 +73,28 @@ class TestSolr4(unittest.TestCase):
         """).strip()
         output = self.globs['system'](buildout)
         self.assertTrue(install_output in output)
+
+        solr_instance_script = self.getfile('bin', 'solr-instance')
+        chunk = "UPDATE_URL = r'http://127.0.0.1:1234/solr/update'"
+        self.assertTrue(chunk in solr_instance_script)
+
+        jetty_file = self.getfile('parts', 'solr', 'etc', 'jetty.xml')
+        self.assertTrue('<Set name="port">1234</Set>' in jetty_file)
+        schema_file = self.getfile(
+            'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
+        foo = '<field name="Foo" type="text" indexed="true"'
+        self.assertTrue(foo in schema_file)
+        bar = '<field name="Bar" type="date" indexed="false"'
+        self.assertTrue(bar in schema_file)
+        foobar = 'name="Foo bar" type="text" indexed="true"'
+        self.assertTrue(foobar in schema_file)
+        self.assertTrue('<uniqueKey>uniqueID</uniqueKey>' in schema_file)
+
+        solrconfig_file = self.getfile(
+            'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
+        datadir = "<dataDir>%s/var/solr/data</dataDir>" % sample_buildout
+        self.assertTrue(datadir in solrconfig_file)
+        self.assertTrue('<int name="rows">99</int>' in solrconfig_file)
 
 
 def test_suite():

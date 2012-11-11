@@ -53,7 +53,7 @@ config-template
     ``templates/solrconfig.xml.tmpl``.
 
 jetty-template
-    Optional override for the ``jetty.xml`` template. Defaults to 
+    Optional override for the ``jetty.xml`` template. Defaults to
     ``templates/jetty.xml.tmpl``.
 
 logging-template
@@ -181,7 +181,7 @@ vardir
     single buildout and dedicate one or more of the instances to
     automated functional testing.
 
-logdir 
+logdir
    Optional override for the location of the Solr logfiles.
    Defaults to ``${buildout:directory}/var/solr``.
 
@@ -215,8 +215,8 @@ java_opts
         ...
 
 cores
-    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every 
-    section in ``cores`` a multicore solr instance is created with it's own 
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every
+    section in ``cores`` a multicore solr instance is created with it's own
     configuration.
 
 Cache options
@@ -235,7 +235,7 @@ The supported options are:
 - queryResultCacheAutowarmCount
 - documentCacheSize
 - documentCacheInitialSize
-
+- documentCacheAutowarmCount (solr 4)
 
 Examples single solr
 ====================
@@ -245,7 +245,7 @@ A simple example how a single solr could look like::
     [buildout]
     parts = solr-download
             solr
-           
+
     [solr-download]
     recipe = hexagonit.recipe.download
     strip-top-level-dir = true
@@ -270,8 +270,8 @@ A simple example how a single solr could look like::
 Example multicore solr
 ======================
 
-To get multicore working it is needed to use 
-``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore 
+To get multicore working it is needed to use
+``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore
 solr could look like::
 
     [buildout]

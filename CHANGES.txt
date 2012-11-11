@@ -4,6 +4,8 @@ Change History
 3.8 (unreleased)
 ================
 
+- solr 4.0 support [silviot]
+
 
 3.7.1 (2012-02-28)
 ==================
