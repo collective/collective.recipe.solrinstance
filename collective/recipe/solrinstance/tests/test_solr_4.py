@@ -2,9 +2,69 @@ import unittest
 import os
 from textwrap import dedent
 from os.path import join
-from subprocess import check_output
 from zc.buildout.testing import buildoutSetUp, buildoutTearDown
 from zc.buildout.testing import install_develop
+
+MULTICORE_CONF = """
+[buildout]
+parts = solr-mc
+
+[solr-mc]
+recipe = collective.recipe.solrinstance:mc
+host = 127.0.0.1
+port = 1234
+section-name = SOLR
+cores = core1 core2
+java_opts =
+    -Xms512M
+    -Xmx1024M
+
+[core1]
+max-num-results = 55
+unique-key = uniqueID
+index =
+    name:uniqueID type:uuid indexed:true stored:true default:NEW
+    name:Foo type:text
+    name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    name:Foo bar type:text
+    name:BlaWS type:text_ws
+filter =
+    text solr.ISOLatin1AccentFilterFactory
+    text_ws Baz foo="bar" juca="bala"
+
+[core2]
+max-num-results = 99
+unique-key = uniqueID
+index =
+    name:uniqueID type:uuid indexed:true stored:true default:NEW
+    name:Foo type:text
+    name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    name:Foo bar type:text
+filter =
+    text solr.ISOLatin1AccentFilterFactory
+    text_ws Baz foo="bar" juca="bala"
+"""
+
+SINGLE_CORE_CONF = """
+[buildout]
+parts = solr
+
+[solr]
+recipe = collective.recipe.solrinstance
+host = 127.0.0.1
+port = 1234
+max-num-results = 99
+section-name = SOLR
+unique-key = uniqueID
+index =
+    name:uniqueID type:string indexed:true stored:true required:true
+    name:Foo type:text
+    name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    name:Foo bar type:text
+filter =
+    text solr.ISOLatin1AccentFilterFactory
+    text_ws Baz foo="bar" juca="bala"
+"""
 
 
 class TestSolr4(unittest.TestCase):
@@ -12,28 +72,6 @@ class TestSolr4(unittest.TestCase):
 
     def setUp(self):
         buildoutSetUp(self)
-        with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
-            fh.write(dedent("""
-                [buildout]
-                parts = solr
-
-                [solr]
-                recipe = collective.recipe.solrinstance
-                host = 127.0.0.1
-                port = 1234
-                max-num-results = 99
-                section-name = SOLR
-                unique-key = uniqueID
-                index =
-                    name:uniqueID type:string indexed:true stored:true required:true
-                    name:Foo type:text
-                    name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
-                    name:Foo bar type:text
-                filter =
-                    text solr.ISOLatin1AccentFilterFactory
-                    text_ws Baz foo="bar" juca="bala"
-            """))
-
         install_develop('zope.exceptions', self)
         install_develop('zope.interface', self)
         install_develop('zope.testing', self)
@@ -59,6 +97,8 @@ class TestSolr4(unittest.TestCase):
             return fh.read()
 
     def test_basic_install(self):
+        with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
+            fh.write(SINGLE_CORE_CONF)
         sample_buildout = self.globs['sample_buildout']
         buildout = self.globs['buildout']
         install_output = dedent("""
@@ -71,7 +111,7 @@ class TestSolr4(unittest.TestCase):
             solr-instance: Generated script 'solr-instance'
         """).strip()
         output = self.globs['system'](buildout)
-        self.assertTrue(install_output in output)
+        self.assertTrue(install_output in output, output)
 
         solr_instance_script = self.getfile('bin', 'solr-instance')
         chunk = "UPDATE_URL = r'http://127.0.0.1:1234/solr/update'"
@@ -94,6 +134,32 @@ class TestSolr4(unittest.TestCase):
         datadir = "<dataDir>%s/var/solr/data</dataDir>" % sample_buildout
         self.assertTrue(datadir in solrconfig_file)
         self.assertTrue('<int name="rows">99</int>' in solrconfig_file)
+
+    def test_multicore(self):
+        with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
+            fh.write(MULTICORE_CONF)
+        install_output = dedent("""
+            Installing solr-mc.
+            solr.xml: Generated file 'solr.xml'.
+            solrconfig.xml: Generated file 'solrconfig.xml'.
+            stopwords.txt: Generated file 'stopwords.txt'.
+            schema.xml: Generated file 'schema.xml'.
+            solrconfig.xml: Generated file 'solrconfig.xml'.
+            stopwords.txt: Generated file 'stopwords.txt'.
+            schema.xml: Generated file 'schema.xml'.
+            jetty.xml: Generated file 'jetty.xml'.
+            logging.properties: Generated file 'logging.properties'.
+            solr-instance: Generated script 'solr-instance'.
+        """).strip()
+        output = self.globs['system'](self.globs['buildout'])
+        self.assertTrue(install_output in output, output)
+        solr_xml = self.getfile('parts', 'solr-mc', 'solr', 'solr.xml')
+        self.assertTrue('<core name="core1" instanceDir="core1" />' in solr_xml)
+        self.assertTrue('<core name="core2" instanceDir="core2" />' in solr_xml)
+        core1_schema = self.getfile('parts', 'solr-mc', 'solr', 'core1', 'conf', 'schema.xml')
+        self.assertTrue('<schema name="core1"' in core1_schema)
+        self.assertTrue('<field name="BlaWS" type="text_ws" indexed="true"' in core1_schema)
+
 
 
 def test_suite():
