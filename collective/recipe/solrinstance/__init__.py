@@ -157,6 +157,8 @@ class SolrBase(object):
             'default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options_orig.get(
             'additional-solrconfig', '').strip()
+        options['additionalSchemaConfig'] = options_orig.get(
+            'additional-schema-config', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
             'requestParsers-multipartUploadLimitInKB', '102400').strip()
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
@@ -515,16 +517,18 @@ class MultiCoreRecipe(SolrBase):
         if "cores" not in options:
             raise zc.buildout.UserError('Attribute `cores` not defined.')
         try:
-            self.cores = [x for x in options["cores"].split(" ") if len(x) > 0]
+            self.cores = [x for x in options["cores"].split() if len(x) > 0]
         except:
             raise zc.buildout.UserError(
-                    'Attribute `cores` not correct defined. Define as '
-                    'withespace seperated list `cores = X1 X2 X3`')
+                    'Attribute `cores` is not correctly defined. Define as a '
+                    'whitespace separated list like `cores = X1 X2 X3`')
         if not self.cores:
             raise zc.buildout.UserError(
-                    'Attribute `cores` not correct defined. Define as '
-                    'withespace seperated list `cores = X1 X2 X3`')
+                    'Attribute `cores` is not correctly defined. Define as a '
+                    'whitespace separated list like `cores = X1 X2 X3`')
         not_allowed_attr = set(self.options_orig.keys()) & NOT_ALLOWED_ATTR
+
+        self.defaultCoreName = options.get('default-core-name', '').strip()
 
         if len(not_allowed_attr) != 0:
             raise zc.buildout.UserError(
@@ -562,7 +566,8 @@ class MultiCoreRecipe(SolrBase):
         self.generate_solr_mc(
             source='%s/solr.xml.tmpl' % self.tpldir,
             cores=self.cores,
-            destination=solr_dir)
+            destination=solr_dir,
+            defaultCoreName=self.defaultCoreName)
 
         #generate defined cores
         for core in self.cores:

@@ -23,12 +23,16 @@ extracted in the parts directory:
     ... unique-key = uniqueID
     ... index =
     ...     name:uniqueID type:string indexed:true stored:true required:true
-    ...     name:Foo type:text
-    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
+    ...     name:Foo type:text copyfield:Baz
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
     ...     name:Foo bar type:text
+    ...     name:Baz type:text
+    ...     name:Everything type:text
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... additional-schema-config =
+    ...      <copyField source="*" dest="Everything"/>
     ... """)
 
 Create the default structure. We assume the solr distribution was
@@ -116,8 +120,21 @@ And make sure the substitution worked for all files.
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
            termOffsets="false"/>
+    <field name="Baz" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
+    <field name="Everything" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"/>
     ...
     <uniqueKey>uniqueID</uniqueKey>
+    ...
+    <copyField source="Foo" dest="Baz"/>
+    <copyField source="Bar" dest="Baz"/>
+    ...
+    <copyField source="*" dest="Everything"/>
     ...
 
 `solrconfig.xml`:
@@ -805,9 +822,13 @@ Ok, let's run the buildout:
     >>> print system(buildout)
     While:
     ...
-    Error: Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`
+    Error: Attribute `cores` is not correctly defined. Define as a whitespace
+    separated list like `cores = X1 X2 X3`
 
-Test a our first core
+Note that you can specify the ``cores`` option as either newline separated or
+other whitespace separated.
+
+Test our first core:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -911,3 +932,57 @@ See if name is set in `schema.xml`:
            termVectors="false" termPositions="false"
            termOffsets="false"/>
     ...
+
+You can specify a default core with ``default-core-name``:
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... cores = 
+    ...     core1
+    ...     core2
+    ... default-core-name = core1
+    ...
+    ... [core1]
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ...
+    ... [core2]
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    Uninstalling solr-mc.
+    Installing solr-mc.
+    solr.xml: Generated file 'solr.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    schema.xml: Generated file 'schema.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    schema.xml: Generated file 'schema.xml'.
+    jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
+    solr-instance: Generated script 'solr-instance'.
+
+The parameter should thus end up in ``solr.xml``:
+
+    >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'solr.xml')
+    <?xml...
+    <solr persistent="true">
+    ...
+      <cores adminPath="/admin/cores" defaultCoreName="core1">
+        <core name="core1" instanceDir="core1" />
+        <core name="core2" instanceDir="core2" />
+      </cores>
+    ...
+
