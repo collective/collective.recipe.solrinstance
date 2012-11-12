@@ -16,7 +16,7 @@ https://github.com/hannosch/collective.recipe.solrinstance
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-Note: This version of the recipe only supports Solr 3.5. Please use a release
+Note: This version of the recipe only supports Solr 3.5 and 4.0. Please use a release
 from the 2.x series if you are using Solr 1.4.
 
 Supported options
