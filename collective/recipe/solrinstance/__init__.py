@@ -585,7 +585,7 @@ class MultiCoreRecipe(SolrBase):
             solr_data = os.path.join(solr_var, 'data', core)
             if not os.path.exists(solr_data):
                 os.makedirs(solr_data)
-            config_template = (self.solropts.get('config-template') or
+            config_template = (options_core.get('config-template') or
                 '%s/solrconfig.xml.tmpl' % self.tpldir)
 
             self.generate_solr_conf(
