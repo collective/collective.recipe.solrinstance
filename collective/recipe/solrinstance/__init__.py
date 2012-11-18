@@ -117,25 +117,15 @@ class SolrBase(object):
         options['name'] = name
         options['index'] = options_orig.get('index')
         options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
-        options['config-template'] = options_orig.get(
-            'config-template',
-            '%s/solrconfig.xml.tmpl' % self.tpldir)
+        options['config-template'] = options_orig.get('config-template')
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
                 '%s/schema.xml.tmpl' % self.tpldir)
         options['stopwords-template'] = options_orig.get(
             'stopwords-template',
             '%s/stopwords.txt.tmpl' % self.tpldir)
-        default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
-        if self.is_solr_4():
-            default_config_destination = os.path.join(
-                self.install_dir, 'solr', 'collection1', 'conf')
-        options['config-destination'] = options_orig.get(
-                'config-destination',
-                default_config_destination)
-        options['schema-destination'] = options_orig.get(
-                'schema-destination',
-                default_config_destination)
+        options['config-destination'] = options_orig.get('config-destination')
+        options['schema-destination'] = options_orig.get('schema-destination')
 
         try:
             num_results = int(options_orig.get('max-num-results',
@@ -446,11 +436,17 @@ class SolrSingleRecipe(SolrBase):
             source=(self.instanceopts.get('logging-template') or
                 '%s/logging.properties.tmpl' % self.tpldir),
             destination=jetty_destination)
-
+        config_template = (self.solropts.get('config-template') or
+            '%s/solrconfig.xml.tmpl' % self.tpldir)
+        default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
+        if self.is_solr_4():
+            default_config_destination = os.path.join(
+                self.install_dir, 'solr', 'collection1', 'conf')
         self.generate_solr_conf(
-            source=self.solropts.get('config-template'),
+            source=config_template,
             datadir=solr_data,
-            destination=self.solropts['config-destination'],
+            destination=(self.solropts['config-destination'] or
+                default_config_destination),
             rows=self.solropts['max-num-results'],
             additional_solrconfig=self.solropts['additional-solrconfig'],
             useColdSearcher=self.solropts.get('useColdSearcher', 'false'),
@@ -480,14 +476,16 @@ class SolrSingleRecipe(SolrBase):
 
         self.generate_solr_schema(
             source=self.solropts.get('schema-template'),
-            destination=self.solropts['schema-destination'],
+            destination=(self.solropts['schema-destination'] or
+                default_config_destination),
             filters=self.parse_filter(self.solropts),
             indeces=self.parse_index(self.solropts),
             options=self.solropts)
 
         self.generate_stopwords(
             source=self.solropts.get('stopwords-template'),
-            destination=self.solropts['config-destination'],
+            destination=(self.solropts['config-destination'] or
+                default_config_destination),
             )
 
         self.create_bin_scripts(
@@ -587,10 +585,11 @@ class MultiCoreRecipe(SolrBase):
             solr_data = os.path.join(solr_var, 'data', core)
             if not os.path.exists(solr_data):
                 os.makedirs(solr_data)
+            config_template = (self.solropts.get('config-template') or
+                '%s/solrconfig.xml.tmpl' % self.tpldir)
 
             self.generate_solr_conf(
-                source=options_core.get('config-template',
-                    '%s/solrconfig.xml.tmpl' % self.tpldir),
+                source=config_template,
                 datadir=solr_data,
                 destination=conf_dir,
                 rows=options_core['max-num-results'],
