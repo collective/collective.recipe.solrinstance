@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import zc.buildout
-import iw.recipe.template
-import shutil
-import os
 import glob
+import os
+import shutil
+import sys
+
+import iw.recipe.template
+import zc.buildout
+
 
 INDEX_TYPES = set(['text', 'text_ws', 'ignored', 'date', 'string',
                    'boolean', 'integer', 'long', 'float', 'double'])
