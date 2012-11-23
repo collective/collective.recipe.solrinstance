@@ -187,7 +187,8 @@ class SolrBase(object):
                 regex = ".*\.jar"
             if path.strip():
                 options['extralibs'].append({'path': path, 'regex': regex})
-        options['abortOnConfigurationError'] = options_orig.get('abortOnConfigurationError', 'false')
+        options['abortOnConfigurationError'] = \
+            options_orig.get('abortOnConfigurationError', 'false')
 
         return options
 
@@ -376,7 +377,7 @@ class SolrBase(object):
         for fname in glob.iglob(src_glob):
             try:
                 shutil.copy(fname, dst_folder)
-            except IOError, e:
+            except IOError as e:
                 print e
 
     def create_mc_solr(self, path, cores, solr_var):
