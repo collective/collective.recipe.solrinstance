@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
+
 from setuptools import setup, find_packages
 
 version = '3.9.dev0'
@@ -8,6 +10,19 @@ version = '3.9.dev0'
 
 def read(name):
     return open(os.path.join(os.path.dirname(__file__), name)).read()
+
+
+requires = ['setuptools']
+if sys.version_info >= (3,):
+    requires += [
+        'genshi>=0.7dev-r1180',
+        'zc.buildout>=2.0.0a1',
+        ]
+else:
+    requires += [
+        'genshi',
+        'zc.buildout<2.0.0a1'
+        ]
 
 
 setup(
@@ -41,13 +56,9 @@ setup(
     namespace_packages=['collective', 'collective.recipe'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        'setuptools',
-        'genshi',
-        'zc.buildout',
-    ],
+    install_requires=requires,
     setup_requires=[
-        'setuptools-git',
+        'setuptools',
     ],
     tests_require=[
         'zope.exceptions',
