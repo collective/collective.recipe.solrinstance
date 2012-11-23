@@ -43,7 +43,7 @@ UPDATE_URL = r'${options.updateurl}'
 def start(daemonize=True):
     logfp = None
     if daemonize:
-        logfp = file(SOLR_LOG, 'a+')
+        logfp = open(SOLR_LOG, 'a+')
     pid = Popen(START_CMD, cwd=SOLR_DIR,
                 stdout=logfp, stderr=logfp).pid
     f = open(PID_FILE, 'wb')
