@@ -22,24 +22,24 @@
 -->
 <config>
 
-  <abortOnConfigurationError>$options.abortOnConfigurationError</abortOnConfigurationError>
+  <abortOnConfigurationError>${options.abortOnConfigurationError}</abortOnConfigurationError>
 
   <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
 
-  <lib dir="$options.location/contrib/extraction/lib" regex=".*\.jar" />
-  <lib dir="$options.location/contrib/analysis-extras/lib" regex=".*\.jar" />
-  <lib dir="$options.location/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/extraction/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/analysis-extras/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
 
-  <lib dir="$options.location/dist/" regex="apache-solr-cell-\d.*\.jar" />
-  <lib dir="$options.location/dist/" regex="apache-solr-core-\d.*\.jar" />
-  <lib dir="$options.location/dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
-  <lib dir="$options.location/dist/" regex="apache-solr-langid-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-cell-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-core-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-langid-\d.*\.jar" />
 
-  #for $filter in $options.extralibs
-  <lib dir="$filter.path" regex="$filter.regex" />
-  #end for
+  {% for filter in options.extralibs %}\
+  <lib dir="${filter.path}" regex="${filter.regex}" />
+  {% end %}\
 
-  <dataDir>$options.datadir</dataDir>
+  <dataDir>${options.datadir}</dataDir>
 
   <directoryFactory name="DirectoryFactory"
                     class="solr.StandardDirectoryFactory"/>
@@ -68,9 +68,9 @@
   <mainIndex>
 
     <useCompoundFile>false</useCompoundFile>
-    <mergeFactor>$options.mergeFactor</mergeFactor>
-    <ramBufferSizeMB>$options.ramBufferSizeMB</ramBufferSizeMB>
-    <unlockOnStartup>$options.unlockOnStartup</unlockOnStartup>
+    <mergeFactor>${options.mergeFactor}</mergeFactor>
+    <ramBufferSizeMB>${options.ramBufferSizeMB}</ramBufferSizeMB>
+    <unlockOnStartup>${options.unlockOnStartup}</unlockOnStartup>
     <reopenReaders>true</reopenReaders>
 
     <deletionPolicy class="solr.SolrDeletionPolicy">
@@ -103,7 +103,7 @@
 
   <updateHandler class="solr.DirectUpdateHandler2">
 
-      $options.autoCommit
+      ${options.autoCommit}
 
   </updateHandler>
 
@@ -130,9 +130,9 @@
                and old cache.
       -->
     <filterCache class="solr.FastLRUCache"
-                 size="$options.filterCacheSize"
-                 initialSize="$options.filterCacheInitialSize"
-                 autowarmCount="$options.filterCacheAutowarmCount"/>
+                 size="${options.filterCacheSize}"
+                 initialSize="${options.filterCacheInitialSize}"
+                 autowarmCount="${options.filterCacheAutowarmCount}"/>
 
     <!-- Query Result Cache
 
@@ -140,9 +140,9 @@
          (DocList) based on a query, a sort, and the range of documents requested.
       -->
     <queryResultCache class="solr.FastLRUCache"
-                     size="$options.queryResultCacheSize"
-                     initialSize="$options.queryResultCacheInitialSize"
-                     autowarmCount="$options.queryResultCacheAutowarmCount"/>
+                     size="${options.queryResultCacheSize}"
+                     initialSize="${options.queryResultCacheInitialSize}"
+                     autowarmCount="${options.queryResultCacheAutowarmCount}"/>
 
     <!-- Document Cache
 
@@ -151,8 +151,8 @@
          this cache will not be autowarmed.
       -->
     <documentCache class="solr.FastLRUCache"
-                   size="$options.documentCacheSize"
-                   initialSize="$options.documentCacheInitialSize"/>
+                   size="${options.documentCacheSize}"
+                   initialSize="${options.documentCacheInitialSize}"/>
 
     <enableLazyFieldLoading>true</enableLazyFieldLoading>
 
@@ -179,7 +179,7 @@
          warming searcher and use it.  If "false" then all requests
          will block until the first searcher is done warming.
       -->
-    <useColdSearcher>$options.useColdSearcher</useColdSearcher>
+    <useColdSearcher>${options.useColdSearcher}</useColdSearcher>
 
     <!-- Max Warming Searchers
 
@@ -190,7 +190,7 @@
          Recommend values of 1-2 for read-only slaves, higher for
          masters w/o cache warming.
       -->
-    <maxWarmingSearchers>$options.maxWarmingSearchers</maxWarmingSearchers>
+    <maxWarmingSearchers>${options.maxWarmingSearchers}</maxWarmingSearchers>
 
   </query>
 
@@ -214,7 +214,7 @@
 
       -->
     <requestParsers enableRemoteStreaming="false"
-                    multipartUploadLimitInKB="$options.requestParsers_multipartUploadLimitInKB" />
+                    multipartUploadLimitInKB="${options.requestParsers_multipartUploadLimitInKB}" />
 
     <httpCaching lastModifiedFrom="openTime"
                  etagSeed="Solr">
@@ -234,14 +234,14 @@
   <requestHandler name="standard" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-       <int name="rows">$options.rows</int>
+       <int name="rows">${options.rows}</int>
      </lst>
   </requestHandler>
 
   <requestHandler name="search" class="solr.SearchHandler" default="true">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-       <int name="rows">$options.rows</int>
+       <int name="rows">${options.rows}</int>
        <str name="spellcheck.onlyMorePopular">false</str>
        <str name="spellcheck.extendedResults">false</str>
        <str name="spellcheck.count">1</str>
@@ -399,7 +399,7 @@
 
     <lst name="spellchecker">
       <str name="name">default</str>
-      <str name="field">$options.spellcheckField</str>
+      <str name="field">${options.spellcheckField}</str>
       <str name="spellcheckIndexDir">spellchecker</str>
       <float name="thresholdTokenFrequency">.001</float>
       <str name="buildOnOptimize">true</str>
@@ -546,6 +546,6 @@
     <defaultQuery>*:*</defaultQuery>
   </admin>
 
-  $options.additional_solrconfig
+  ${options.additional_solrconfig}
 
 </config>

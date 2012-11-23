@@ -43,7 +43,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'iw.recipe.template',
+        'genshi',
         'zc.buildout',
     ],
     setup_requires=[

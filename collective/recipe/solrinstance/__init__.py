@@ -6,7 +6,10 @@ import os
 import shutil
 import sys
 
-import iw.recipe.template
+from genshi.template import Context, NewTextTemplate
+from genshi.template.base import TemplateSyntaxError
+from genshi.template.eval import UndefinedError
+import pkg_resources
 import zc.buildout
 
 
@@ -57,6 +60,7 @@ class SolrBase(object):
     """This class hold every base functions """
 
     def __init__(self, buildout, name, options_orig):
+        self.generated = []
         self.name = name
         self.options_orig = options_orig
         self.buildout = buildout
@@ -327,49 +331,77 @@ class SolrBase(object):
             return '\n'.join(result)
         return ''
 
-    def generate_solr_mc(self, **kwargs):
-        iw.recipe.template.Template(
-            self.buildout,
-            'solr.xml',
-            kwargs).install()
+    def _generate_from_template(self, executable=False, **kwargs):
+        destination = kwargs['destination']
+        source = kwargs['source']
+        name = kwargs['name']
+        output_file = os.path.join(destination, name)
+        with open(source, 'r') as template:
+            template = NewTextTemplate(template)
 
-    def generate_jetty(self, **kwargs):
-        iw.recipe.template.Template(
-            self.buildout,
-            'jetty.xml',
-            kwargs).install()
+        context = Context(name=name, buildout=self.buildout, options=kwargs)
+        try:
+            output = template.generate(context).render()
+        except (TemplateSyntaxError, UndefinedError) as e:
+            raise zc.buildout.UserError("Error in template %s:\n%s" %
+                                        (name, e.msg))
 
-    def generate_logging(self, **kwargs):
-        iw.recipe.template.Template(
-            self.buildout,
-            'logging.properties',
-            kwargs).install()
+        if executable:
+            output = '#!%s\n%s' % (sys.executable, output)
 
-    def generate_solr_conf(self, **kwargs):
-        iw.recipe.template.Template(
-            self.buildout,
-            'solrconfig.xml',
-            kwargs).install()
+        if executable and sys.platform == 'win32':
+            exe = output_file + '.exe'
+            open(exe, 'wb').write(
+                pkg_resources.resource_string('setuptools', 'cli.exe')
+            )
+            self.generated.append(exe)
+            output_file = output_file + '-script.py'
 
-    def generate_solr_schema(self, **kwargs):
-        iw.recipe.template.Template(
-            self.buildout,
-            'schema.xml',
-            kwargs).install()
+        with open(output_file, 'w') as outfile:
+            outfile.write(output)
 
-    def generate_stopwords(self, **kwargs):
-        iw.recipe.template.Template(
-            self.buildout,
-            'stopwords.txt',
-            kwargs).install()
+        if executable:
+            self.logger.info("Generated script %r.", name)
+            try:
+                os.chmod(output_file, 493)  # 0755 / 0o755
+            except (AttributeError, os.error):
+                pass
+        else:
+            self.logger.info("Generated file %r.", name)
 
-    def create_bin_scripts(self, script, **kwargs):
+        self.generated.append(output_file)
+
+    def generate_solr_mc(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='solr.xml', **kwargs)
+
+    def generate_jetty(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='jetty.xml', **kwargs)
+
+    def generate_logging(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='logging.properties', **kwargs)
+
+    def generate_solr_conf(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='solrconfig.xml', **kwargs)
+
+    def generate_solr_schema(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='schema.xml', **kwargs)
+
+    def generate_stopwords(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='stopwords.txt', **kwargs)
+
+    def create_bin_scripts(self, script, source, destination, **kwargs):
         """ Create a runner for our solr instance """
         if script:
-            iw.recipe.template.Script(
-                self.buildout,
-                script,
-                kwargs).install()
+            self._generate_from_template(source=source,
+                                         destination=destination,
+                                         name=script, executable=True,
+                                         **kwargs)
 
     def copysolr(self, source, destination):
         # Copy the instance files
@@ -397,7 +429,7 @@ class SolrSingleRecipe(SolrBase):
 
     def install(self):
         """installer"""
-        parts = [self.install_dir]
+        self.generated = [self.install_dir]
 
         if os.path.exists(self.install_dir):
             shutil.rmtree(self.install_dir)
@@ -488,7 +520,7 @@ class SolrSingleRecipe(SolrBase):
             startcmd=self.parse_java_opts(self.instanceopts))
 
         # returns installed files
-        return parts
+        return self.generated
 
     def update(self):
         """updater"""
@@ -522,7 +554,7 @@ class MultiCoreRecipe(SolrBase):
 
     def install(self):
         """installer"""
-        parts = [self.install_dir]
+        self.generated = [self.install_dir]
 
         if os.path.exists(self.install_dir):
             shutil.rmtree(self.install_dir)
@@ -646,7 +678,7 @@ class MultiCoreRecipe(SolrBase):
             startcmd=self.parse_java_opts(self.instanceopts))
 
         # returns installed files
-        return parts
+        return self.generated
 
     def update(self):
         """updater"""
