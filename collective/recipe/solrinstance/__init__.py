@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import glob
+import logging
 import os
 import shutil
 import sys
@@ -66,6 +67,7 @@ class SolrBase(object):
 
         # let other recipies reference the destination path
         options_orig['location'] = self.install_dir
+        self.logger = logging.getLogger(self.name)
 
     def initServerInstanceOpts(self, buildout, name, options_orig):
         #server instance opts
@@ -378,7 +380,7 @@ class SolrBase(object):
             try:
                 shutil.copy(fname, dst_folder)
             except IOError as e:
-                print e
+                self.logger.error(e)
 
     def create_mc_solr(self, path, cores, solr_var):
         """create a empty solr mc dir"""
