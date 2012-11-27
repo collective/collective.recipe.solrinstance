@@ -207,12 +207,21 @@ extra-field-types
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
 
 filter
-    Configure the additional filters for the default field types.
-    Each filter is configured on a separated line. Each line contains
-    a ``index params`` pair, where ``index`` is one of the existing
-    index types and ``params`` contains ``[key]:[value]`` items to
-    configure the filter. Check the available filters in Solr's
-    docs: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
+    Configure additional filters for the default field types.
+    Each filter is configured on a separated line. Each line should read like::
+
+        text solr.EdgeNGramFilterFactory minGramSize="2" maxGramSize="15" side="front"
+
+    In the above example:
+
+    * ``text`` is the ``type``, one of the built-in field types
+    * ``solr.EdgeNGramFilterFactory`` is the ``class`` for this filter
+    * ``minGramSize="2"  maxGramSize="15" side="front"`` are the paramaters 
+      for the filter's configuration. They should be formatted as XML 
+      attributes.
+
+    Check the available filters in Solr's documentation:
+    http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
 
 index
     Configures the different types of index fields provided by the
