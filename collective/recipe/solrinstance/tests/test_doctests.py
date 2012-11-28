@@ -18,6 +18,6 @@ def setUp(test):
 
 def test_suite():
     return DocFileSuite(
-           'README.txt',
+           '../README.txt',
            setUp=setUp, tearDown=buildoutTearDown,
            optionflags=ELLIPSIS | NORMALIZE_WHITESPACE | REPORT_UDIFF)

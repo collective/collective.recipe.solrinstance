@@ -1,0 +1,131 @@
+from subprocess import Popen, call
+import atexit
+import signal
+import sys, os
+import platform
+
+
+WINDOWS = False
+
+if platform.system()=='Windows':
+    WINDOWS = True
+    _pyver = platform.python_version_tuple()
+    # if int(_pyver[0]) == 2 and int(_pyver[1]) < 7 and (_pyver[1]>=5):
+    if int(_pyver[0]) == 2 and (_pyver[1]>=5):
+        # For Win Python lower than 2.7 we have to emulate kill function
+        # it can be achieved using ctypes module, which exists since 2.5
+        # TODO: implement using os.kill for Python 2.7+ on Windows
+        import ctypes
+
+        def kill(pid):
+            """kill function for Win32"""
+            kernel32 = ctypes.windll.kernel32
+            handle = kernel32.OpenProcess(1, 0, pid)
+            return (0 != kernel32.TerminateProcess(handle, 0))
+
+
+if len(sys.argv) != 2:
+    print "please run with  %s start|stop|purge|status|fg" % __file__
+    sys.exit()
+
+PID_FILE = r'$options.pidfile'
+SOLR_DIR = r'$options.solrdir'
+SOLR_LOG = r'$options.logfile'
+START_CMD = $options.startcmd
+UPDATE_URL = r'$options.updateurl'
+
+def start(daemonize=True):
+    logfp = None
+    if daemonize:
+        logfp = file(SOLR_LOG, 'a+')
+    pid = Popen(START_CMD, cwd=SOLR_DIR,
+                stdout=logfp, stderr=logfp).pid
+    f = open(PID_FILE, 'wb')
+    f.write(str(pid))
+    f.close()
+    print 'Solr started with pid %s' % (pid,)
+    if not(daemonize):
+        try:
+            return os.waitpid(pid, 0)
+        except OSError, e:
+            if e.errno == 4:
+                return
+            else:
+                raise e
+
+def stop():
+    try:
+        f = open(PID_FILE)
+        pid = f.read().strip()
+        f.close()
+        # SIGHUP here didn't quite do the job, so using TERM instead
+        if WINDOWS:
+            kill(int(pid))
+        else:
+            os.kill(int(pid), signal.SIGTERM)
+
+        os.unlink(PID_FILE)
+        print "Solr stopped successfully."
+    except (IOError, OSError):
+        print "Error occured: Solr probably not stopped ..."
+
+def purge():
+    if status() > 0:
+        postdir = os.path.join(SOLR_DIR, 'exampledocs')
+        call(['java', '-Ddata=args' ,'-Durl=%s' % UPDATE_URL, 
+              '-jar', 'post.jar', '<delete><query>*:*</query></delete>'], 
+             cwd=postdir)
+    else:
+        print "Solr not running. Index can't be purged."
+
+def status():
+    try:
+        f = open(PID_FILE)
+        pid = f.read().strip()
+        f.close()
+        return pid
+    except (IOError, OSError):
+        return -1
+
+def graceful_stop():
+    print "Graceful stop"
+    if status() > 0:
+        stop()
+
+def exit_signal_handler(sig, frame):
+    graceful_stop()
+
+# We want solr to stop if this wrapper script is stopped
+
+if not WINDOWS:
+    # "On Windows, signal() can only be called with SIGABRT, SIGFPE, SIGILL, 
+    # SIGINT, SIGSEGV, or SIGTERM. A ValueError will be raised in any other 
+    # case" <= http://docs.python.org/library/signal.html
+    signal.signal(signal.SIGQUIT, exit_signal_handler)
+signal.signal(signal.SIGINT, exit_signal_handler)
+signal.signal(signal.SIGTERM, exit_signal_handler)
+
+if sys.argv[1] == 'start':
+    start(True)
+    sys.exit()
+if sys.argv[1] == 'fg':
+    atexit.register(graceful_stop)
+    start(False)
+elif sys.argv[1] == 'stop':
+    stop()
+elif sys.argv[1] == 'restart':
+    if status() > 0:
+        stop()
+    start(True)
+    sys.exit()
+elif sys.argv[1] == 'purge':
+    purge()
+elif sys.argv[1] == 'status':
+    pid = status()
+    if pid > 0:
+        print "Solr running with PID: ", pid
+    else:
+        print "Solr not running."
+else:
+    print ("illegal option: please run with "
+           "%s start|stop|restart|status|purge|fg" % __file__)

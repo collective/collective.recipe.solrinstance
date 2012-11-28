@@ -16,7 +16,7 @@ https://github.com/collective/collective.recipe.solrinstance
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-Note: This version of the recipe only supports Solr 3.5. Please use a release
+Note: This version of the recipe only supports Solr 3.5 and 4.0. Please use a release
 from the 2.x series if you are using Solr 1.4.
 
 Supported options
@@ -54,12 +54,12 @@ vardir
     single buildout and dedicate one or more of the instances to
     automated functional testing.
 
-logdir 
+logdir
     Optional override for the location of the Solr logfiles.
     Defaults to ``${buildout:directory}/var/solr``.
 
 jetty-template
-    Optional override for the ``jetty.xml`` template. Defaults to 
+    Optional override for the ``jetty.xml`` template. Defaults to
     ``templates/jetty.xml.tmpl``.
 
 logging-template
@@ -167,7 +167,6 @@ additional-solrconfig
     ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
 
 Cache options
-+++++++++++++
 
 Fine grained control of query caching as described at
 http://wiki.apache.org/solr/SolrCaching.
@@ -182,6 +181,8 @@ The supported options are:
 - ``queryResultCacheAutowarmCount``
 - ``documentCacheSize``
 - ``documentCacheInitialSize``
+- ``documentCacheAutowarmCount`` (only for solr 4)
+
 
 Schema
 ======
@@ -230,8 +231,8 @@ index
     pairs which define options associated with the index. Common
     field options are detailed at
     http://wiki.apache.org/solr/SchemaXml#Common_field_options and
-    are illustrated in following examples. 
-    
+    are illustrated in following examples.
+
     A special ``[key]:[value]`` pair is supported here for supporting `Copy
     Fields`; if you specify ``copyfield:dest_field``, then a ``<copyField>``
     declaration will be included in the schema that copies the given field into
@@ -260,15 +261,15 @@ Multi-core
 ==========
 
 cores
-    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every 
-    section in ``cores`` a multicore solr instance is created with it's own 
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every
+    section in ``cores`` a multicore solr instance is created with it's own
     configuration.
 
 default-core-name
     Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
     recipe, then this option controls which core is set as the default for
     incoming requests that do not specify a core name. This corresponds to
-    the ``defaultCoreName`` option described at 
+    the ``defaultCoreName`` option described at
     http://wiki.apache.org/solr/CoreAdmin#cores.
 
 Zope Integration
@@ -290,6 +291,7 @@ zope-conf
 Examples
 ********
 
+
 Single solr
 ===========
 
@@ -298,7 +300,7 @@ A simple example how a single solr could look like::
     [buildout]
     parts = solr-download
             solr
-           
+
     [solr-download]
     recipe = hexagonit.recipe.download
     strip-top-level-dir = true
@@ -327,8 +329,8 @@ A simple example how a single solr could look like::
 Multicore solr
 ==============
 
-To get multicore working it is needed to use 
-``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore 
+To get multicore working it is needed to use
+``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore
 solr could look like::
 
     [buildout]
