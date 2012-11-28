@@ -76,13 +76,10 @@ class SolrBase(object):
         options['basepath'] = options_orig.get('basepath', '/solr').strip()
         options['solr-location'] = os.path.abspath(
             options_orig.get('solr-location', '').strip())
-        options['jetty-template'] = options_orig.get("jetty-template",
-                '%s/jetty.xml.tmpl' % self.tpldir)
-        options['logging-template'] = options_orig.get("logging-template",
-                '%s/logging.properties.tmpl' % self.tpldir)
+        options['jetty-template'] = options_orig.get("jetty-template")
+        options['logging-template'] = options_orig.get("logging-template")
 
-        options['jetty-destination'] = options_orig.get(
-                'jetty-destination', os.path.join(self.install_dir, 'etc'))
+        options['jetty-destination'] = options_orig.get('jetty-destination')
 
         options['vardir'] = options_orig.get(
                 'vardir',
@@ -120,25 +117,15 @@ class SolrBase(object):
         options['name'] = name
         options['index'] = options_orig.get('index')
         options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
-        options['config-template'] = options_orig.get(
-            'config-template',
-            '%s/solrconfig.xml.tmpl' % self.tpldir)
+        options['config-template'] = options_orig.get('config-template')
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
                 '%s/schema.xml.tmpl' % self.tpldir)
         options['stopwords-template'] = options_orig.get(
             'stopwords-template',
             '%s/stopwords.txt.tmpl' % self.tpldir)
-        default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
-        if self.is_solr_4():
-            default_config_destination = os.path.join(
-                self.install_dir, 'solr', 'collection1', 'conf')
-        options['config-destination'] = options_orig.get(
-                'config-destination',
-                default_config_destination)
-        options['schema-destination'] = options_orig.get(
-                'schema-destination',
-                default_config_destination)
+        options['config-destination'] = options_orig.get('config-destination')
+        options['schema-destination'] = options_orig.get('schema-destination')
 
         try:
             num_results = int(options_orig.get('max-num-results',
@@ -436,22 +423,32 @@ class SolrSingleRecipe(SolrBase):
         for path in solr_data, solr_log:
             if not os.path.exists(path):
                 os.makedirs(path)
-
+        jetty_destination = (self.instanceopts.get('jetty-destination') or
+            os.path.join(self.install_dir, 'etc'))
         self.generate_jetty(
-            source=self.instanceopts.get('jetty-template'),
+            source=(self.instanceopts.get('jetty-template') or
+                '%s/jetty.xml.tmpl' % self.tpldir),
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
-            destination=self.instanceopts['jetty-destination'])
+            destination=jetty_destination
+        )
 
         self.generate_logging(
-            source=self.instanceopts.get('logging-template'),
-            destination=self.instanceopts['jetty-destination'])
-
+            source=(self.instanceopts.get('logging-template') or
+                '%s/logging.properties.tmpl' % self.tpldir),
+            destination=jetty_destination)
+        config_template = (self.solropts.get('config-template') or
+            '%s/solrconfig.xml.tmpl' % self.tpldir)
+        default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
+        if self.is_solr_4():
+            default_config_destination = os.path.join(
+                self.install_dir, 'solr', 'collection1', 'conf')
         self.generate_solr_conf(
-            source=self.solropts.get('config-template'),
+            source=config_template,
             datadir=solr_data,
-            destination=self.solropts['config-destination'],
+            destination=(self.solropts['config-destination'] or
+                default_config_destination),
             rows=self.solropts['max-num-results'],
             additional_solrconfig=self.solropts['additional-solrconfig'],
             useColdSearcher=self.solropts.get('useColdSearcher', 'false'),
@@ -481,14 +478,16 @@ class SolrSingleRecipe(SolrBase):
 
         self.generate_solr_schema(
             source=self.solropts.get('schema-template'),
-            destination=self.solropts['schema-destination'],
+            destination=(self.solropts['schema-destination'] or
+                default_config_destination),
             filters=self.parse_filter(self.solropts),
             indeces=self.parse_index(self.solropts),
             options=self.solropts)
 
         self.generate_stopwords(
             source=self.solropts.get('stopwords-template'),
-            destination=self.solropts['config-destination'],
+            destination=(self.solropts['config-destination'] or
+                default_config_destination),
             )
 
         self.create_bin_scripts(
@@ -588,10 +587,11 @@ class MultiCoreRecipe(SolrBase):
             solr_data = os.path.join(solr_var, 'data', core)
             if not os.path.exists(solr_data):
                 os.makedirs(solr_data)
+            config_template = (options_core.get('config-template') or
+                '%s/solrconfig.xml.tmpl' % self.tpldir)
 
             self.generate_solr_conf(
-                source=options_core.get('config-template',
-                    '%s/solrconfig.xml.tmpl' % self.tpldir),
+                source=config_template,
                 datadir=solr_data,
                 destination=conf_dir,
                 rows=options_core['max-num-results'],
@@ -637,18 +637,21 @@ class MultiCoreRecipe(SolrBase):
                 filters=self.parse_filter(options_core),
                 indeces=self.parse_index(options_core),
                 options=options_core)
+        jetty_destination = (self.instanceopts.get('jetty-destination') or
+            os.path.join(self.install_dir, 'etc'))
 
         self.generate_jetty(
-            source=self.instanceopts.get('jetty-template',
-                     '%s/jetty.xml.tmpl' % self.tpldir),
+            source=(self.instanceopts.get('jetty-template') or
+                '%s/jetty.xml.tmpl' % self.tpldir),
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
-            destination=self.instanceopts['jetty-destination'])
+            destination=jetty_destination)
 
         self.generate_logging(
-            source=self.instanceopts.get('logging-template'),
-            destination=self.instanceopts['jetty-destination'])
+            source=(self.instanceopts.get('logging-template') or
+                '%s/logging.properties.tmpl' % self.tpldir),
+            destination=jetty_destination)
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
