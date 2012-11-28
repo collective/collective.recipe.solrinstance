@@ -259,6 +259,8 @@ class SolrBase(object):
         indeces = []
         names = []
         for line in options['index'].strip().splitlines():
+            if line.strip().startswith('#'):
+                continue  # Allow comments
             entry = {}
             for item in self._splitIndexLine(line):
                 attr, value = item.split(':')[:2]

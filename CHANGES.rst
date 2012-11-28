@@ -7,6 +7,7 @@ Change History
 - Allow ``cores`` to be separated by newlines rather than just spaces.
   [domruf]
 - solr 4.0 support [silviot]
+- allow comments in index directive [silviot]
 
 
 3.8 (2012-08-09)

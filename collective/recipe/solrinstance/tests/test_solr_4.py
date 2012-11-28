@@ -24,6 +24,7 @@ max-num-results = 55
 unique-key = uniqueID
 index =
     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    # You can add comment lines among index definitions
     name:Foo type:text
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
@@ -58,6 +59,7 @@ section-name = SOLR
 unique-key = uniqueID
 index =
     name:uniqueID type:string indexed:true stored:true required:true
+    # You can add comment lines among index definitions
     name:Foo type:text
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
