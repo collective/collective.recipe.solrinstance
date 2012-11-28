@@ -9,7 +9,6 @@ Change History
 - solr 4.0 support [silviot]
 - allow comments in index directive [silviot]
 
-
 3.8 (2012-08-09)
 ================
 
@@ -23,7 +22,6 @@ Change History
 - Add documentation and tests for ``copyfield`` option for indexes to test
   and clarify that this option is available.
   [davidjb]
->>>>>>> d4aa5e0cee66ed1d45959528dae2a1221c50fa7a:CHANGES.rst
 
 3.7.1 (2012-02-28)
 ==================
