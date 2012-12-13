@@ -54,7 +54,7 @@ setup(
         'zope.interface',
         'zope.testing',
     ],
-    test_suite='collective.recipe.solrinstance.tests.test_suite',
+    test_suite='collective.recipe.solrinstance.tests.test_doctests.test_suite',
     entry_points={
         "zc.buildout": [
             "default = collective.recipe.solrinstance:SolrSingleRecipe",

@@ -9,7 +9,8 @@ Change History
 - Add ``char-filter`` as an option for setting CharFilterFactories for
   default field types.
   [davidjb]
-
+- solr 4.0 support [silviot]
+- allow comments in index directive [silviot]
 
 3.8 (2012-08-09)
 ================
