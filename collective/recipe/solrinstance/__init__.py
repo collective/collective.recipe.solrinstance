@@ -32,6 +32,8 @@ DEFAULT_FILTERS = """
     text solr.TrimFilterFactory
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
 """
+DEFAULT_CHAR_FILTERS = """
+"""
 
 ZOPE_CONF = """
 <product-config %(section-name)s>
@@ -107,6 +109,9 @@ class SolrBase(object):
         options['name'] = name
         options['index'] = options_orig.get('index')
         options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
+        options['char-filter'] = options_orig.get(
+            'char-filter',
+            DEFAULT_CHAR_FILTERS).strip()
         options['config-template'] = options_orig.get(
             'config-template',
             '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR)
@@ -188,12 +193,12 @@ class SolrBase(object):
 
         return options
 
-    def parse_filter(self, options):
+    def parse_filter(self, options, option_key='filter'):
         """Parses the filter definitions from the options."""
         filters = {}
         for index in INDEX_TYPES:
             filters[index] = []
-        for line in options.get('filter').splitlines():
+        for line in options.get(option_key).splitlines():
             index, params = line.strip().split(' ', 1)
             parsed = params.strip().split(' ', 1)
             klass, extra = parsed[0], ''
@@ -461,6 +466,7 @@ class SolrSingleRecipe(SolrBase):
             source=self.solropts.get('schema-template'),
             destination=self.solropts['schema-destination'],
             filters=self.parse_filter(self.solropts),
+            char_filters=self.parse_filter(self.solropts, 'char-filter'),
             indeces=self.parse_index(self.solropts),
             options=self.solropts)
 
@@ -612,6 +618,7 @@ class MultiCoreRecipe(SolrBase):
                     '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR),
                 destination=conf_dir,
                 filters=self.parse_filter(options_core),
+                char_filters=self.parse_filter(options_core, 'char-filter'),
                 indeces=self.parse_index(options_core),
                 options=options_core)
 

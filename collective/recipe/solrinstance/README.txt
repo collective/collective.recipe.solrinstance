@@ -31,6 +31,8 @@ extracted in the parts directory:
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... char-filter =
+    ...     text solr.HTMLStripCharFilterFactory
     ... additional-schema-config =
     ...      <copyField source="*" dest="Everything"/>
     ... """)
@@ -101,6 +103,8 @@ And make sure the substitution worked for all files.
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <filter class="Baz" foo="bar" juca="bala"/>
+    ...
+    <charFilter class="solr.HTMLStripCharFilterFactory" />
     ...
     <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
@@ -854,6 +858,9 @@ Test our first core:
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ...     name:Foo bar type:text
     ...     name:BlaWS type:text_ws
+    ... char-filter =
+    ...     text_ws solr.HTMLStripCharFilterFactory
+    ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
@@ -866,6 +873,9 @@ Test our first core:
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ...     name:Foo bar type:text
+    ... char-filter =
+    ...     text_ws solr.HTMLStripCharFilterFactory
+    ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
@@ -922,6 +932,8 @@ See if name is set in `schema.xml`:
     <schema name="core1"...
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <charFilter class="solr.MappingCharFilterFactory" mapping="my-mapping.txt"/>
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         <filter class="Baz" foo="bar" juca="bala"/>
       </analyzer>

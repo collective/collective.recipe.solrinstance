@@ -143,6 +143,9 @@
     <!-- A text field that only splits on whitespace for exact matching of words -->
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
+        #for $char_filter in $options.char_filters.text_ws
+        <charFilter class="$char_filter.class" $char_filter.extra/>
+        #end for
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
         #for $filter in $options.filters.text_ws
         <filter class="$filter.class" $filter.extra/>
@@ -152,6 +155,9 @@
 
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
       <analyzer>
+        #for $char_filter in $options.char_filters.text
+        <charFilter class="$char_filter.class" $char_filter.extra/>
+        #end for
         <tokenizer class="solr.ICUTokenizerFactory"/>
         #for $filter in $options.filters.text
         <filter class="$filter.class" $filter.extra/>

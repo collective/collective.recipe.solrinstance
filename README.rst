@@ -223,6 +223,16 @@ filter
     Check the available filters in Solr's documentation:
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
 
+char-filter
+    Configure additional character filters (``CharFilterFactories``) for the
+    default field types.
+
+    Each filter is configured on a separated line and follows the same
+    configuration style as the ``filter`` option above.
+
+    Information about available character filters is available in
+    Solr's documentation: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#CharFilterFactories
+
 index
     Configures the different types of index fields provided by the
     Solr instance. Each field is configured on a separated line. Each

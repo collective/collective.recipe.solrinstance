@@ -6,6 +6,9 @@ Change History
 
 - Allow ``cores`` to be separated by newlines rather than just spaces.
   [domruf]
+- Add ``char-filter`` as an option for setting CharFilterFactories for
+  default field types.
+  [davidjb]
 
 
 3.8 (2012-08-09)
