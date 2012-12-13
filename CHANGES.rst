@@ -4,13 +4,15 @@ Change History
 3.9 (unreleased)
 ================
 
+- Solr 4.0 support
+  [silviot]
+- Allow comments in index directive
+  [silviot]
 - Allow ``cores`` to be separated by newlines rather than just spaces.
   [domruf]
 - Add ``char-filter`` as an option for setting CharFilterFactories for
   default field types.
   [davidjb]
-- solr 4.0 support [silviot]
-- allow comments in index directive [silviot]
 
 3.8 (2012-08-09)
 ================
