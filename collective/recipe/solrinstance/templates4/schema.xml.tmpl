@@ -461,6 +461,11 @@
     <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
     <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
 
+   <!--
+    A Geohash is a compact representation of a latitude longitude pair in a single field.
+    See http://wiki.apache.org/solr/SpatialSearch
+   -->
+    <fieldType name="geohash" class="solr.GeoHashField"/>
     <!-- An alternative geospatial field type new to Solr 4.  It supports multiValued and polygon shapes.
       For more information about this and other Spatial fields new to Solr 4, see:
       http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
@@ -565,5 +570,10 @@
   <copyField source="$copyfield.source" dest="$copyfield.dest"/>
   #end for
   #end for
+
+  #if $options.options.additionalSchemaConfig
+  <!-- Additional schema configuration -->
+  $options.options.additionalSchemaConfig
+  #end if
 
 </schema>

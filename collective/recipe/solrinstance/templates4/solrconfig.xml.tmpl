@@ -309,7 +309,7 @@
          Caches results of searches - ordered lists of document ids
          (DocList) based on a query, a sort, and the range of documents requested.
       -->
-    <queryResultCache class="solr.LRUCache"
+    <queryResultCache class="solr.FastLRUCache"
                      size="$options.queryResultCacheSize"
                      initialSize="$options.queryResultCacheInitialSize"
                      autowarmCount="$options.queryResultCacheAutowarmCount"/>
@@ -320,7 +320,7 @@
          document).  Since Lucene internal document ids are transient,
          this cache will not be autowarmed.
       -->
-    <documentCache class="solr.LRUCache"
+    <documentCache class="solr.FastLRUCache"
                    size="$options.documentCacheSize"
                    initialSize="$options.documentCacheInitialSize"
                    autowarmCount="$options.documentCacheAutowarmCount"/>
@@ -394,12 +394,12 @@
         then documents 0 through 49 will be collected and cached.  Any further
         requests in that range can be satisfied via the cache.
      -->
-   <queryResultWindowSize>20</queryResultWindowSize>
+   <queryResultWindowSize>10</queryResultWindowSize>
 
    <!-- Maximum number of documents to cache for any entry in the
         queryResultCache.
      -->
-   <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
+   <queryResultMaxDocsCached>100</queryResultMaxDocsCached>
 
    <!-- Query Related Event Listeners
 
@@ -478,7 +478,7 @@
        handleSelect="true" is not recommended for new users, but is the default
        for backwards compatibility
     -->
-  <requestDispatcher handleSelect="true" >
+  <requestDispatcher handleSelect="true">
     <!-- Request Parsing
 
          These settings indicate how Solr Requests may be parsed, and
@@ -497,10 +497,11 @@
          using enableRemoteStreaming="true"
 
       -->
-    <requestParsers enableRemoteStreaming="true"
+    <requestParsers enableRemoteStreaming="false"
                     multipartUploadLimitInKB="$options.requestParsers_multipartUploadLimitInKB" />
 
     <!-- HTTP Caching
+
 
          Set HTTP caching related parameters (for proxy caches and clients).
 
@@ -553,6 +554,9 @@
          <cacheControl>max-age=30, public</cacheControl>
        </httpCaching>
       -->
+    <httpCaching lastModifiedFrom="openTime"
+                 etagSeed="Solr">
+    </httpCaching>
   </requestDispatcher>
 
   <!-- Request Handlers
