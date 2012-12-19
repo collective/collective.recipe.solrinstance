@@ -12,12 +12,14 @@ search, caching, replication, and a web administration interface
 Git Repository and issue tracker:
 https://github.com/collective/collective.recipe.solrinstance
 
+.. image::  https://travis-ci.org/collective/collective.recipe.solrinstance.png
+
 .. _Solr : http://lucene.apache.org/solr/
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-Note: This version of the recipe only supports Solr 3.5 and 4.0. Please use a release
-from the 2.x series if you are using Solr 1.4.
+*Note:* This version of the recipe only supports Solr 3.5 and 4.0. Please use a
+release from the 2.x series if you are using Solr 1.4.
 
 Supported options
 *****************
@@ -99,8 +101,8 @@ java_opts
           -Xmx1024M
         ...
 
-Config
-======
+Solr Configuration
+==================
 
 config-destination
     Optional override for the directory where the ``solrconfig.xml``
@@ -166,7 +168,9 @@ additional-solrconfig
     Optional additional configuration to be included inside the
     ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
 
-Cache options
+
+Cache Options
+=============
 
 Fine grained control of query caching as described at
 http://wiki.apache.org/solr/SolrCaching.
@@ -228,8 +232,8 @@ filter
 
     In the above example:
 
-    * ``text`` is the ``type``, one of the built-in field types
-    * ``solr.EdgeNGramFilterFactory`` is the ``class`` for this filter
+    * ``text`` is the ``type``, one of the built-in field types;
+    * ``solr.EdgeNGramFilterFactory`` is the ``class`` for this filter; and
     * ``minGramSize="2"  maxGramSize="15" side="front"`` are the parameters 
       for the filter's configuration. They should be formatted as XML 
       attributes.
@@ -244,7 +248,7 @@ filter
       * ``solr.StopFilterFactory``
 
     To suppress default behaviour, configure the ``filter`` option accordingly.
-    If you want no filters, then set ``filter = `` (blank option) in your
+    If you want no filters, then set ``filter =`` (as an empty option) in your
     Buildout configuration. This is useful in the situation where you want no
     default filters and want full control over specifying filters on a
     per-analyzer basis.
@@ -389,14 +393,22 @@ additional-schema-config
 Multi-core
 ==========
 
+The following options only apply if ``collective.recipe.solrinstance:mc`` is
+specified. They are optional if the normal recipe is being used.
+
 cores
-    Optional. If ``collective.recipe.solrinstance:mc`` is specified for every
-    section in ``cores`` a multicore solr instance is created with it's own
+    A list of identifiers of Buildout configuration sections that correspond
+    to individual Solr core configurations. Each identifier specified will
+    have the section it relates to processed according to the given options
+    above to generate Solr configuration files for each core.  See `Multi-core
+    Solr`_ for an example.  
+    
+    Each identifier specified will result in a Solr ``instanceDir`` being
+    created and entries for each core placed in Solr's ``solr.xml``
     configuration.
 
 default-core-name
-    Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
-    recipe, then this option controls which core is set as the default for
+    Optional. This option controls which core is set as the default for
     incoming requests that do not specify a core name. This corresponds to
     the ``defaultCoreName`` option described at
     http://wiki.apache.org/solr/CoreAdmin#cores.
@@ -405,7 +417,7 @@ Zope Integration
 ================
 
 section-name
-    Name of the product-config section to be generated for ``zope.conf``.
+    Name of the ``product-config`` section to be generated for ``zope.conf``.
     Defaults to ``solr``.
 
 zope-conf
@@ -421,10 +433,10 @@ Examples
 ********
 
 
-Single solr
+Single Solr
 ===========
 
-A simple example how a single solr could look like::
+A simple example how a single Solr configuration could look like this::
 
     [buildout]
     parts = solr-download
@@ -459,12 +471,12 @@ A simple example how a single solr could look like::
     additional-schema-config =
         <copyField source="*" dest="Everything"/>
 
-Multicore solr
-==============
+Multi-core Solr
+===============
 
-To get multicore working it is needed to use
-``collective.recipe.solrinstance:mc`` recipe. A simple example how a multicore
-solr could look like::
+To configure Solr for multiple cores, you must use the
+``collective.recipe.solrinstance:mc`` recipe. An example of a multi-core Solr
+configuration could look like the following::
 
     [buildout]
     parts = solr-download
