@@ -860,10 +860,21 @@ Test our first core:
     ...     name:BlaWS type:text_ws
     ... char-filter =
     ...     text_ws solr.HTMLStripCharFilterFactory
+    ... char-filter-index =
     ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... filter-index =
+    ...     text solr.LowerCaseFilterFactory
+    ... filter-query =
+    ...     text solr.LowerCaseFilterFactory
+    ...     text solr.PorterStemFilterFactory
+    ... tokenizer-index =
+    ...     text solr.StandardTokenizerFactory
+    ... tokenizer-query =
+    ...     text solr.StandardTokenizerFactory
+    ...     text solr.WhitespaceTokenizerFactory
     ...
     ... [core2]
     ... max-num-results = 99
@@ -875,10 +886,21 @@ Test our first core:
     ...     name:Foo bar type:text
     ... char-filter =
     ...     text_ws solr.HTMLStripCharFilterFactory
+    ... char-filter-index =
     ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... filter-index =
+    ...     text solr.LowerCaseFilterFactory
+    ... filter-query =
+    ...     text solr.LowerCaseFilterFactory
+    ...     text solr.PorterStemFilterFactory
+    ... tokenizer-index =
+    ...     text solr.StandardTokenizerFactory
+    ... tokenizer-query =
+    ...     text solr.StandardTokenizerFactory
+    ...     text solr.WhitespaceTokenizerFactory
     ... """)
 
 Ok, let's run the buildout:
@@ -930,12 +952,30 @@ See if name is set in `schema.xml`:
     >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf', 'schema.xml')
     <?xml...
     <schema name="core1"...
-    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
+    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="index">
         <charFilter class="solr.HTMLStripCharFilterFactory" />
         <charFilter class="solr.MappingCharFilterFactory" mapping="my-mapping.txt"/>
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
         <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+      <analyzer type="query">
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+    </fieldType>...
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.PorterStemFilterFactory" />
       </analyzer>
     </fieldType>
     ...

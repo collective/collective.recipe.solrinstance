@@ -72,7 +72,7 @@ jetty-destination
 
 extralibs
     Optional includes of custom Java libraries. The option takes
-    a path and a regular expression per line seperated by a colon.
+    a path and a regular expression per line separated by a colon.
     The regular expression is optional and defaults to ``.*\.jar``
     (all jar-files in a directory). Example::
 
@@ -150,12 +150,12 @@ spellcheckField
     Defaults to ``default``.
 
 autoCommitMaxDocs
-    Let's you enable auto commit handling and force a commit after at least
+    Lets you enable auto commit handling and force a commit after at least
     the number of documents were added. This is disabled by default.
 
 autoCommitMaxTime
-    Let's you enable auto commit handling after a specified time in milli
-    seconds. This is disabled by default.
+    Lets you enable auto commit handling after a specified time in
+    milliseconds. This is disabled by default.
 
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
@@ -181,7 +181,7 @@ The supported options are:
 - ``queryResultCacheAutowarmCount``
 - ``documentCacheSize``
 - ``documentCacheInitialSize``
-- ``documentCacheAutowarmCount`` (only for solr 4)
+- ``documentCacheAutowarmCount`` (only for Solr 4)
 
 
 Schema
@@ -204,12 +204,25 @@ stopwords-template
 extra-field-types
     Configure the extra field types available to be used in the
     ``index`` option. You can create custom field types with special
-    analysers and tokenizers, check Solr's complete reference:
+    analyzers and tokenizers, check Solr's complete reference:
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
 
 filter
-    Configure additional filters for the default field types.
-    Each filter is configured on a separated line. Each line should read like::
+    Configure filters for analyzers for the default field types.
+    These accept tokens produced by a given ``tokenizer`` and process them
+    in series to either add, change or remove tokens. After all filters
+    have been applied, the resulting token stream is indexed into the given
+    field.
+    
+    This option applies to the default analyzer for a given field -- by
+    default, Solr considers this to apply to both ``query`` and ``index``
+    analyzers.  If you want to configure separate analyzers, see the
+    ``filter-query`` and ``filter-index`` options below.
+
+    Each filter is configured on a separated line and each filter will be
+    applied to tokens (during Solr operation) in the order specified.
+    
+    Each line should read like::
 
         text solr.EdgeNGramFilterFactory minGramSize="2" maxGramSize="15" side="front"
 
@@ -217,22 +230,128 @@ filter
 
     * ``text`` is the ``type``, one of the built-in field types
     * ``solr.EdgeNGramFilterFactory`` is the ``class`` for this filter
-    * ``minGramSize="2"  maxGramSize="15" side="front"`` are the paramaters 
+    * ``minGramSize="2"  maxGramSize="15" side="front"`` are the parameters 
       for the filter's configuration. They should be formatted as XML 
       attributes.
+
+    By default, for the default analyzer (being both ``query`` and ``index``):
+
+    * ``text`` fields are filtered using:
+
+      * ``solr.ICUFoldingFilterFactory``
+      * ``solr.WordDelimiterFilterFactory``
+      * ``solr.TrimFilterFactory``
+      * ``solr.StopFilterFactory``
+
+    To suppress default behaviour, configure the ``filter`` option accordingly.
+    If you want no filters, then set ``filter = `` (blank option) in your
+    Buildout configuration. This is useful in the situation where you want no
+    default filters and want full control over specifying filters on a
+    per-analyzer basis.
 
     Check the available filters in Solr's documentation:
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
 
-char-filter
-    Configure additional character filters (``CharFilterFactories``) for the
-    default field types.
+filter-query
+    Configure filters for default field types for ``query`` analyzers only. 
+    This option is like ``filter`` but only applies to the ``query`` analyzer
+    for a given field.
 
-    Each filter is configured on a separated line and follows the same
-    configuration style as the ``filter`` option above.
+    Configuration syntax is the same as the ``filter`` option above.  Options
+    specified here will be added after any that apply from usage of the main
+    ``filter`` option.
+
+filter-index
+    Configure filters for default field types for ``index`` analyzers only. 
+    This option is like ``filter`` but only applies to the ``index`` analyzer
+    for a given field.
+    
+    Configuration syntax is the same as the ``filter`` option above.  Options
+    specified here will be added after any that apply from usage of the main
+    ``filter`` option.
+
+char-filter
+    Configure character filters (``CharFilterFactories``) for analyzers for the
+    default field types. These are pre-processors for input characters
+    in Solr fields or queries (consuming and producing a character stream) that
+    can add, change or remove characters while preserving character position
+    information
+    
+    This option applies to the default analyzer for a given field -- by
+    default, Solr considers this to apply to both ``query`` and ``index``
+    analyzers.  If you want to configure separate analyzers, see the
+    ``char-filter-query`` and ``char-filter-index`` options below.
+
+    Each char filter is configured on a separated line, following the same
+    configuration syntax as the ``filter`` option above.  Each char filter will
+    be applied to tokens (during Solr operation) in the order specified.
+
+    By default, no char filters are specified for any analyzers.
 
     Information about available character filters is available in
     Solr's documentation: http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#CharFilterFactories
+
+char-filter-query
+    Configure character filters for default field types for ``query`` analyzers
+    only.  This option is like ``char-filter`` but only applies to the
+    ``query`` analyzer for a given field type.
+
+    Configuration syntax is the same as the ``filter`` option above.  Options
+    specified here will be added after any that apply from usage of the main
+    ``char filter`` option.
+
+char-filter-index
+    Configure character filters for default field types for ``index`` analyzers
+    only.  This option is like ``char-filter`` but only applies to the
+    ``index`` analyzer for a given field type.
+    
+    Configuration syntax is the same as the ``filter`` option above.  Options
+    specified here will be added after any that apply from usage of the main
+    ``char filter`` option.
+
+tokenizer
+    Configure tokenizers for analyzers for the default field types.
+    
+    This option applies to the default analyzer for a given field -- by
+    default, Solr considers this to apply to both ``query`` and ``index``
+    analyzers.  If you want to configure separate analyzers, see the
+    ``tokenizer-query`` and ``tokenizer-index`` options below.
+
+    Each tokenizer is configured on a separated line, following the same
+    configuration syntax as the ``filter`` option above. Only one tokenizer
+    may be specified per analyzer type for a given field type.  If you specify
+    multiple tokenizers for the same field type, the last one specified will
+    take precedence.
+
+    By default, for the default analyzer (being both ``query`` and ``index``):
+
+     * ``text`` fields are tokenized using ``solr.ICUTokenizerFactory``
+     * ``text_ws`` fields are tokenized using
+       ``solr.WhitespaceTokenizerFactory``
+
+tokenizer-query
+    Configure a tokenizer for default field types for ``query`` analyzers
+    only.  This option is like ``tokenizer``, but only applies to the
+    ``query`` analyzer for a given field type.
+
+    Configuration syntax is the same as the ``filter`` option above.  
+    Options specified here will overide any that apply from usage of the main
+    ``tokenizer`` option. For instance, if you specified a ``text_ws``
+    tokenizer within the ``tokenizer`` option, and re-specify another
+    ``text_ws`` tokenizer here, then this will take precedence.  Other field
+    types will not be affected if not overriden.
+
+tokenizer-index
+    Configure a tokenizer for default field types for ``index`` analyzers
+    only.  This option is like ``tokenizer``, but only applies to the
+    ``index`` analyzer for a given field type.
+
+    Configuration syntax is the same as the ``filter`` option above.  
+    Options specified here will overide any that apply from usage of the main
+    ``tokenizer`` option. For instance, if you specified a ``text_ws``
+    tokenizer within the ``tokenizer`` option, and re-specify another
+    ``text_ws`` tokenizer here, then this will take precedence.  Other field
+    types will not be affected if not overriden.
 
 index
     Configures the different types of index fields provided by the
@@ -333,6 +452,10 @@ A simple example how a single solr could look like::
         name:Everything type:text
     filter =
         text solr.LowerCaseFilterFactory
+    char-filter-index =
+        text solr.HTMLStripCharFilterFactory
+    tokenizer-query =
+        text solr.WhitespaceTokenizerFactory
     additional-schema-config =
         <copyField source="*" dest="Everything"/>
 
@@ -372,6 +495,11 @@ solr could look like::
         name:Everything type:text
     filter =
         text solr.LowerCaseFilterFactory
+    char-filter-index =
+        text solr.HTMLStripCharFilterFactory
+    tokenizer-query =
+        text solr.WhitespaceTokenizerFactory
+        text solr.LowerCaseFilterFactory
     additional-schema-config =
         <copyField source="*" dest="Everything"/>
 
@@ -385,3 +513,7 @@ solr could look like::
         name:Lau type:text
     filter =
         text solr.LowerCaseFilterFactory
+    char-filter-query =
+        text solr.HTMLStripCharFilterFactory
+    tokenizer-index =
+        text solr.WhitespaceTokenizerFactory

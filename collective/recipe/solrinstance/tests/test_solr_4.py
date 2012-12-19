@@ -29,9 +29,23 @@ index =
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
     name:BlaWS type:text_ws
+char-filter =
+    text_ws solr.HTMLStripCharFilterFactory
+char-filter-index =
+    text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
 filter =
     text solr.ISOLatin1AccentFilterFactory
     text_ws Baz foo="bar" juca="bala"
+filter-index =
+    text solr.LowerCaseFilterFactory
+filter-query =
+    text solr.LowerCaseFilterFactory
+    text solr.PorterStemFilterFactory
+tokenizer-index =
+    text solr.StandardTokenizerFactory
+tokenizer-query =
+    text solr.StandardTokenizerFactory
+    text solr.WhitespaceTokenizerFactory
 
 [core2]
 max-num-results = 99
@@ -41,9 +55,23 @@ index =
     name:Foo type:text
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
+char-filter =
+    text_ws solr.HTMLStripCharFilterFactory
+char-filter-index =
+    text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
 filter =
     text solr.ISOLatin1AccentFilterFactory
     text_ws Baz foo="bar" juca="bala"
+filter-index =
+    text solr.LowerCaseFilterFactory
+filter-query =
+    text solr.LowerCaseFilterFactory
+    text solr.PorterStemFilterFactory
+tokenizer-index =
+    text solr.StandardTokenizerFactory
+tokenizer-query =
+    text solr.StandardTokenizerFactory
+    text solr.WhitespaceTokenizerFactory
 """
 
 SINGLE_CORE_CONF = """
@@ -63,9 +91,23 @@ index =
     name:Foo type:text
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
+char-filter =
+    text_ws solr.HTMLStripCharFilterFactory
+char-filter-index =
+    text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
 filter =
     text solr.ISOLatin1AccentFilterFactory
     text_ws Baz foo="bar" juca="bala"
+filter-index =
+    text solr.LowerCaseFilterFactory
+filter-query =
+    text solr.LowerCaseFilterFactory
+    text solr.PorterStemFilterFactory
+tokenizer-index =
+    text solr.StandardTokenizerFactory
+tokenizer-query =
+    text solr.StandardTokenizerFactory
+    text solr.WhitespaceTokenizerFactory
 """
 
 
@@ -97,6 +139,18 @@ class TestSolr4(unittest.TestCase):
         ))
         with open(filepath) as fh:
             return fh.read()
+
+    def _test_field_types(self, schema_file):
+        self.assertTrue('analyzer type="index"' in schema_file)
+        self.assertTrue('analyzer type="query"' in schema_file)
+        self.assertTrue('<charFilter class="solr.HTMLStripCharFilterFactory' \
+                        in schema_file)
+        self.assertTrue('<charFilter class="solr.MappingCharFilterFactory" mapping="my-mapping.txt"' in schema_file)
+        self.assertTrue('<tokenizer class="solr.WhitespaceTokenizerFactory' \
+                        in schema_file)
+        self.assertTrue('<filter class="Baz"' in schema_file)
+        self.assertTrue('<filter class="solr.PorterStemFilterFactory' \
+                        in schema_file)
 
     def test_basic_install(self):
         with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
@@ -131,6 +185,8 @@ class TestSolr4(unittest.TestCase):
         self.assertTrue(foobar in schema_file)
         self.assertTrue('<uniqueKey>uniqueID</uniqueKey>' in schema_file)
 
+        self._test_field_types(schema_file)
+
         solrconfig_file = self.getfile(
             'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
         datadir = "<dataDir>%s/var/solr/data</dataDir>" % sample_buildout
@@ -161,6 +217,8 @@ class TestSolr4(unittest.TestCase):
         core1_schema = self.getfile('parts', 'solr-mc', 'solr', 'core1', 'conf', 'schema.xml')
         self.assertTrue('<schema name="core1"' in core1_schema)
         self.assertTrue('<field name="BlaWS" type="text_ws" indexed="true"' in core1_schema)
+        
+        self._test_field_types(core1_schema)
 
 
 

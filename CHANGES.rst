@@ -4,6 +4,13 @@ Change History
 3.9 (unreleased)
 ================
 
+- Add ability to control ``filter``, ``char-filter`` and ``tokenizer`` options
+  for different analyzers (eg ``query`` and ``index`` analyzers). These
+  options are named like ``filter-query``.
+  [davidjb]
+- Add ``tokenizer`` option for controlling the tokenizers set for default
+  field type analyzers.
+  [davidjb]
 - Solr 4.0 support
   [silviot]
 - Allow comments in index directive

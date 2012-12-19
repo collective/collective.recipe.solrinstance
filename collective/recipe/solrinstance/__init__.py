@@ -34,6 +34,13 @@ DEFAULT_FILTERS = """
 """
 DEFAULT_CHAR_FILTERS = """
 """
+DEFAULT_TOKENIZER = """
+    text solr.ICUTokenizerFactory
+    text_ws solr.WhitespaceTokenizerFactory
+"""
+
+#: Processors that allow just one entry per field type
+UNIQUE_PROCESSORS = ('tokenizer',)
 
 ZOPE_CONF = """
 <product-config %(section-name)s>
@@ -114,14 +121,27 @@ class SolrBase(object):
 
     def initSolrOpts(self, buildout, name, options_orig):
         #solr opts
-        options = {}
+        options = {'analyzers': {}}
 
         options['name'] = name
         options['index'] = options_orig.get('index')
-        options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
-        options['char-filter'] = options_orig.get(
-            'char-filter',
-            DEFAULT_CHAR_FILTERS).strip()
+
+        #General filters apply to both querying/indexing analyzers for fields
+        filter = options_orig.get('filter', DEFAULT_FILTERS).strip()
+        char_filter = options_orig.get('char-filter',
+                                       DEFAULT_CHAR_FILTERS).strip()
+        tokenizer = DEFAULT_TOKENIZER.strip()
+        for analyzer_type in ('query', 'index'):
+            options['analyzers'][analyzer_type] = {'filter': filter,
+                                                   'char_filter': char_filter,
+                                                   'tokenizer': tokenizer}
+            for proc in ('filter', 'char-filter', 'tokenizer'):
+                #Options are stored like 'filter-query' and 'filter-index'
+                processor = '{}-{}'.format(proc, analyzer_type)
+                proc_store = proc.replace('-', '_')
+                options['analyzers'][analyzer_type][proc_store] += \
+                        ('\n    ' + options_orig.get(processor, '').strip())
+
         options['config-template'] = options_orig.get('config-template')
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
@@ -199,21 +219,45 @@ class SolrBase(object):
 
         return options
 
-    def parse_filter(self, options, option_key='filter'):
-        """Parses the filter definitions from the options."""
+    def parse_processor(self, filter_option, unique=False):
+        """Parses the processor (char filter, filter, tokenizer) definitions.
+
+        String-based options are parsed to obtain class and option definitions
+        for field types. If the `unique` option is enabled, only the last
+        option is stored."""
         filters = {}
         for index in INDEX_TYPES:
             filters[index] = []
-        for line in options.get(option_key).splitlines():
-            index, params = line.strip().split(' ', 1)
-            parsed = params.strip().split(' ', 1)
-            klass, extra = parsed[0], ''
-            if len(parsed) > 1:
-                extra = parsed[1]
-            if index.lower() not in INDEX_TYPES:
-                raise zc.buildout.UserError('Invalid index type: %s' % index)
-            filters[index].append({'class': klass, 'extra': extra})
+        for line in filter_option.splitlines():
+            line_stripped = line.strip()
+            if line_stripped:
+                index, params = line_stripped.split(' ', 1)
+                parsed = params.strip().split(' ', 1)
+                klass, extra = parsed[0], ''
+                if len(parsed) > 1:
+                    extra = parsed[1]
+                if index.lower() not in INDEX_TYPES:
+                    raise zc.buildout.UserError('Invalid index type: %s' % index)
+
+                filter = {'class': klass, 'extra': extra}
+                if unique:
+                    filters[index] = [filter]
+                else:
+                    filters[index].append(filter)
         return filters
+
+    def parse_analyzer(self, options):
+        """Parse all analyzers and their configuration from the options."""
+        analyzers = {}
+        for analyzer_type in options['analyzers']:
+            analyzers[analyzer_type] = {}
+            analyzer_options = options['analyzers'][analyzer_type]
+            for processor in analyzer_options:
+                unique = processor in UNIQUE_PROCESSORS
+                analyzers[analyzer_type][processor] = \
+                        self.parse_processor(analyzer_options[processor],
+                                             unique=unique)
+        return analyzers
 
     def _splitIndexLine(self, line):
         # Split an index line.
@@ -485,8 +529,7 @@ class SolrSingleRecipe(SolrBase):
             source=self.solropts.get('schema-template'),
             destination=(self.solropts['schema-destination'] or
                 default_config_destination),
-            filters=self.parse_filter(self.solropts),
-            char_filters=self.parse_filter(self.solropts, 'char-filter'),
+            analyzers=self.parse_analyzer(self.solropts),
             indeces=self.parse_index(self.solropts),
             options=self.solropts)
 
@@ -640,8 +683,7 @@ class MultiCoreRecipe(SolrBase):
                 source=options_core.get('schema-template',
                     '%s/schema.xml.tmpl' % self.tpldir),
                 destination=conf_dir,
-                filters=self.parse_filter(options_core),
-                char_filters=self.parse_filter(options_core, 'char-filter'),
+                analyzers=self.parse_analyzer(options_core),
                 indeces=self.parse_index(options_core),
                 options=options_core)
         jetty_destination = (self.instanceopts.get('jetty-destination') or
