@@ -1,7 +1,7 @@
 Change History
 **************
 
-3.9 (unreleased)
+4.0 (unreleased)
 ================
 
 - Add ability to control ``filter``, ``char-filter`` and ``tokenizer`` options
