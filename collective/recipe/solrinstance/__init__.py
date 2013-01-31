@@ -130,7 +130,7 @@ class SolrBase(object):
         filter = options_orig.get('filter', DEFAULT_FILTERS).strip()
         char_filter = options_orig.get('char-filter',
                                        DEFAULT_CHAR_FILTERS).strip()
-        tokenizer = DEFAULT_TOKENIZER.strip()
+        tokenizer = options_orig.get('tokenizer', DEFAULT_TOKENIZER).strip()
         for analyzer_type in ('query', 'index'):
             options['analyzers'][analyzer_type] = {'filter': filter,
                                                    'char_filter': char_filter,

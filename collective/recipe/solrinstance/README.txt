@@ -28,6 +28,8 @@ extracted in the parts directory:
     ...     name:Foo bar type:text
     ...     name:Baz type:text
     ...     name:Everything type:text
+    ... tokenizer =
+    ...     text solr.KeywordTokenizerFactory
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
@@ -107,6 +109,8 @@ And make sure the substitution worked for all files.
     <charFilter class="solr.HTMLStripCharFilterFactory" />
     ...
     <filter class="solr.ISOLatin1AccentFilterFactory" />
+    ...
+    <tokenizer class="solr.KeywordTokenizerFactory" />
     ...
     <field name="uniqueID" type="string" indexed="true"
            stored="true" required="true" multiValued="false"
