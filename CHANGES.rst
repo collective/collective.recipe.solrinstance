@@ -1,7 +1,7 @@
 Change History
 **************
 
-4.0 (unreleased)
+4.0 (2013-02-15)
 ================
 
 - Add ability to control ``filter``, ``char-filter`` and ``tokenizer`` options
