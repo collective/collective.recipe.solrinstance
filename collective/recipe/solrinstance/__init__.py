@@ -98,6 +98,8 @@ class SolrBase(object):
 
         options['script'] = options_orig.get('script', 'solr-instance').strip()
 
+        options['pidpath'] = options_orig.get('pidpath', '')
+
         #XXX this is ugly and should be removed
         options['section-name'] = options_orig.get('section-name',
                                                    'solr').strip()
@@ -469,6 +471,11 @@ class SolrSingleRecipe(SolrBase):
         else:
             solr_log = os.path.join(solr_var, 'log')
 
+        if self.instanceopts['pidpath']:
+            solr_pid = self.instanceopts['pidpath']
+        else:
+            solr_pid = solr_var
+
         for path in solr_data, solr_log:
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -542,7 +549,7 @@ class SolrSingleRecipe(SolrBase):
         self.create_bin_scripts(
             self.instanceopts.get('script'),
             source='%s/solr-instance.tmpl' % self.tpldir,
-            pidfile=os.path.join(solr_var, 'solr.pid'),
+            pidfile=os.path.join(solr_pid, 'solr.pid'),
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.install_dir,
@@ -605,6 +612,11 @@ class MultiCoreRecipe(SolrBase):
             solr_log = self.instanceopts['logdir']
         else:
             solr_log = os.path.join(solr_var, 'log')
+
+        if self.instanceopts['pidpath']:
+            solr_pid = self.instanceopts['pidpath']
+        else:
+            solr_pid = solr_var
 
         if not os.path.exists(solr_log):
             os.makedirs(solr_log)
@@ -705,7 +717,7 @@ class MultiCoreRecipe(SolrBase):
         self.create_bin_scripts(
             self.instanceopts.get('script'),
             source='%s/solr-instance.tmpl' % self.tpldir,
-            pidfile=os.path.join(solr_var, 'solr.pid'),
+            pidfile=os.path.join(solr_pid, 'solr.pid'),
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.install_dir,

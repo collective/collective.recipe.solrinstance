@@ -4,7 +4,7 @@ Change History
 4.0.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Add ability to specify location of pid file.
 
 
 4.0 (2013-02-15)
