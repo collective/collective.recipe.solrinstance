@@ -139,7 +139,7 @@ class SolrBase(object):
                                                    'tokenizer': tokenizer}
             for proc in ('filter', 'char-filter', 'tokenizer'):
                 #Options are stored like 'filter-query' and 'filter-index'
-                processor = '{}-{}'.format(proc, analyzer_type)
+                processor = '{0}-{1}'.format(proc, analyzer_type)
                 proc_store = proc.replace('-', '_')
                 options['analyzers'][analyzer_type][proc_store] += \
                         ('\n    ' + options_orig.get(processor, '').strip())
