@@ -54,6 +54,7 @@ TEMPLATE_DIR = os.path.dirname(__file__)
 NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
                         "default-search-field", "default-operator",
                         "additional-solrconfig",
+                        "additional-solrconfig-query",
                         "autoCommitMaxDocs", "autoCommitMaxTime",
                         "requestParsers-multipartUploadLimitInKB"])
 
@@ -169,6 +170,8 @@ class SolrBase(object):
             'default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options_orig.get(
             'additional-solrconfig', '').strip()
+        options['additional-solrconfig-query'] = options_orig.get(
+            'additional-solrconfig-query', '').strip()
         options['additionalSchemaConfig'] = options_orig.get(
             'additional-schema-config', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
@@ -500,6 +503,7 @@ class SolrSingleRecipe(SolrBase):
                 default_config_destination),
             rows=self.solropts['max-num-results'],
             additional_solrconfig=self.solropts['additional-solrconfig'],
+            additional_solrconfig_query=self.solropts['additional-solrconfig-query'],
             useColdSearcher=self.solropts.get('useColdSearcher', 'false'),
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=self.solropts[
@@ -645,6 +649,7 @@ class MultiCoreRecipe(SolrBase):
                 destination=conf_dir,
                 rows=options_core['max-num-results'],
                 additional_solrconfig=options_core['additional-solrconfig'],
+                additional_solrconfig_query=options_core['additional-solrconfig-query'],
                 useColdSearcher=options_core.get('useColdSearcher', 'false'),
                 maxWarmingSearchers=options_core.get('maxWarmingSearchers',
                                                      '4'),
