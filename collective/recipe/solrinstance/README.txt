@@ -509,6 +509,45 @@ Additional solrconfig should also be allowed:
     </foo>
     ...
 
+Additional solrconfig query section should also be allowed:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ...     name:Bar type:text
+    ... additional-solrconfig-query =
+    ...     <listener event="firstSearcher">
+    ...         <arr />
+    ...     </listener>
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <listener event="firstSearcher">
+        <arr />
+    </listener>
+    </query>
+    ...
+
 Sometimes it is necessary to include extra libraries (e.g. DIH-handler,
 solr-cell, ...). You can do this with the `extralibs`-option.
 
@@ -998,7 +1037,7 @@ You can specify a default core with ``default-core-name``:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... cores = 
+    ... cores =
     ...     core1
     ...     core2
     ... default-core-name = core1
