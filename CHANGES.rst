@@ -4,7 +4,9 @@ Change History
 4.0.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Added additional-solrconfig-query allowing one to extend the solrconfig.xml
+  query section.
+  [naro]
 
 
 4.0 (2013-02-15)
