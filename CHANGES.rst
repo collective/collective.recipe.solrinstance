@@ -5,6 +5,10 @@ Change History
 ==================
 
 - Add ability to specify location of pid file.
+  [CheeseTheMonkey]
+- Added additional-solrconfig-query allowing one to extend the solrconfig.xml
+  query section.
+  [naro]
 
 
 4.0 (2013-02-15)

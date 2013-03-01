@@ -175,6 +175,11 @@ additional-solrconfig
     Optional additional configuration to be included inside the
     ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
 
+additional-solrconfig-query
+    Optional additional configuration to be included inside the
+    query section of ``solrconfig.xml``.
+    For instance, ``<listener />`` directives.
+
 
 Cache Options
 =============
@@ -224,7 +229,7 @@ filter
     in series to either add, change or remove tokens. After all filters
     have been applied, the resulting token stream is indexed into the given
     field.
-    
+
     This option applies to the default analyzer for a given field -- by
     default, Solr considers this to apply to both ``query`` and ``index``
     analyzers.  If you want to configure separate analyzers, see the
@@ -232,7 +237,7 @@ filter
 
     Each filter is configured on a separated line and each filter will be
     applied to tokens (during Solr operation) in the order specified.
-    
+
     Each line should read like::
 
         text solr.EdgeNGramFilterFactory minGramSize="2" maxGramSize="15" side="front"
@@ -241,8 +246,8 @@ filter
 
     * ``text`` is the ``type``, one of the built-in field types;
     * ``solr.EdgeNGramFilterFactory`` is the ``class`` for this filter; and
-    * ``minGramSize="2"  maxGramSize="15" side="front"`` are the parameters 
-      for the filter's configuration. They should be formatted as XML 
+    * ``minGramSize="2"  maxGramSize="15" side="front"`` are the parameters
+      for the filter's configuration. They should be formatted as XML
       attributes.
 
     By default, for the default analyzer (being both ``query`` and ``index``):
@@ -264,7 +269,7 @@ filter
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#TokenFilterFactories
 
 filter-query
-    Configure filters for default field types for ``query`` analyzers only. 
+    Configure filters for default field types for ``query`` analyzers only.
     This option is like ``filter`` but only applies to the ``query`` analyzer
     for a given field.
 
@@ -273,10 +278,10 @@ filter-query
     ``filter`` option.
 
 filter-index
-    Configure filters for default field types for ``index`` analyzers only. 
+    Configure filters for default field types for ``index`` analyzers only.
     This option is like ``filter`` but only applies to the ``index`` analyzer
     for a given field.
-    
+
     Configuration syntax is the same as the ``filter`` option above.  Options
     specified here will be added after any that apply from usage of the main
     ``filter`` option.
@@ -287,7 +292,7 @@ char-filter
     in Solr fields or queries (consuming and producing a character stream) that
     can add, change or remove characters while preserving character position
     information
-    
+
     This option applies to the default analyzer for a given field -- by
     default, Solr considers this to apply to both ``query`` and ``index``
     analyzers.  If you want to configure separate analyzers, see the
@@ -315,14 +320,14 @@ char-filter-index
     Configure character filters for default field types for ``index`` analyzers
     only.  This option is like ``char-filter`` but only applies to the
     ``index`` analyzer for a given field type.
-    
+
     Configuration syntax is the same as the ``filter`` option above.  Options
     specified here will be added after any that apply from usage of the main
     ``char filter`` option.
 
 tokenizer
     Configure tokenizers for analyzers for the default field types.
-    
+
     This option applies to the default analyzer for a given field -- by
     default, Solr considers this to apply to both ``query`` and ``index``
     analyzers.  If you want to configure separate analyzers, see the
@@ -345,7 +350,7 @@ tokenizer-query
     only.  This option is like ``tokenizer``, but only applies to the
     ``query`` analyzer for a given field type.
 
-    Configuration syntax is the same as the ``filter`` option above.  
+    Configuration syntax is the same as the ``filter`` option above.
     Options specified here will overide any that apply from usage of the main
     ``tokenizer`` option. For instance, if you specified a ``text_ws``
     tokenizer within the ``tokenizer`` option, and re-specify another
@@ -357,7 +362,7 @@ tokenizer-index
     only.  This option is like ``tokenizer``, but only applies to the
     ``index`` analyzer for a given field type.
 
-    Configuration syntax is the same as the ``filter`` option above.  
+    Configuration syntax is the same as the ``filter`` option above.
     Options specified here will overide any that apply from usage of the main
     ``tokenizer`` option. For instance, if you specified a ``text_ws``
     tokenizer within the ``tokenizer`` option, and re-specify another
@@ -408,8 +413,8 @@ cores
     to individual Solr core configurations. Each identifier specified will
     have the section it relates to processed according to the given options
     above to generate Solr configuration files for each core.  See `Multi-core
-    Solr`_ for an example.  
-    
+    Solr`_ for an example.
+
     Each identifier specified will result in a Solr ``instanceDir`` being
     created and entries for each core placed in Solr's ``solr.xml``
     configuration.
