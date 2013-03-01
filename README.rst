@@ -63,6 +63,10 @@ logdir
     Optional override for the location of the Solr logfiles.
     Defaults to ``${buildout:directory}/var/solr``.
 
+pidpath
+    Optional override for the location of the Solr pid file.
+    Defaults to ``${buildout:directory}/var/solr``.
+
 jetty-template
     Optional override for the ``jetty.xml`` template. Defaults to
     ``templates/jetty.xml.tmpl``.

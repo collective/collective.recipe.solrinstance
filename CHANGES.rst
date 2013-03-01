@@ -4,6 +4,8 @@ Change History
 4.0.1 (unreleased)
 ==================
 
+- Add ability to specify location of pid file.
+  [CheeseTheMonkey]
 - Added additional-solrconfig-query allowing one to extend the solrconfig.xml
   query section.
   [naro]
