@@ -15,7 +15,6 @@ def read(name):
 requires = ['setuptools']
 if sys.version_info >= (3,):
     requires += [
-        'Genshi>=0.7.0',
         'zc.buildout>=2.0.0a1',
         ]
 else:
@@ -23,7 +22,7 @@ else:
         'Genshi',
         'zc.buildout<2.0.0a1'
         ]
-test_requires = [
+test_requires = requires + [
     'zope.exceptions',
     'zope.interface',
     'zope.testing',
