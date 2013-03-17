@@ -1,17 +1,22 @@
 Change History
 **************
 
+4.0 (unreleased)
+================
+
+- Python 3 support added. Python < 2.6 support dropped. Dropped
+  dependency on iw.recipe.template as Cheetah does not support Python
+  3. Replaced with Genshi, as used by collective.recipe.template.
+  
+  **Backwards incompatibility**: custom templates must be converted to
+  Genshi format.
+  [mitchellrj]
+
 3.9 (unreleased)
 ================
 
 - Allow ``cores`` to be separated by newlines rather than just spaces.
   [domruf]
-
-- Python 3 support added. Python < 2.6 support dropped. Dropped
-  dependency on iw.recipe.template as Cheetah does not support Python
-  3. Replaced with Genshi, as used by collective.recipe.template.
-  [mitchellrj]
-
 
 3.8 (2012-08-09)
 ================
