@@ -23,6 +23,11 @@ else:
         'Genshi',
         'zc.buildout<2.0.0a1'
         ]
+test_requires = [
+    'zope.exceptions',
+    'zope.interface',
+    'zope.testing',
+]
 
 
 setup(
@@ -60,11 +65,10 @@ setup(
     setup_requires=[
         'setuptools',
     ],
-    tests_require=[
-        'zope.exceptions',
-        'zope.interface',
-        'zope.testing',
-    ],
+    tests_require=test_requires,
+    extras_require=dict(
+        test=test_requires,
+    ),
     test_suite='collective.recipe.solrinstance.tests.test_suite',
     entry_points={
         "zc.buildout": [
