@@ -187,13 +187,13 @@
       {% for type, analyzer in options.analyzers.items() %}\
       <analyzer type="${type}">
         {% for char_filter in analyzer.char_filter.text_ws %}\
-        <charFilter class="${char_filter.class}" ${char_filter.extra}/>
+        <charFilter class="${char_filter['class']}" ${char_filter.extra}/>
         {% end %}\
         {% for tokenizer in analyzer.tokenizer.text_ws %}\
-        <tokenizer class="${tokenizer.class}" ${tokenizer.extra}/>
+        <tokenizer class="${tokenizer['class']}" ${tokenizer.extra}/>
         {% end %}\
         {% for filter in analyzer.filter.text_ws %}\
-        <filter class="${filter.class}" ${filter.extra}/>
+        <filter class="${filter['class']}" ${filter.extra}/>
         {% end %}\
       </analyzer>
       {% end %}\
@@ -203,13 +203,13 @@
       {% for type, analyzer in options.analyzers.items() %}\
       <analyzer type="${type}">
         {% for char_filter in analyzer.char_filter.text %}\
-        <charFilter class="${char_filter.class}" ${char_filter.extra}/>
+        <charFilter class="${char_filter['class']}" ${char_filter.extra}/>
         {% end %}\
         {% for tokenizer in analyzer.tokenizer.text %}\
-        <tokenizer class="${tokenizer.class}" ${tokenizer.extra}/>
+        <tokenizer class="${tokenizer['class']}" ${tokenizer.extra}/>
         {% end %}\
         {% for filter in analyzer.filter.text %}\
-        <filter class="${filter.class}" ${filter.extra}/>
+        <filter class="${filter['class']}" ${filter.extra}/>
         {% end %}\
       </analyzer>
       {% end %}\
