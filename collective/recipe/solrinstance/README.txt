@@ -529,15 +529,15 @@ Additional solrconfig query section should also be allowed:
     ...         <arr />
     ...     </listener>
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
