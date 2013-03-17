@@ -5,7 +5,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-version = '4.0.dev0'
+version = '5.0.dev0'
 
 
 def read(name):
@@ -69,7 +69,7 @@ setup(
     extras_require=dict(
         test=test_requires,
     ),
-    test_suite='collective.recipe.solrinstance.tests.test_suite',
+    test_suite='collective.recipe.solrinstance.tests.test_doctests.test_suite',
     entry_points={
         "zc.buildout": [
             "default = collective.recipe.solrinstance:SolrSingleRecipe",

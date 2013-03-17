@@ -39,6 +39,15 @@ DEFAULT_FILTERS = """
     text solr.TrimFilterFactory
     text solr.StopFilterFactory ignoreCase="true" words="stopwords.txt"
 """
+DEFAULT_CHAR_FILTERS = """
+"""
+DEFAULT_TOKENIZER = """
+    text solr.ICUTokenizerFactory
+    text_ws solr.WhitespaceTokenizerFactory
+"""
+
+#: Processors that allow just one entry per field type
+UNIQUE_PROCESSORS = ('tokenizer',)
 
 ZOPE_CONF = """
 <product-config %(section-name)s>
@@ -52,6 +61,7 @@ TEMPLATE_DIR = os.path.dirname(__file__)
 NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
                         "default-search-field", "default-operator",
                         "additional-solrconfig",
+                        "additional-solrconfig-query",
                         "autoCommitMaxDocs", "autoCommitMaxTime",
                         "requestParsers-multipartUploadLimitInKB"])
 
@@ -63,6 +73,8 @@ class SolrBase(object):
         self.generated = []
         self.name = name
         self.options_orig = options_orig
+        self.solr_location = os.path.abspath(
+            options_orig.get('solr-location', '').strip())
         self.buildout = buildout
         self.install_dir = os.path.join(
             buildout['buildout']['parts-directory'], name)
@@ -83,13 +95,10 @@ class SolrBase(object):
         options['basepath'] = options_orig.get('basepath', '/solr').strip()
         options['solr-location'] = os.path.abspath(
             options_orig.get('solr-location', '').strip())
-        options['jetty-template'] = options_orig.get("jetty-template",
-                '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR)
-        options['logging-template'] = options_orig.get("logging-template",
-                '%s/templates/logging.properties.tmpl' % TEMPLATE_DIR)
+        options['jetty-template'] = options_orig.get("jetty-template")
+        options['logging-template'] = options_orig.get("logging-template")
 
-        options['jetty-destination'] = options_orig.get(
-                'jetty-destination', os.path.join(self.install_dir, 'etc'))
+        options['jetty-destination'] = options_orig.get('jetty-destination')
 
         options['vardir'] = options_orig.get(
                 'vardir',
@@ -98,6 +107,8 @@ class SolrBase(object):
         options['logdir'] = options_orig.get('logdir', '')
 
         options['script'] = options_orig.get('script', 'solr-instance').strip()
+
+        options['pidpath'] = options_orig.get('pidpath', '')
 
         #XXX this is ugly and should be removed
         options['section-name'] = options_orig.get('section-name',
@@ -109,29 +120,49 @@ class SolrBase(object):
         options['java_opts'] = options_orig.get('java_opts', '')
         return options
 
+    def is_solr_4(self):
+        sol4_dir = os.path.join('example', 'solr', 'collection1')
+        return os.path.isdir(os.path.join(self.solr_location, sol4_dir))
+
+    @property
+    def tpldir(self):
+        value = os.path.join(TEMPLATE_DIR, 'templates')
+        if self.is_solr_4():
+            value += '4'
+        return value
+
     def initSolrOpts(self, buildout, name, options_orig):
         #solr opts
-        options = {}
+        options = {'analyzers': {}}
 
         options['name'] = name
         options['index'] = options_orig.get('index')
-        options['filter'] = options_orig.get('filter', DEFAULT_FILTERS).strip()
-        options['config-template'] = options_orig.get(
-            'config-template',
-            '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR)
+
+        #General filters apply to both querying/indexing analyzers for fields
+        filter = options_orig.get('filter', DEFAULT_FILTERS).strip()
+        char_filter = options_orig.get('char-filter',
+                                       DEFAULT_CHAR_FILTERS).strip()
+        tokenizer = options_orig.get('tokenizer', DEFAULT_TOKENIZER).strip()
+        for analyzer_type in ('query', 'index'):
+            options['analyzers'][analyzer_type] = {'filter': filter,
+                                                   'char_filter': char_filter,
+                                                   'tokenizer': tokenizer}
+            for proc in ('filter', 'char-filter', 'tokenizer'):
+                #Options are stored like 'filter-query' and 'filter-index'
+                processor = '{0}-{1}'.format(proc, analyzer_type)
+                proc_store = proc.replace('-', '_')
+                options['analyzers'][analyzer_type][proc_store] += \
+                        ('\n    ' + options_orig.get(processor, '').strip())
+
+        options['config-template'] = options_orig.get('config-template')
         options["customTemplate"] = "schema-template" in options_orig
         options["schema-template"] = options_orig.get('schema-template',
-                '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR)
+                '%s/schema.xml.tmpl' % self.tpldir)
         options['stopwords-template'] = options_orig.get(
             'stopwords-template',
-            '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR)
-        options['config-destination'] = options_orig.get(
-                'config-destination',
-                os.path.join(self.install_dir, 'solr', 'conf'))
-
-        options['schema-destination'] = options_orig.get(
-                'schema-destination',
-                os.path.join(self.install_dir, 'solr', 'conf'))
+            '%s/stopwords.txt.tmpl' % self.tpldir)
+        options['config-destination'] = options_orig.get('config-destination')
+        options['schema-destination'] = options_orig.get('schema-destination')
 
         try:
             num_results = int(options_orig.get('max-num-results',
@@ -150,6 +181,8 @@ class SolrBase(object):
             'default-operator', 'OR').strip().upper()
         options['additional-solrconfig'] = options_orig.get(
             'additional-solrconfig', '').strip()
+        options['additional-solrconfig-query'] = options_orig.get(
+            'additional-solrconfig-query', '').strip()
         options['additionalSchemaConfig'] = options_orig.get(
             'additional-schema-config', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
@@ -183,6 +216,9 @@ class SolrBase(object):
             'documentCacheSize', '512')
         options['documentCacheInitialSize'] = options_orig.get(
             'documentCacheInitialSize', '512')
+        options['documentCacheAutowarmCount'] = options_orig.get(
+            'documentCacheAutowarmCount', '0')
+
         options['extralibs'] = []
         extralibs = options_orig.get('extralibs', '').strip()
         for lib in extralibs.splitlines():
@@ -198,21 +234,45 @@ class SolrBase(object):
 
         return options
 
-    def parse_filter(self, options):
-        """Parses the filter definitions from the options."""
+    def parse_processor(self, filter_option, unique=False):
+        """Parses the processor (char filter, filter, tokenizer) definitions.
+
+        String-based options are parsed to obtain class and option definitions
+        for field types. If the `unique` option is enabled, only the last
+        option is stored."""
         filters = {}
         for index in INDEX_TYPES:
             filters[index] = []
-        for line in options.get('filter').splitlines():
-            index, params = line.strip().split(' ', 1)
-            parsed = params.strip().split(' ', 1)
-            klass, extra = parsed[0], ''
-            if len(parsed) > 1:
-                extra = parsed[1]
-            if index.lower() not in INDEX_TYPES:
-                raise zc.buildout.UserError('Invalid index type: %s' % index)
-            filters[index].append({'class': klass, 'extra': extra})
+        for line in filter_option.splitlines():
+            line_stripped = line.strip()
+            if line_stripped:
+                index, params = line_stripped.split(' ', 1)
+                parsed = params.strip().split(' ', 1)
+                klass, extra = parsed[0], ''
+                if len(parsed) > 1:
+                    extra = parsed[1]
+                if index.lower() not in INDEX_TYPES:
+                    raise zc.buildout.UserError('Invalid index type: %s' % index)
+
+                filter = {'class': klass, 'extra': extra}
+                if unique:
+                    filters[index] = [filter]
+                else:
+                    filters[index].append(filter)
         return filters
+
+    def parse_analyzer(self, options):
+        """Parse all analyzers and their configuration from the options."""
+        analyzers = {}
+        for analyzer_type in options['analyzers']:
+            analyzers[analyzer_type] = {}
+            analyzer_options = options['analyzers'][analyzer_type]
+            for processor in analyzer_options:
+                unique = processor in UNIQUE_PROCESSORS
+                analyzers[analyzer_type][processor] = \
+                        self.parse_processor(analyzer_options[processor],
+                                             unique=unique)
+        return analyzers
 
     def _splitIndexLine(self, line):
         # Split an index line.
@@ -250,6 +310,8 @@ class SolrBase(object):
         indeces = []
         names = []
         for line in options['index'].strip().splitlines():
+            if line.strip().startswith('#'):
+                continue  # Allow comments
             entry = {}
             for item in self._splitIndexLine(line):
                 attr, value = item.split(':')[:2]
@@ -450,27 +512,43 @@ class SolrSingleRecipe(SolrBase):
         else:
             solr_log = os.path.join(solr_var, 'log')
 
+        if self.instanceopts['pidpath']:
+            solr_pid = self.instanceopts['pidpath']
+        else:
+            solr_pid = solr_var
+
         for path in solr_data, solr_log:
             if not os.path.exists(path):
                 os.makedirs(path)
-
+        jetty_destination = (self.instanceopts.get('jetty-destination') or
+            os.path.join(self.install_dir, 'etc'))
         self.generate_jetty(
-            source=self.instanceopts.get('jetty-template'),
+            source=(self.instanceopts.get('jetty-template') or
+                '%s/jetty.xml.tmpl' % self.tpldir),
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
-            destination=self.instanceopts['jetty-destination'])
+            destination=jetty_destination
+        )
 
         self.generate_logging(
-            source=self.instanceopts.get('logging-template'),
-            destination=self.instanceopts['jetty-destination'])
-
+            source=(self.instanceopts.get('logging-template') or
+                '%s/logging.properties.tmpl' % self.tpldir),
+            destination=jetty_destination)
+        config_template = (self.solropts.get('config-template') or
+            '%s/solrconfig.xml.tmpl' % self.tpldir)
+        default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
+        if self.is_solr_4():
+            default_config_destination = os.path.join(
+                self.install_dir, 'solr', 'collection1', 'conf')
         self.generate_solr_conf(
-            source=self.solropts.get('config-template'),
+            source=config_template,
             datadir=solr_data,
-            destination=self.solropts['config-destination'],
+            destination=(self.solropts['config-destination'] or
+                default_config_destination),
             rows=self.solropts['max-num-results'],
             additional_solrconfig=self.solropts['additional-solrconfig'],
+            additional_solrconfig_query=self.solropts['additional-solrconfig-query'],
             useColdSearcher=self.solropts.get('useColdSearcher', 'false'),
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=self.solropts[
@@ -490,6 +568,7 @@ class SolrSingleRecipe(SolrBase):
                 'queryResultCacheAutowarmCount'],
             documentCacheSize=self.solropts['documentCacheSize'],
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
+            documentCacheAutowarmCount=self.solropts['documentCacheAutowarmCount'],
             extralibs=self.solropts['extralibs'],
             location=self.install_dir,
             abortOnConfigurationError=self.solropts['abortOnConfigurationError']
@@ -497,20 +576,22 @@ class SolrSingleRecipe(SolrBase):
 
         self.generate_solr_schema(
             source=self.solropts.get('schema-template'),
-            destination=self.solropts['schema-destination'],
-            filters=self.parse_filter(self.solropts),
+            destination=(self.solropts['schema-destination'] or
+                default_config_destination),
+            analyzers=self.parse_analyzer(self.solropts),
             indeces=self.parse_index(self.solropts),
             options=self.solropts)
 
         self.generate_stopwords(
             source=self.solropts.get('stopwords-template'),
-            destination=self.solropts['config-destination'],
+            destination=(self.solropts['config-destination'] or
+                default_config_destination),
             )
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
-            source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
-            pidfile=os.path.join(solr_var, 'solr.pid'),
+            source='%s/solr-instance.tmpl' % self.tpldir,
+            pidfile=os.path.join(solr_pid, 'solr.pid'),
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.install_dir,
@@ -574,6 +655,11 @@ class MultiCoreRecipe(SolrBase):
         else:
             solr_log = os.path.join(solr_var, 'log')
 
+        if self.instanceopts['pidpath']:
+            solr_pid = self.instanceopts['pidpath']
+        else:
+            solr_pid = solr_var
+
         if not os.path.exists(solr_log):
             os.makedirs(solr_log)
 
@@ -582,7 +668,7 @@ class MultiCoreRecipe(SolrBase):
 
         solr_dir = os.path.join(self.install_dir, 'solr')
         self.generate_solr_mc(
-            source='%s/templates/solr.xml.tmpl' % TEMPLATE_DIR,
+            source='%s/solr.xml.tmpl' % self.tpldir,
             cores=self.cores,
             destination=solr_dir,
             defaultCoreName=self.defaultCoreName)
@@ -604,14 +690,16 @@ class MultiCoreRecipe(SolrBase):
             solr_data = os.path.join(solr_var, 'data', core)
             if not os.path.exists(solr_data):
                 os.makedirs(solr_data)
+            config_template = (options_core.get('config-template') or
+                '%s/solrconfig.xml.tmpl' % self.tpldir)
 
             self.generate_solr_conf(
-                source=options_core.get('config-template',
-                    '%s/templates/solrconfig.xml.tmpl' % TEMPLATE_DIR),
+                source=config_template,
                 datadir=solr_data,
                 destination=conf_dir,
                 rows=options_core['max-num-results'],
                 additional_solrconfig=options_core['additional-solrconfig'],
+                additional_solrconfig_query=options_core['additional-solrconfig-query'],
                 useColdSearcher=options_core.get('useColdSearcher', 'false'),
                 maxWarmingSearchers=options_core.get('maxWarmingSearchers',
                                                      '4'),
@@ -634,6 +722,7 @@ class MultiCoreRecipe(SolrBase):
                 documentCacheSize=options_core['documentCacheSize'],
                 documentCacheInitialSize=options_core[
                     'documentCacheInitialSize'],
+                documentCacheAutowarmCount=options_core['documentCacheAutowarmCount'],
                 extralibs=options_core['extralibs'],
                 location=self.install_dir,
                 abortOnConfigurationError=options_core['abortOnConfigurationError']
@@ -641,34 +730,37 @@ class MultiCoreRecipe(SolrBase):
 
             self.generate_stopwords(
                 source=options_core.get('stopwords-template',
-                    '%s/templates/stopwords.txt.tmpl' % TEMPLATE_DIR),
+                    '%s/stopwords.txt.tmpl' % self.tpldir),
                 destination=conf_dir,
                 )
 
             self.generate_solr_schema(
                 source=options_core.get('schema-template',
-                    '%s/templates/schema.xml.tmpl' % TEMPLATE_DIR),
+                    '%s/schema.xml.tmpl' % self.tpldir),
                 destination=conf_dir,
-                filters=self.parse_filter(options_core),
+                analyzers=self.parse_analyzer(options_core),
                 indeces=self.parse_index(options_core),
                 options=options_core)
+        jetty_destination = (self.instanceopts.get('jetty-destination') or
+            os.path.join(self.install_dir, 'etc'))
 
         self.generate_jetty(
-            source=self.instanceopts.get('jetty-template',
-                     '%s/templates/jetty.xml.tmpl' % TEMPLATE_DIR),
+            source=(self.instanceopts.get('jetty-template') or
+                '%s/jetty.xml.tmpl' % self.tpldir),
             logdir=solr_log,
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
-            destination=self.instanceopts['jetty-destination'])
+            destination=jetty_destination)
 
         self.generate_logging(
-            source=self.instanceopts.get('logging-template'),
-            destination=self.instanceopts['jetty-destination'])
+            source=(self.instanceopts.get('logging-template') or
+                '%s/logging.properties.tmpl' % self.tpldir),
+            destination=jetty_destination)
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
-            source='%s/templates/solr-instance.tmpl' % TEMPLATE_DIR,
-            pidfile=os.path.join(solr_var, 'solr.pid'),
+            source='%s/solr-instance.tmpl' % self.tpldir,
+            pidfile=os.path.join(solr_pid, 'solr.pid'),
             logfile=os.path.join(solr_log, 'solr.log'),
             destination=self.buildout['buildout']['bin-directory'],
             solrdir=self.install_dir,

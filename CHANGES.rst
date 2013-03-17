@@ -1,7 +1,7 @@
 Change History
 **************
 
-4.0 (unreleased)
+5.0 (unreleased)
 ================
 
 - Python 3 support added. Python < 2.6 support dropped. Dropped
@@ -12,11 +12,38 @@ Change History
   Genshi format.
   [mitchellrj]
 
-3.9 (unreleased)
+4.0.1 (unreleased)
+==================
+
+- Added additional-solrconfig-query allowing one to extend the solrconfig.xml
+  query section.
+  [naro]
+- Add ability to specify location of pid file.
+  [CheeseTheMonkey]
+
+
+4.0 (2013-02-15)
 ================
 
+- Add ability to control ``filter``, ``char-filter`` and ``tokenizer`` options
+  for different analyzers (eg ``query`` and ``index`` analyzers). These
+  options are named like ``filter-query``.
+  [davidjb]
+- Add ``tokenizer`` option for controlling the tokenizers set for default
+  field type analyzers.
+  [davidjb]
+- Solr 4.0 support
+  [silviot]
+- Allow comments in index directive
+  [silviot]
 - Allow ``cores`` to be separated by newlines rather than just spaces.
   [domruf]
+<<<<<<< HEAD
+=======
+- Add ``char-filter`` as an option for setting CharFilterFactories for
+  default field types.
+  [davidjb]
+>>>>>>> master
 
 3.8 (2012-08-09)
 ================

@@ -142,21 +142,35 @@
 
     <!-- A text field that only splits on whitespace for exact matching of words -->
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-        {% for filter in options.filters.text_ws %}\
-        <filter class="${filter['class']}" ${filter.extra}/>
+      {% for type, analyzer in sorted(options.analyzers.items()) %}\
+      <analyzer type="${type}">
+        {% for char_filter in analyzer.char_filter.text_ws %}\
+        <charFilter class="${char_filter.class}" ${char_filter.extra}/>
+        {% end %}\
+        {% for tokenizer in analyzer.tokenizer.text_ws %}\
+        <tokenizer class="${tokenizer.class}" ${tokenizer.extra}/>
+        {% end %}\
+        {% for filter in analyzer.filter.text_ws %}\
+        <filter class="${filter.class}" ${filter.extra}/>
         {% end %}\
       </analyzer>
+      {% end %}\
     </fieldType>
 
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.ICUTokenizerFactory"/>
-        {% for filter in options.filters.text %}\
-        <filter class="${filter['class']}" ${filter.extra}/>
-        {% end %}
+      {% for type, analyzer in sorted(options.analyzers.items()) %}\
+      <analyzer type="${type}">
+        {% for char_filter in analyzer.char_filter.text %}\
+        <charFilter class="${char_filter.class}" ${char_filter.extra}/>
+        {% end %}\
+        {% for tokenizer in analyzer.tokenizer.text %}\
+        <tokenizer class="${tokenizer.class}" ${tokenizer.extra}/>
+        {% end %}\
+        {% for filter in analyzer.filter.text %}\
+        <filter class="${filter.class}" ${filter.extra}/>
+        {% end %}\
       </analyzer>
+      {% end %}\
     </fieldType>
 
     <!-- since fields of this type are by default not stored or indexed,

@@ -28,9 +28,13 @@ extracted in the parts directory:
     ...     name:Foo bar type:text
     ...     name:Baz type:text
     ...     name:Everything type:text
+    ... tokenizer =
+    ...     text solr.KeywordTokenizerFactory
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... char-filter =
+    ...     text solr.HTMLStripCharFilterFactory
     ... additional-schema-config =
     ...      <copyField source="*" dest="Everything"/>
     ... """)
@@ -102,7 +106,11 @@ And make sure the substitution worked for all files.
     ...
     <filter class="Baz" foo="bar" juca="bala"/>
     ...
+    <charFilter class="solr.HTMLStripCharFilterFactory" />
+    ...
     <filter class="solr.ISOLatin1AccentFilterFactory" />
+    ...
+    <tokenizer class="solr.KeywordTokenizerFactory" />
     ...
     <field name="uniqueID" type="string" indexed="true"
            stored="true" required="true" multiValued="false"
@@ -501,6 +509,45 @@ Additional solrconfig should also be allowed:
     </foo>
     ...
 
+Additional solrconfig query section should also be allowed:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ...     name:Bar type:text
+    ... additional-solrconfig-query =
+    ...     <listener event="firstSearcher">
+    ...         <arr />
+    ...     </listener>
+    ... """)
+    >>> print system(buildout)
+    Uninstalling solr.
+    Installing solr.
+    jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    schema.xml: Generated file 'schema.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    solr-instance: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <listener event="firstSearcher">
+        <arr />
+    </listener>
+    </query>
+    ...
+
 Sometimes it is necessary to include extra libraries (e.g. DIH-handler,
 solr-cell, ...). You can do this with the `extralibs`-option.
 
@@ -854,9 +901,23 @@ Test our first core:
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ...     name:Foo bar type:text
     ...     name:BlaWS type:text_ws
+    ... char-filter =
+    ...     text_ws solr.HTMLStripCharFilterFactory
+    ... char-filter-index =
+    ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... filter-index =
+    ...     text solr.LowerCaseFilterFactory
+    ... filter-query =
+    ...     text solr.LowerCaseFilterFactory
+    ...     text solr.PorterStemFilterFactory
+    ... tokenizer-index =
+    ...     text solr.StandardTokenizerFactory
+    ... tokenizer-query =
+    ...     text solr.StandardTokenizerFactory
+    ...     text solr.WhitespaceTokenizerFactory
     ...
     ... [core2]
     ... max-num-results = 99
@@ -866,9 +927,23 @@ Test our first core:
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ...     name:Foo bar type:text
+    ... char-filter =
+    ...     text_ws solr.HTMLStripCharFilterFactory
+    ... char-filter-index =
+    ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... filter-index =
+    ...     text solr.LowerCaseFilterFactory
+    ... filter-query =
+    ...     text solr.LowerCaseFilterFactory
+    ...     text solr.PorterStemFilterFactory
+    ... tokenizer-index =
+    ...     text solr.StandardTokenizerFactory
+    ... tokenizer-query =
+    ...     text solr.StandardTokenizerFactory
+    ...     text solr.WhitespaceTokenizerFactory
     ... """)
 
 Ok, let's run the buildout:
@@ -920,10 +995,30 @@ See if name is set in `schema.xml`:
     >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf', 'schema.xml')
     <?xml...
     <schema name="core1"...
-    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="index">
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <charFilter class="solr.MappingCharFilterFactory" mapping="my-mapping.txt"/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
         <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+      <analyzer type="query">
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+    </fieldType>...
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.PorterStemFilterFactory" />
       </analyzer>
     </fieldType>
     ...
@@ -942,7 +1037,7 @@ You can specify a default core with ``default-core-name``:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... cores = 
+    ... cores =
     ...     core1
     ...     core2
     ... default-core-name = core1
