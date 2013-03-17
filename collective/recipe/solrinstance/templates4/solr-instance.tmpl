@@ -28,11 +28,11 @@ if len(sys.argv) != 2:
     print "please run with  %s start|stop|purge|status|fg" % __file__
     sys.exit()
 
-PID_FILE = r'$options.pidfile'
-SOLR_DIR = r'$options.solrdir'
-SOLR_LOG = r'$options.logfile'
-START_CMD = $options.startcmd
-UPDATE_URL = r'$options.updateurl'
+PID_FILE = r'${options.pidfile}'
+SOLR_DIR = r'${options.solrdir}'
+SOLR_LOG = r'${options.logfile}'
+START_CMD = ${options.startcmd}
+UPDATE_URL = r'${options.updateurl}'
 
 def start(daemonize=True):
     logfp = None
