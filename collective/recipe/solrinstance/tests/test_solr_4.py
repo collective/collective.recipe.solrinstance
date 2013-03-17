@@ -119,9 +119,6 @@ class TestSolr4(unittest.TestCase):
         install_develop('zope.exceptions', self)
         install_develop('zope.interface', self)
         install_develop('zope.testing', self)
-        install_develop('Cheetah', self)
-        install_develop('Markdown', self)
-        install_develop('iw.recipe.template', self)
         install_develop('collective.recipe.solrinstance', self)
         sample_buildout = self.globs['sample_buildout']
         os.makedirs(join(sample_buildout, 'example', 'etc'))
