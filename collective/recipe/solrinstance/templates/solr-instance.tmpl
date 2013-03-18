@@ -37,7 +37,7 @@ if len(sys.argv) != 2:
 PID_FILE = r'${options.pidfile}'
 SOLR_DIR = r'${options.solrdir}'
 SOLR_LOG = r'${options.logfile}'
-START_CMD = r'${options.startcmd}'
+START_CMD = ${repr(options.startcmd)}
 UPDATE_URL = r'${options.updateurl}'
 
 def start(daemonize=True):
