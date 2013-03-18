@@ -1,6 +1,17 @@
 Change History
 **************
 
+5.0 (unreleased)
+================
+
+- Python 3 support added. Python < 2.6 support dropped. Dropped
+  dependency on iw.recipe.template as Cheetah does not support Python
+  3. Replaced with Genshi, as used by collective.recipe.template.
+  
+  **Backwards incompatibility**: custom templates must be converted to
+  Genshi format.
+  [mitchellrj]
+
 4.0.1 (unreleased)
 ==================
 

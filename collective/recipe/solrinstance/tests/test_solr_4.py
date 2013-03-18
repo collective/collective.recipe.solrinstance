@@ -119,9 +119,7 @@ class TestSolr4(unittest.TestCase):
         install_develop('zope.exceptions', self)
         install_develop('zope.interface', self)
         install_develop('zope.testing', self)
-        install_develop('Cheetah', self)
-        install_develop('Markdown', self)
-        install_develop('iw.recipe.template', self)
+        install_develop('Genshi', self)
         install_develop('collective.recipe.solrinstance', self)
         sample_buildout = self.globs['sample_buildout']
         os.makedirs(join(sample_buildout, 'example', 'etc'))
@@ -159,12 +157,12 @@ class TestSolr4(unittest.TestCase):
         buildout = self.globs['buildout']
         install_output = dedent("""
             Installing solr.
-            jetty.xml: Generated file 'jetty.xml'.
-            logging.properties: Generated file 'logging.properties'.
-            solrconfig.xml: Generated file 'solrconfig.xml'.
-            schema.xml: Generated file 'schema.xml'.
-            stopwords.txt: Generated file 'stopwords.txt'.
-            solr-instance: Generated script 'solr-instance'
+            solr: Generated file 'jetty.xml'.
+            solr: Generated file 'logging.properties'.
+            solr: Generated file 'solrconfig.xml'.
+            solr: Generated file 'schema.xml'.
+            solr: Generated file 'stopwords.txt'.
+            solr: Generated script 'solr-instance'
         """).strip()
         output = self.globs['system'](buildout)
         self.assertTrue(install_output in output, output)
@@ -198,16 +196,16 @@ class TestSolr4(unittest.TestCase):
             fh.write(MULTICORE_CONF)
         install_output = dedent("""
             Installing solr-mc.
-            solr.xml: Generated file 'solr.xml'.
-            solrconfig.xml: Generated file 'solrconfig.xml'.
-            stopwords.txt: Generated file 'stopwords.txt'.
-            schema.xml: Generated file 'schema.xml'.
-            solrconfig.xml: Generated file 'solrconfig.xml'.
-            stopwords.txt: Generated file 'stopwords.txt'.
-            schema.xml: Generated file 'schema.xml'.
-            jetty.xml: Generated file 'jetty.xml'.
-            logging.properties: Generated file 'logging.properties'.
-            solr-instance: Generated script 'solr-instance'.
+            solr-mc: Generated file 'solr.xml'.
+            solr-mc: Generated file 'solrconfig.xml'.
+            solr-mc: Generated file 'stopwords.txt'.
+            solr-mc: Generated file 'schema.xml'.
+            solr-mc: Generated file 'solrconfig.xml'.
+            solr-mc: Generated file 'stopwords.txt'.
+            solr-mc: Generated file 'schema.xml'.
+            solr-mc: Generated file 'jetty.xml'.
+            solr-mc: Generated file 'logging.properties'.
+            solr-mc: Generated script 'solr-instance'.
         """).strip()
         output = self.globs['system'](self.globs['buildout'])
         self.assertTrue(install_output in output, output)

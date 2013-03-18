@@ -10,9 +10,7 @@ def setUp(test):
     install_develop('zope.exceptions', test)
     install_develop('zope.interface', test)
     install_develop('zope.testing', test)
-    install_develop('Cheetah', test)
-    install_develop('Markdown', test)
-    install_develop('iw.recipe.template', test)
+    install_develop('genshi', test)
     install_develop('collective.recipe.solrinstance', test)
 
 

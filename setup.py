@@ -1,13 +1,33 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
+
 from setuptools import setup, find_packages
 
-version = '4.0.1.dev0'
+version = '5.0.dev0'
 
 
 def read(name):
     return open(os.path.join(os.path.dirname(__file__), name)).read()
+
+
+requires = ['setuptools']
+if sys.version_info >= (3,):
+    requires += [
+        'Genshi>=0.7.0',
+        'zc.buildout>=2.0.0a1',
+        ]
+else:
+    requires += [
+        'Genshi',
+        'zc.buildout<2.0.0a1'
+        ]
+test_requires = requires + [
+    'zope.exceptions',
+    'zope.interface',
+    'zope.testing',
+]
 
 
 setup(
@@ -41,19 +61,14 @@ setup(
     namespace_packages=['collective', 'collective.recipe'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        'setuptools',
-        'iw.recipe.template',
-        'zc.buildout',
-    ],
+    install_requires=requires,
     setup_requires=[
-        'setuptools-git',
+        'setuptools',
     ],
-    tests_require=[
-        'zope.exceptions',
-        'zope.interface',
-        'zope.testing',
-    ],
+    tests_require=test_requires,
+    extras_require=dict(
+        test=test_requires,
+    ),
     test_suite='collective.recipe.solrinstance.tests.test_doctests.test_suite',
     entry_points={
         "zc.buildout": [
