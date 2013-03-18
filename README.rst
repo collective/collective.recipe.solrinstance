@@ -21,8 +21,20 @@ https://github.com/collective/collective.recipe.solrinstance
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
 
 
-*Note:* This version of the recipe only supports Solr 3.5 and 4.0. Please use a
-release from the 2.x series if you are using Solr 1.4.
+Notes
+=====
+
+- This version of the recipe only supports Solr 3.5 and 4.0. Please use a
+  release from the 2.x series if you are using Solr 1.4.
+
+- This version supports Genshi_ templates **only**. Please use a release
+  less than 5.x if you require Cheetah_ templating and do not require
+  Python 3 support. If you require Python 3 support, you must convert
+  any custom templates to use the `Genshi text templating language`_.
+
+.. _Genshi : http://genshi.edgewall.org/
+.. _Cheetah: http://www.cheetahtemplate.org/
+.. _`Genshi text templating language` : http://genshi.edgewall.org/wiki/Documentation/text-templates.html
 
 Supported options
 *****************
