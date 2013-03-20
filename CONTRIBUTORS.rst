@@ -17,3 +17,4 @@
 - Carsten Senger
 - Gerhard Weis
 - David Beitey
+- Richard Mitchell

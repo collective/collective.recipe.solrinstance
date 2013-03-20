@@ -16,7 +16,7 @@
          http://wiki.apache.org/solr/LoggingInDefaultJettySetup -->
     <Call class="java.lang.System" name="setProperty">
         <Arg>java.util.logging.config.file</Arg>
-        <Arg>$options.destination/logging.properties</Arg>
+        <Arg>${options.destination}/logging.properties</Arg>
     </Call>
 
     <!-- Increase the maximum POST size to 100 MB to be able to handle large shard requests -->
@@ -78,8 +78,8 @@
     <Call name="addConnector">
       <Arg>
           <New class="org.mortbay.jetty.bio.SocketConnector">
-            <Set name="host">$options.serverhost</Set>
-            <Set name="port">$options.serverport</Set>
+            <Set name="host">${options.serverhost}</Set>
+            <Set name="port">${options.serverport}</Set>
             <Set name="maxIdleTime">50000</Set>
             <Set name="lowResourceMaxIdleTime">1500</Set>
             <Set name="statsOn">false</Set>
@@ -212,7 +212,7 @@
     <Ref id="RequestLog">
       <Set name="requestLog">
         <New id="RequestLogImpl" class="org.mortbay.jetty.NCSARequestLog">
-          <Set name="filename">$options.logdir/jetty-yyyy_mm_dd.request.log</Set>
+          <Set name="filename">${options.logdir}/jetty-yyyy_mm_dd.request.log</Set>
           <Set name="filenameDateFormat">yyyy_MM_dd</Set>
           <Set name="retainDays">90</Set>
           <Set name="append">true</Set>

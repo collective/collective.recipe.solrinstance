@@ -21,25 +21,25 @@
      this file, see http://wiki.apache.org/solr/SolrConfigXml.
 -->
 <config>
-  <abortOnConfigurationError>$options.abortOnConfigurationError</abortOnConfigurationError>
+  <abortOnConfigurationError>${options.abortOnConfigurationError}</abortOnConfigurationError>
   <luceneMatchVersion>LUCENE_40</luceneMatchVersion>
-  <lib dir="$options.location/contrib/extraction/lib" regex=".*\.jar" />
-  <lib dir="$options.location/contrib/analysis-extras/lib" regex=".*\.jar" />
-  <lib dir="$options.location/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/extraction/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/analysis-extras/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
 
-  <lib dir="$options.location/dist/" regex="apache-solr-cell-\d.*\.jar" />
-  <lib dir="$options.location/dist/" regex="apache-solr-core-\d.*\.jar" />
-  <lib dir="$options.location/dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
-  <lib dir="$options.location/dist/" regex="apache-solr-langid-\d.*\.jar" />
-  <lib dir="$options.location/contrib/langid/lib" regex=".*\.jar" />
-  <lib dir="$options.location/contrib/clustering/lib" regex=".*\.jar" />
-  <lib dir="$options.location/contrib/velocity/lib" regex=".*\.jar" />
-  <lib dir="$options.location/dist" regex="apache-solr-clustering-\d.*\.jar" />
-  <lib dir="$options.location/dist" regex="apache-solr-velocity-extras-\d.*\.jar" />
-  #for $filter in $options.extralibs
-  <lib dir="$filter.path" regex="$filter.regex" />
-  #end for
-  <dataDir>$options.datadir</dataDir>
+  <lib dir="${options.location}/dist/" regex="apache-solr-cell-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-core-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
+  <lib dir="${options.location}/dist/" regex="apache-solr-langid-\d.*\.jar" />
+  <lib dir="${options.location}/contrib/langid/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/clustering/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/velocity/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/dist" regex="apache-solr-clustering-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="apache-solr-velocity-extras-\d.*\.jar" />
+  {% for filter in options.extralibs %}\
+  <lib dir="${filter.path}" regex="${filter.regex}" />
+  {% end %}\
+  <dataDir>${options.datadir}</dataDir>
 
   <!-- <lib/> directives can be used to instruct Solr to load an Jars
        identified and use them to resolve any "plugins" specified in
@@ -95,7 +95,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
-  <dataDir>\${solr.data.dir:}</dataDir>
+  <dataDir>$${solr.data.dir:}</dataDir>
 
 
   <!-- The DirectoryFactory to use for indexes.
@@ -113,7 +113,7 @@
        persistent, and doesn't work with replication.
     -->
   <directoryFactory name="DirectoryFactory"
-                    class="\${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
+                    class="$${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
        Index Config - These settings control low-level behavior of indexing
@@ -125,9 +125,9 @@
   <indexConfig>
     <writeLockTimeout>1000</writeLockTimeout>
     <lockType>native</lockType>
-    <mergeFactor>$options.mergeFactor</mergeFactor>
-    <ramBufferSizeMB>$options.ramBufferSizeMB</ramBufferSizeMB>
-    <unlockOnStartup>$options.unlockOnStartup</unlockOnStartup>
+    <mergeFactor>${options.mergeFactor}</mergeFactor>
+    <ramBufferSizeMB>${options.ramBufferSizeMB}</ramBufferSizeMB>
+    <unlockOnStartup>${options.unlockOnStartup}</unlockOnStartup>
   </indexConfig>
 
   <!-- The default high-performance update handler -->
@@ -203,11 +203,11 @@
          "dir" - the target directory for transaction logs, defaults to the
             solr data directory.
     <updateLog>
-      <str name="dir">\${solr.data.dir:}</str>
+      <str name="dir">$${solr.data.dir:}</str>
     </updateLog>
     -->
 
-      $options.autoCommit
+      ${options.autoCommit}
 
   </updateHandler>
 
@@ -300,9 +300,9 @@
                and old cache.
       -->
     <filterCache class="solr.FastLRUCache"
-                 size="$options.filterCacheSize"
-                 initialSize="$options.filterCacheInitialSize"
-                 autowarmCount="$options.filterCacheAutowarmCount"/>
+                 size="${options.filterCacheSize}"
+                 initialSize="${options.filterCacheInitialSize}"
+                 autowarmCount="${options.filterCacheAutowarmCount}"/>
 
     <!-- Query Result Cache
 
@@ -310,9 +310,9 @@
          (DocList) based on a query, a sort, and the range of documents requested.
       -->
     <queryResultCache class="solr.FastLRUCache"
-                     size="$options.queryResultCacheSize"
-                     initialSize="$options.queryResultCacheInitialSize"
-                     autowarmCount="$options.queryResultCacheAutowarmCount"/>
+                     size="${options.queryResultCacheSize}"
+                     initialSize="${options.queryResultCacheInitialSize}"
+                     autowarmCount="${options.queryResultCacheAutowarmCount}"/>
 
     <!-- Document Cache
 
@@ -321,9 +321,9 @@
          this cache will not be autowarmed.
       -->
     <documentCache class="solr.FastLRUCache"
-                   size="$options.documentCacheSize"
-                   initialSize="$options.documentCacheInitialSize"
-                   autowarmCount="$options.documentCacheAutowarmCount"/>
+                   size="${options.documentCacheSize}"
+                   initialSize="${options.documentCacheInitialSize}"
+                   autowarmCount="${options.documentCacheAutowarmCount}"/>
 
     <!-- Field Value Cache
 
@@ -443,7 +443,7 @@
          warming searcher and use it.  If "false" then all requests
          will block until the first searcher is done warming.
       -->
-    <useColdSearcher>$options.useColdSearcher</useColdSearcher>
+    <useColdSearcher>${options.useColdSearcher}</useColdSearcher>
 
     <!-- Max Warming Searchers
 
@@ -454,9 +454,9 @@
          Recommend values of 1-2 for read-only slaves, higher for
          masters w/o cache warming.
       -->
-    <maxWarmingSearchers>$options.maxWarmingSearchers</maxWarmingSearchers>
+    <maxWarmingSearchers>${options.maxWarmingSearchers}</maxWarmingSearchers>
 
-    $options.additional_solrconfig_query
+    ${options.additional_solrconfig_query}
 
   </query>
 
@@ -500,7 +500,7 @@
 
       -->
     <requestParsers enableRemoteStreaming="false"
-                    multipartUploadLimitInKB="$options.requestParsers_multipartUploadLimitInKB" />
+                    multipartUploadLimitInKB="${options.requestParsers_multipartUploadLimitInKB}" />
 
     <!-- HTTP Caching
 
@@ -595,7 +595,7 @@
       -->
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-       <int name="rows">$options.rows</int>
+       <int name="rows">${options.rows}</int>
      </lst>
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
@@ -655,7 +655,7 @@
   <requestHandler name="/query" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-       <int name="rows">$options.rows</int>
+       <int name="rows">${options.rows}</int>
        <str name="wt">json</str>
        <str name="indent">true</str>
      </lst>
@@ -686,7 +686,7 @@
   <requestHandler name="/browse" class="solr.SearchHandler">
      <lst name="defaults">
        <str name="echoParams">explicit</str>
-       <int name="rows">$options.rows</int>
+       <int name="rows">${options.rows}</int>
 
        <!-- VelocityResponseWriter settings -->
        <str name="wt">velocity</str>
@@ -697,7 +697,7 @@
        <!-- Query settings -->
        <str name="defType">edismax</str>
        <str name="q.alt">*:*</str>
-       <str name="rows">$options.rows</str>
+       <str name="rows">${options.rows}</str>
        <str name="fl">*,score</str>
 
        <!-- Highlighting defaults -->
@@ -869,7 +869,7 @@
      <requestHandler name="/admin/properties" class="solr.admin.PropertiesRequestHandler" />
      <requestHandler name="/admin/file"       class="solr.admin.ShowFileRequestHandler" >
     -->
-  <!-- If you wish to hide files under \${solr.home}/conf, explicitly
+  <!-- If you wish to hide files under $${solr.home}/conf, explicitly
        register the ShowFileRequestHandler using:
     -->
   <!--
@@ -1002,7 +1002,7 @@
     <!-- a spellchecker built from a field of the main index -->
     <lst name="spellchecker">
       <str name="name">default</str>
-      <str name="field">$options.spellcheckField</str>
+      <str name="field">${options.spellcheckField}</str>
       <str name="classname">solr.DirectSolrSpellChecker</str>
       <!-- the spellcheck distance measure used, the default is the internal levenshtein -->
       <str name="distanceMeasure">internal</str>
@@ -1141,7 +1141,7 @@
 
     -->
   <searchComponent name="clustering"
-                   enable="\${solr.clustering.enabled:false}"
+                   enable="$${solr.clustering.enabled:false}"
                    class="solr.clustering.ClusteringComponent" >
     <!-- Declare an engine -->
     <lst name="engine">
@@ -1207,7 +1207,7 @@
     -->
   <requestHandler name="/clustering"
                   startup="lazy"
-                  enable="\${solr.clustering.enabled:false}"
+                  enable="$${solr.clustering.enabled:false}"
                   class="solr.SearchHandler">
     <lst name="defaults">
       <bool name="clustering">true</bool>
@@ -1227,7 +1227,7 @@
 
        <str name="defType">edismax</str>
        <str name="q.alt">*:*</str>
-       <str name="rows">$options.rows</str>
+       <str name="rows">${options.rows}</str>
        <str name="fl">*,score</str>
     </lst>
     <arr name="last-components">
@@ -1419,6 +1419,6 @@
     <defaultQuery>*:*</defaultQuery>
   </admin>
 
-  $options.additional_solrconfig
+  ${options.additional_solrconfig}
 
 </config>

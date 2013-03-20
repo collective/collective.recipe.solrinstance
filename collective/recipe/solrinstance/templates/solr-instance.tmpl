@@ -5,6 +5,12 @@ import sys, os
 import platform
 
 
+if sys.version_info >= (3,):
+    b = lambda x: x.encode('utf8')
+else:
+    b = lambda x: x
+
+
 WINDOWS = False
 
 if platform.system()=='Windows':
@@ -25,29 +31,29 @@ if platform.system()=='Windows':
 
 
 if len(sys.argv) != 2:
-    print "please run with  %s start|stop|purge|status|fg" % __file__
+    print("please run with  %s start|stop|purge|status|fg" % __file__)
     sys.exit()
 
-PID_FILE = r'$options.pidfile'
-SOLR_DIR = r'$options.solrdir'
-SOLR_LOG = r'$options.logfile'
-START_CMD = $options.startcmd
-UPDATE_URL = r'$options.updateurl'
+PID_FILE = r'${options.pidfile}'
+SOLR_DIR = r'${options.solrdir}'
+SOLR_LOG = r'${options.logfile}'
+START_CMD = ${repr(options.startcmd)}
+UPDATE_URL = r'${options.updateurl}'
 
 def start(daemonize=True):
     logfp = None
     if daemonize:
-        logfp = file(SOLR_LOG, 'a+')
+        logfp = open(SOLR_LOG, 'a+')
     pid = Popen(START_CMD, cwd=SOLR_DIR,
                 stdout=logfp, stderr=logfp).pid
     f = open(PID_FILE, 'wb')
-    f.write(str(pid))
+    f.write(b(str(pid)))
     f.close()
-    print 'Solr started with pid %s' % (pid,)
+    print('Solr started with pid %s' % (pid,))
     if not(daemonize):
         try:
             return os.waitpid(pid, 0)
-        except OSError, e:
+        except OSError as e:
             if e.errno == 4:
                 return
             else:
@@ -65,9 +71,9 @@ def stop():
             os.kill(int(pid), signal.SIGTERM)
 
         os.unlink(PID_FILE)
-        print "Solr stopped successfully."
+        print("Solr stopped successfully.")
     except (IOError, OSError):
-        print "Error occured: Solr probably not stopped ..."
+        print("Error occured: Solr probably not stopped ...")
 
 def purge():
     if status() > 0:
@@ -76,19 +82,19 @@ def purge():
               '-jar', 'post.jar', '<delete><query>*:*</query></delete>'], 
              cwd=postdir)
     else:
-        print "Solr not running. Index can't be purged."
+        print("Solr not running. Index can't be purged.")
 
 def status():
     try:
         f = open(PID_FILE)
         pid = f.read().strip()
         f.close()
-        return pid
+        return int(pid)
     except (IOError, OSError):
         return -1
 
 def graceful_stop():
-    print "Graceful stop"
+    print("Graceful stop")
     if status() > 0:
         stop()
 
@@ -123,9 +129,9 @@ elif sys.argv[1] == 'purge':
 elif sys.argv[1] == 'status':
     pid = status()
     if pid > 0:
-        print "Solr running with PID: ", pid
+        print("Solr running with PID: ", pid)
     else:
-        print "Solr not running."
+        print("Solr not running.")
 else:
     print ("illegal option: please run with "
            "%s start|stop|restart|status|purge|fg" % __file__)

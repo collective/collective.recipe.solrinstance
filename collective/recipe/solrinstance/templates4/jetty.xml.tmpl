@@ -57,8 +57,8 @@
     <Call name="addConnector">
       <Arg>
           <New class="org.eclipse.jetty.server.bio.SocketConnector">
-            <Set name="host">$options.serverhost</Set>
-            <Set name="port">$options.serverport</Set>
+            <Set name="host">${options.serverhost}</Set>
+            <Set name="port">${options.serverport}</Set>
             <Set name="maxIdleTime">50000</Set>
             <Set name="lowResourceMaxIdleTime">1500</Set>
             <Set name="statsOn">false</Set>
@@ -98,7 +98,7 @@
             <Set name="requestLog">
               <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
                 <Set name="filename">
-                   $options.logdir/request.yyyy_mm_dd.log
+                   ${options.logdir}/request.yyyy_mm_dd.log
                 </Set>
                 <Set name="filenameDateFormat">yyyy_mm_dd</Set>
                 <Set name="retainDays">90</Set>
