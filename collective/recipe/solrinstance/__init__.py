@@ -466,8 +466,21 @@ class SolrBase(object):
                                          **kwargs)
 
     def copysolr(self, source, destination):
-        # Copy the instance files
-        shutil.copytree(source, destination)
+        for sourcedir, dirs, files in os.walk(source):
+            relpath = os.path.relpath(sourcedir, source)
+            destdir = os.path.join(destination, relpath)
+
+            if os.path.exists(destdir) and not os.path.isdir(destdir):
+                shutil.rmtree(destdir)
+
+            if not os.path.exists(destdir):
+                os.makedirs(destdir)
+
+            for name in files:
+                srcname = os.path.join(sourcedir, name)
+                dstname = os.path.join(destdir, name)
+                shutil.copy2(srcname, dstname)
+                shutil.copystat(srcname, dstname)
 
     def copy_files(self, src_glob, dst_folder):
         for fname in glob.iglob(src_glob):
