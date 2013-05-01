@@ -504,11 +504,6 @@ class SolrSingleRecipe(SolrBase):
 
     def install(self):
         """installer"""
-        self.generated = [self.install_dir]
-
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
-
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'example'), self.install_dir)
@@ -614,7 +609,7 @@ class SolrSingleRecipe(SolrBase):
             startcmd=self.parse_java_opts(self.instanceopts))
 
         # returns installed files
-        return self.generated
+        return ()
 
     def update(self):
         """
@@ -650,11 +645,6 @@ class MultiCoreRecipe(SolrBase):
 
     def install(self):
         """installer"""
-        self.generated = [self.install_dir]
-
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
-
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'example'), self.install_dir)
@@ -784,8 +774,7 @@ class MultiCoreRecipe(SolrBase):
                 self.instanceopts['port']),
             startcmd=self.parse_java_opts(self.instanceopts))
 
-        # returns installed files
-        return self.generated
+        return ()
 
     def update(self):
         """
