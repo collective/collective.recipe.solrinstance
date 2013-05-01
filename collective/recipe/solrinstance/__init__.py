@@ -604,8 +604,10 @@ class SolrSingleRecipe(SolrBase):
         return self.generated
 
     def update(self):
-        """updater"""
-        return self.install()
+        """
+        We don't need to do anythin on update - install will get called if any of our settings change
+        """
+        pass
 
 
 class MultiCoreRecipe(SolrBase):
@@ -773,5 +775,7 @@ class MultiCoreRecipe(SolrBase):
         return self.generated
 
     def update(self):
-        """updater"""
-        return self.install()
+        """
+        We don't need to do anythin on update - install will get called if any of our settings change
+        """
+        pass
