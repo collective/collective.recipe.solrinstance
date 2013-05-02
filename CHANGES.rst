@@ -4,6 +4,14 @@ Change History
 5.0 (unreleased)
 ================
 
+- Ensure Solr 4 templates do not have two ``autoCommit``directives, mirroring
+  how Solr 3 templates operate.
+
+  **Backwards incompatibility**: if relying on a default ``autoCommit``
+  directive in Solr 4, you must configure the ``autoCommitMaxDocs`` and/or
+  ``autoCommitMaxTime`` recipe options.  A default is no longer provided.
+  [davidjb]
+
 - Python 3 support added. Python < 2.6 support dropped. Dropped
   dependency on iw.recipe.template as Cheetah does not support Python
   3. Replaced with Genshi, as used by collective.recipe.template.
