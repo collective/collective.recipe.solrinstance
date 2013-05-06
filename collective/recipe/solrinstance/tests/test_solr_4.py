@@ -150,7 +150,7 @@ class TestSolr4(unittest.TestCase):
         self.assertTrue('<filter class="solr.PorterStemFilterFactory' \
                         in schema_file)
 
-    def test_basic_install(self):
+    def _basic_install(self):
         with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
             fh.write(SINGLE_CORE_CONF)
         sample_buildout = self.globs['sample_buildout']
@@ -191,6 +191,15 @@ class TestSolr4(unittest.TestCase):
         self.assertTrue(datadir in solrconfig_file)
         self.assertTrue('<int name="rows">99</int>' in solrconfig_file)
 
+    def test_basic_install(self):
+        self._basic_install()
+
+    def test_artifact_prefix(self):
+        self._basic_install()
+        solrconfig_file = self.getfile(
+            'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
+        self.assertTrue('apache-' not in solrconfig_file)
+
     def test_multicore(self):
         with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
             fh.write(MULTICORE_CONF)
@@ -218,9 +227,24 @@ class TestSolr4(unittest.TestCase):
         
         self._test_field_types(core1_schema)
 
+class TestSolr40(TestSolr4):
+    """ Test for Solr 4.0 - artifacts were prefixed with ``apache-``.
+    """
+    def setUp(self):
+        super(TestSolr40, self).setUp()
+        sample_buildout = self.globs['sample_buildout']
+        os.makedirs(join(sample_buildout, 'dist', 'apache-solr-4.0.war'))
+
+    def test_artifact_prefix(self):
+        self._basic_install()
+        solrconfig_file = self.getfile(
+            'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
+        self.assertTrue('apache-' in solrconfig_file)
+
 
 
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestSolr4))
+    suite.addTest(unittest.makeSuite(TestSolr40))
     return suite

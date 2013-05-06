@@ -4,6 +4,11 @@ Change History
 5.0 (unreleased)
 ================
 
+- Remove ``apache-`` prefix from artifact filenames (jar files) to handle
+  naming changes introduced with Solr 4.1.  Versions earlier than 4.1 will
+  see this prefix included within configuration files.
+  [davidjb]  
+
 - Ensure Solr 4 templates do not have two ``autoCommit``directives, mirroring
   how Solr 3 templates operate.
 

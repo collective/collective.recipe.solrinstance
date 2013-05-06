@@ -120,6 +120,12 @@ class SolrBase(object):
         options['java_opts'] = options_orig.get('java_opts', '')
         return options
 
+    def get_artifact_prefix(self):
+        test_artifacts = os.path.join(self.solr_location, 'dist', 'apache-*')
+        if not self.is_solr_4() or glob.glob(test_artifacts):
+            return 'apache-'
+        return ''
+
     def is_solr_4(self):
         sol4_dir = os.path.join('example', 'solr', 'collection1')
         return os.path.isdir(os.path.join(self.solr_location, sol4_dir))
@@ -133,7 +139,9 @@ class SolrBase(object):
 
     def initSolrOpts(self, buildout, name, options_orig):
         #solr opts
-        options = {'analyzers': {}}
+        options = {'analyzers': {},
+                   'artifact_prefix': self.get_artifact_prefix()}
+
 
         options['name'] = name
         options['index'] = options_orig.get('index')
@@ -571,6 +579,7 @@ class SolrSingleRecipe(SolrBase):
             documentCacheAutowarmCount=self.solropts['documentCacheAutowarmCount'],
             extralibs=self.solropts['extralibs'],
             location=self.install_dir,
+            artifact_prefix=self.solropts['artifact_prefix'],
             abortOnConfigurationError=self.solropts['abortOnConfigurationError']
             )
 
@@ -725,6 +734,7 @@ class MultiCoreRecipe(SolrBase):
                 documentCacheAutowarmCount=options_core['documentCacheAutowarmCount'],
                 extralibs=options_core['extralibs'],
                 location=self.install_dir,
+                artifact_prefix=options_core['artifact_prefix'],
                 abortOnConfigurationError=options_core['abortOnConfigurationError']
                 )
 
