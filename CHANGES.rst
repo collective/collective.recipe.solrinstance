@@ -4,6 +4,10 @@ Change History
 5.0 (unreleased)
 ================
 
+- Allow Buildout to be re-run without breaking a running Solr instance.
+  Previously, Solr required a restart to restore removed files.
+  [Jc2k]
+
 - Remove ``apache-`` prefix from artifact filenames (jar files) to handle
   naming changes introduced with Solr 4.1.  Versions earlier than 4.1 will
   see this prefix included within configuration files.
