@@ -21,6 +21,7 @@ if sys.version_info >= (3,):
 else:
     requires += [
         'Genshi',
+        'zc.buildout',
         ]
 test_requires = requires + [
     'zope.exceptions',
