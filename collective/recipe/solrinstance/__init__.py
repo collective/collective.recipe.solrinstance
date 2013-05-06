@@ -474,8 +474,21 @@ class SolrBase(object):
                                          **kwargs)
 
     def copysolr(self, source, destination):
-        # Copy the instance files
-        shutil.copytree(source, destination)
+        for sourcedir, dirs, files in os.walk(source):
+            relpath = os.path.relpath(sourcedir, source)
+            destdir = os.path.join(destination, relpath)
+
+            if os.path.exists(destdir) and not os.path.isdir(destdir):
+                shutil.rmtree(destdir)
+
+            if not os.path.exists(destdir):
+                os.makedirs(destdir)
+
+            for name in files:
+                srcname = os.path.join(sourcedir, name)
+                dstname = os.path.join(destdir, name)
+                shutil.copy2(srcname, dstname)
+                shutil.copystat(srcname, dstname)
 
     def copy_files(self, src_glob, dst_folder):
         for fname in glob.iglob(src_glob):
@@ -499,11 +512,6 @@ class SolrSingleRecipe(SolrBase):
 
     def install(self):
         """installer"""
-        self.generated = [self.install_dir]
-
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
-
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'example'), self.install_dir)
@@ -610,11 +618,13 @@ class SolrSingleRecipe(SolrBase):
             startcmd=self.parse_java_opts(self.instanceopts))
 
         # returns installed files
-        return self.generated
+        return ()
 
     def update(self):
-        """updater"""
-        return self.install()
+        """
+        We don't need to do anythin on update - install will get called if any of our settings change
+        """
+        pass
 
 
 class MultiCoreRecipe(SolrBase):
@@ -644,11 +654,6 @@ class MultiCoreRecipe(SolrBase):
 
     def install(self):
         """installer"""
-        self.generated = [self.install_dir]
-
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
-
         # Copy the instance files
         self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'example'), self.install_dir)
@@ -779,9 +784,10 @@ class MultiCoreRecipe(SolrBase):
                 self.instanceopts['port']),
             startcmd=self.parse_java_opts(self.instanceopts))
 
-        # returns installed files
-        return self.generated
+        return ()
 
     def update(self):
-        """updater"""
-        return self.install()
+        """
+        We don't need to do anythin on update - install will get called if any of our settings change
+        """
+        pass
