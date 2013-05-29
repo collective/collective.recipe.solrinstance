@@ -10,14 +10,12 @@ def setUp(test):
     install_develop('zope.exceptions', test)
     install_develop('zope.interface', test)
     install_develop('zope.testing', test)
-    install_develop('Cheetah', test)
-    install_develop('Markdown', test)
-    install_develop('iw.recipe.template', test)
+    install_develop('genshi', test)
     install_develop('collective.recipe.solrinstance', test)
 
 
 def test_suite():
     return DocFileSuite(
-           'README.txt',
+           '../README.txt',
            setUp=setUp, tearDown=buildoutTearDown,
            optionflags=ELLIPSIS | NORMALIZE_WHITESPACE | REPORT_UDIFF)

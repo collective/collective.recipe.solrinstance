@@ -28,9 +28,13 @@ extracted in the parts directory:
     ...     name:Foo bar type:text
     ...     name:Baz type:text
     ...     name:Everything type:text
+    ... tokenizer =
+    ...     text solr.KeywordTokenizerFactory
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... char-filter =
+    ...     text solr.HTMLStripCharFilterFactory
     ... additional-schema-config =
     ...      <copyField source="*" dest="Everything"/>
     ... """)
@@ -48,12 +52,12 @@ downloaded before:
 Ok, let's run the buildout:
 
     >>> install_output = """Installing solr.
-    ... jetty.xml: Generated file 'jetty.xml'.
-    ... logging.properties: Generated file 'logging.properties'.
-    ... solrconfig.xml: Generated file 'solrconfig.xml'.
-    ... schema.xml: Generated file 'schema.xml'.
-    ... stopwords.txt: Generated file 'stopwords.txt'.
-    ... solr-instance: Generated script 'solr-instance'"""
+    ... solr: Generated file 'jetty.xml'.
+    ... solr: Generated file 'logging.properties'.
+    ... solr: Generated file 'solrconfig.xml'.
+    ... solr: Generated file 'schema.xml'.
+    ... solr: Generated file 'stopwords.txt'.
+    ... solr: Generated script 'solr-instance'"""
     >>> install_output in system(buildout)
     True
 
@@ -102,7 +106,11 @@ And make sure the substitution worked for all files.
     ...
     <filter class="Baz" foo="bar" juca="bala"/>
     ...
+    <charFilter class="solr.HTMLStripCharFilterFactory" />
+    ...
     <filter class="solr.ISOLatin1AccentFilterFactory" />
+    ...
+    <tokenizer class="solr.KeywordTokenizerFactory" />
     ...
     <field name="uniqueID" type="string" indexed="true"
            stored="true" required="true" multiValued="false"
@@ -180,7 +188,7 @@ unique key.  Without a matching index this yields an error, though:
     ... index =
     ...     name:Foo type:text
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     ...
     Error: Unique key without matching index: uniqueID
@@ -203,7 +211,7 @@ bit stupid, but oh well:
     ...     name:uniqueID type:text
     ...     name:Foo type:text
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Installing solr.
     ...
     Error: Unique key needs to declared "required"=true or "default"=NEW: uniqueID
@@ -223,7 +231,7 @@ in the generated xml either:
     ... index =
     ...     name:Foo type:text
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Installing solr.
     ...
     >>> def read(*path):
@@ -249,7 +257,7 @@ matching index to be set up:
     ... unique-key =
     ... index =
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     ...
     Error: Default search field without matching index: Foo
@@ -269,14 +277,14 @@ With the index set up correctly, things work again:
     ... index =
     ...     name:Foo type:text
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -298,15 +306,15 @@ There's no default for the default search field, however:
     ... index =
     ... """)
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
@@ -337,15 +345,15 @@ You can also define extra field types:
     ...     name:Bar type:bar_type
     ... """)
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -390,15 +398,15 @@ to be used to generate `schema.xml`:
     ... unique-key =
     ... index =
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
@@ -412,9 +420,9 @@ variable that can then be conveniently used in the template:
     >>> rmdir(sample_buildout, 'parts', 'solr')
     >>> write(sample_buildout, 'schema.xml',
     ... """<schema name="foo">
-    ... #for $index in $options.indeces
-    ... <field name="$index.name" $index.extras />
-    ... #end for
+    ... {% for index in options.indeces %}\
+    ... <field name="${index.name}" ${index.extras} />
+    ... {% end %}
     ... </schema>""")
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -429,15 +437,15 @@ variable that can then be conveniently used in the template:
     ...     name:Foo type:text foo:bar another:one
     ...     name:Bar type:text
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema name="foo">
@@ -459,7 +467,7 @@ Without the custom template for `schema.xml` this should yield an error:
     ... index =
     ...     name:Foo type:text foo:bar
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     ...
     Error: Invalid index attribute(s): foo. Allowed attributes are: ...
@@ -484,14 +492,14 @@ Additional solrconfig should also be allowed:
     ...         <bar />
     ...     </foo>
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -499,6 +507,45 @@ Additional solrconfig should also be allowed:
     <foo attr="value1">
         <bar />
     </foo>
+    ...
+
+Additional solrconfig query section should also be allowed:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ...     name:Bar type:text
+    ... additional-solrconfig-query =
+    ...     <listener event="firstSearcher">
+    ...         <arr />
+    ...     </listener>
+    ... """)
+    >>> print(system(buildout))
+    Uninstalling solr.
+    Installing solr.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <listener event="firstSearcher">
+        <arr />
+    </listener>
+    </query>
     ...
 
 Sometimes it is necessary to include extra libraries (e.g. DIH-handler,
@@ -519,15 +566,15 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     ...      /foo/bar:.*\.jarx
     ...      /my/lava/libs
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
@@ -554,15 +601,15 @@ Test autoCommit arguments:
     ... autoCommitMaxDocs = 1000
     ... autoCommitMaxTime = 900000
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -588,15 +635,15 @@ Testing the request parsers default limit:
     ... index =
     ...     name:Foo type:text foo:bar another:one
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -620,15 +667,15 @@ Test changing the request parsers limit:
     ...     name:Foo type:text foo:bar another:one
     ... requestParsers-multipartUploadLimitInKB = 4096
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -655,15 +702,15 @@ alternative template to be used to generate `solrconfig.xml`:
     ... unique-key =
     ... index =
     ... """)
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <config>
@@ -699,21 +746,21 @@ Solr instances to coexist in a single buildout:
     ... script =
     ... """)
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr-main.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
+    solr-main: Generated file 'jetty.xml'.
+    solr-main: Generated file 'logging.properties'.
+    solr-main: Generated file 'solrconfig.xml'.
+    solr-main: Generated file 'schema.xml'.
+    solr-main: Generated file 'stopwords.txt'.
     solr-main: Generated script 'solr-main'.
     Installing solr-functest.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
+    solr-functest: Generated file 'jetty.xml'.
+    solr-functest: Generated file 'logging.properties'.
+    solr-functest: Generated file 'solrconfig.xml'.
+    solr-functest: Generated file 'schema.xml'.
+    solr-functest: Generated file 'stopwords.txt'.
 
     >>> ls(sample_buildout, 'var')
     d  solr-functest
@@ -745,16 +792,16 @@ Testing the java_opts optional params:
 
 Ok, let's run the buildout:
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr-functest.
     Uninstalling solr-main.
     Installing solr.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    schema.xml: Generated file 'schema.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    solr-instance: Generated script 'solr-instance'.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
 
 Check if the run script is here and the template substitution worked
 with java_opts:
@@ -793,7 +840,7 @@ Testing multicore recipe without cores:
 
 Ok, let's run the buildout:
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     While:
     ...
     Error: Attribute `cores` not defined.
@@ -819,12 +866,16 @@ Testing multicore recipe with wrong cores:
 
 Ok, let's run the buildout:
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     While:
     ...
-    Error: Attribute `cores` not correct defined. Define as withespace seperated list `cores = X1 X2 X3`
+    Error: Attribute `cores` is not correctly defined. Define as a whitespace
+    separated list like `cores = X1 X2 X3`
 
-Test a our first core
+Note that you can specify the ``cores`` option as either newline separated or
+other whitespace separated.
+
+Test our first core:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -850,9 +901,23 @@ Test a our first core
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ...     name:Foo bar type:text
     ...     name:BlaWS type:text_ws
+    ... char-filter =
+    ...     text_ws solr.HTMLStripCharFilterFactory
+    ... char-filter-index =
+    ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... filter-index =
+    ...     text solr.LowerCaseFilterFactory
+    ... filter-query =
+    ...     text solr.LowerCaseFilterFactory
+    ...     text solr.PorterStemFilterFactory
+    ... tokenizer-index =
+    ...     text solr.StandardTokenizerFactory
+    ... tokenizer-query =
+    ...     text solr.StandardTokenizerFactory
+    ...     text solr.WhitespaceTokenizerFactory
     ...
     ... [core2]
     ... max-num-results = 99
@@ -862,26 +927,40 @@ Test a our first core
     ...     name:Foo type:text
     ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     ...     name:Foo bar type:text
+    ... char-filter =
+    ...     text_ws solr.HTMLStripCharFilterFactory
+    ... char-filter-index =
+    ...     text_ws solr.MappingCharFilterFactory mapping="my-mapping.txt"
     ... filter =
     ...     text solr.ISOLatin1AccentFilterFactory
     ...     text_ws Baz foo="bar" juca="bala"
+    ... filter-index =
+    ...     text solr.LowerCaseFilterFactory
+    ... filter-query =
+    ...     text solr.LowerCaseFilterFactory
+    ...     text solr.PorterStemFilterFactory
+    ... tokenizer-index =
+    ...     text solr.StandardTokenizerFactory
+    ... tokenizer-query =
+    ...     text solr.StandardTokenizerFactory
+    ...     text solr.WhitespaceTokenizerFactory
     ... """)
 
 Ok, let's run the buildout:
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr.
     Installing solr-mc.
-    solr.xml: Generated file 'solr.xml'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    schema.xml: Generated file 'schema.xml'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    schema.xml: Generated file 'schema.xml'.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solr-instance: Generated script 'solr-instance'.
+    solr-mc: Generated file 'solr.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'logging.properties'.
+    solr-mc: Generated script 'solr-instance'.
 
 See if there are all needed files:
 
@@ -916,10 +995,30 @@ See if name is set in `schema.xml`:
     >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf', 'schema.xml')
     <?xml...
     <schema name="core1"...
-    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="index">
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <charFilter class="solr.MappingCharFilterFactory" mapping="my-mapping.txt"/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
         <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+      <analyzer type="query">
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
+    </fieldType>...
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+        <filter class="solr.PorterStemFilterFactory" />
       </analyzer>
     </fieldType>
     ...
@@ -938,7 +1037,9 @@ You can specify a default core with ``default-core-name``:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... cores = core1 core2
+    ... cores =
+    ...     core1
+    ...     core2
     ... default-core-name = core1
     ...
     ... [core1]
@@ -954,19 +1055,20 @@ You can specify a default core with ``default-core-name``:
 
 Ok, let's run the buildout:
 
-    >>> print system(buildout)
+    >>> print(system(buildout))
     Uninstalling solr-mc.
     Installing solr-mc.
-    solr.xml: Generated file 'solr.xml'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    schema.xml: Generated file 'schema.xml'.
-    solrconfig.xml: Generated file 'solrconfig.xml'.
-    stopwords.txt: Generated file 'stopwords.txt'.
-    schema.xml: Generated file 'schema.xml'.
-    jetty.xml: Generated file 'jetty.xml'.
-    logging.properties: Generated file 'logging.properties'.
-    solr-instance: Generated script 'solr-instance'.
+    solr-mc: Generated file 'solr.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'logging.properties'.
+    solr-mc: Generated script 'solr-instance'.
+    
 
 The parameter should thus end up in ``solr.xml``:
 

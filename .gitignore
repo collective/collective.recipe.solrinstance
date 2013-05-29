@@ -3,7 +3,12 @@ build
 develop-eggs
 dist
 eggs
+include
+lib
+local
 parts
+share
 .installed.cfg
 *.egg-info
 *.pyc
+*.egg

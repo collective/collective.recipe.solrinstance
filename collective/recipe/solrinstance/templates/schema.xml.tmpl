@@ -29,7 +29,7 @@
  http://wiki.apache.org/solr/SchemaXml
 -->
 
-<schema name="$options.options.name" version="1.4">
+<schema name="${options.options.name}" version="1.4">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="1.4" is Solr's version number for the schema syntax and semantics.  It should
@@ -142,21 +142,35 @@
 
     <!-- A text field that only splits on whitespace for exact matching of words -->
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-        #for $filter in $options.filters.text_ws
-        <filter class="$filter.class" $filter.extra/>
-        #end for
+      {% for type, analyzer in sorted(options.analyzers.items()) %}\
+      <analyzer type="${type}">
+        {% for char_filter in analyzer.char_filter.text_ws %}\
+        <charFilter class="${char_filter['class']}" ${char_filter.extra}/>
+        {% end %}\
+        {% for tokenizer in analyzer.tokenizer.text_ws %}\
+        <tokenizer class="${tokenizer['class']}" ${tokenizer.extra}/>
+        {% end %}\
+        {% for filter in analyzer.filter.text_ws %}\
+        <filter class="${filter['class']}" ${filter.extra}/>
+        {% end %}\
       </analyzer>
+      {% end %}\
     </fieldType>
 
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
-      <analyzer>
-        <tokenizer class="solr.ICUTokenizerFactory"/>
-        #for $filter in $options.filters.text
-        <filter class="$filter.class" $filter.extra/>
-        #end for
+      {% for type, analyzer in sorted(options.analyzers.items()) %}\
+      <analyzer type="${type}">
+        {% for char_filter in analyzer.char_filter.text %}\
+        <charFilter class="${char_filter['class']}" ${char_filter.extra}/>
+        {% end %}\
+        {% for tokenizer in analyzer.tokenizer.text %}\
+        <tokenizer class="${tokenizer['class']}" ${tokenizer.extra}/>
+        {% end %}\
+        {% for filter in analyzer.filter.text %}\
+        <filter class="${filter['class']}" ${filter.extra}/>
+        {% end %}\
       </analyzer>
+      {% end %}\
     </fieldType>
 
     <!-- since fields of this type are by default not stored or indexed,
@@ -185,10 +199,10 @@
    -->
     <fieldtype name="geohash" class="solr.GeoHashField"/>
 
-    #if $options.options.extraFieldTypes
+    {% if options.options.extraFieldTypes %}\
     <!-- Extra field types: -->
-    $options.options.extraFieldTypes
-    #end if
+    ${options.options.extraFieldTypes}
+    {% end %}
 
  </types>
 
@@ -217,33 +231,36 @@
        when adding a document.
    -->
 
-   #for $index in $options.indeces
-   #if $index.default
-   #if $index.omitnorms
-   <field name="$index.name" type="$index.type" indexed="$index.indexed"
-          stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
-          omitNorms="$index.omitnorms" default="$index.default" termVectors="$index.termVectors"
-          termPositions="$index.termPositions" termOffsets="$index.termOffsets"/>
-   #else
-   <field name="$index.name" type="$index.type" indexed="$index.indexed"
-          stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
-          default="$index.default" termVectors="$index.termVectors"
-          termPositions="$index.termPositions" termOffsets="$index.termOffsets"/>
-   #end if
-   #else
-   #if $index.omitnorms
-   <field name="$index.name" type="$index.type" indexed="$index.indexed"
-          stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
-          omitNorms="$index.omitnorms" termVectors="$index.termVectors"
-          termPositions="$index.termPositions" termOffsets="$index.termOffsets"/>
-   #else
-   <field name="$index.name" type="$index.type" indexed="$index.indexed"
-          stored="$index.stored" required="$index.required" multiValued="$index.multivalued"
-          termVectors="$index.termVectors" termPositions="$index.termPositions"
-          termOffsets="$index.termOffsets"/>
-   #end if
-   #end if
-   #end for
+   {% for index in options.indeces %}\
+   {% if index.default %}\
+   {% if index.omitnorms %}\
+   <field name="${index.name}" type="${index.type}" indexed="${index.indexed}"
+          stored="${index.stored}" required="${index.required}" multiValued="${index.multivalued}"
+          omitNorms="${index.omitnorms}" default="${index.default}" termVectors="${index.termVectors}"
+          termPositions="${index.termPositions}" termOffsets="${index.termOffsets}"/>
+   {% end %}\
+   {% if not index.omitnorms %}\
+   <field name="${index.name}" type="${index.type}" indexed="${index.indexed}"
+          stored="${index.stored}" required="${index.required}" multiValued="${index.multivalued}"
+          default="${index.default}" termVectors="${index.termVectors}"
+          termPositions="${index.termPositions}" termOffsets="${index.termOffsets}"/>
+   {% end %}\
+   {% end %}\
+   {% if not index.default %}\
+   {% if index.omitnorms %}\
+   <field name="${index.name}" type="${index.type}" indexed="${index.indexed}"
+          stored="${index.stored}" required="${index.required}" multiValued="${index.multivalued}"
+          omitNorms="${index.omitnorms}" termVectors="${index.termVectors}"
+          termPositions="${index.termPositions}" termOffsets="${index.termOffsets}"/>
+   {% end %}\
+   {% if not index.omitnorms %}\
+   <field name="${index.name}" type="${index.type}" indexed="${index.indexed}"
+          stored="${index.stored}" required="${index.required}" multiValued="${index.multivalued}"
+          termVectors="${index.termVectors}" termPositions="${index.termPositions}"
+          termOffsets="${index.termOffsets}"/>
+   {% end %}
+   {% end %}
+   {% end %}
 
    <dynamicField name="tika_*" type="ignored" />
 
@@ -252,31 +269,31 @@
  <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
- #if $options.options.uniqueKey
- <uniqueKey>$options.options.uniqueKey</uniqueKey>
- #end if
+ {% if options.options.uniqueKey %}\
+ <uniqueKey>${options.options.uniqueKey}</uniqueKey>
+ {% end %}\
 
- #if $options.options.defaultSearchField
+ {% if options.options.defaultSearchField %}\
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
- <defaultSearchField>$options.options.defaultSearchField</defaultSearchField>
- #end if
+ <defaultSearchField>${options.options.defaultSearchField}</defaultSearchField>
+ {% end %}\
 
  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
- <solrQueryParser defaultOperator="$options.options.defaultOperator"/>
+ <solrQueryParser defaultOperator="${options.options.defaultOperator}"/>
 
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
         or to add multiple fields to the same field for easier/faster searching.  -->
 
-  #for $index in $options.indeces
-  #for $copyfield in $index.copyfield
-  <copyField source="$copyfield.source" dest="$copyfield.dest"/>
-  #end for
-  #end for
+  {% for index in options.indeces %}\
+  {% for copyfield in index.copyfield %}\
+  <copyField source="${copyfield.source}" dest="${copyfield.dest}"/>
+  {% end %}\
+  {% end %}\
 
-  #if $options.options.additionalSchemaConfig
+  {% if options.options.additionalSchemaConfig %}\
   <!-- Additional schema configuration -->
-  $options.options.additionalSchemaConfig
-  #end if
+  ${options.options.additionalSchemaConfig}
+  {% end %}\
 
 </schema>

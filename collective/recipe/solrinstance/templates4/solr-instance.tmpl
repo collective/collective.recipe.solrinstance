@@ -31,7 +31,7 @@ if platform.system()=='Windows':
 
 
 if len(sys.argv) != 2:
-    print("please run with  %s start|stop|purge|status|fg" % __file__)
+    print("please run with {0} start|stop|purge|status|fg".format(__file__))
     sys.exit()
 
 PID_FILE = r'${options.pidfile}'
@@ -49,7 +49,7 @@ def start(daemonize=True):
     f = open(PID_FILE, 'wb')
     f.write(b(str(pid)))
     f.close()
-    print('Solr started with pid %s' % (pid,))
+    print('Solr started with pid {0}'.format(pid))
     if not(daemonize):
         try:
             return os.waitpid(pid, 0)
@@ -134,4 +134,4 @@ elif sys.argv[1] == 'status':
         print("Solr not running.")
 else:
     print ("illegal option: please run with "
-           "%s start|stop|restart|status|purge|fg" % __file__)
+           "{0} start|stop|restart|status|purge|fg".format(__file__))
