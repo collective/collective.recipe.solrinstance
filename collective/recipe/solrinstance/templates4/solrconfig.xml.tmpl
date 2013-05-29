@@ -113,7 +113,7 @@
        persistent, and doesn't work with replication.
     -->
   <directoryFactory name="DirectoryFactory"
-                    class="$${solr.directoryFactory:solr.NRTCachingDirectoryFactory}"/>
+                    class="$${solr.directoryFactory:${options.directoryFactory}}"/>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
        Index Config - These settings control low-level behavior of indexing

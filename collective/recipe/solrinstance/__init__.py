@@ -226,7 +226,8 @@ class SolrBase(object):
             'documentCacheInitialSize', '512')
         options['documentCacheAutowarmCount'] = options_orig.get(
             'documentCacheAutowarmCount', '0')
-
+        options['directoryFactory'] = options_orig.get(
+            'directoryFactory', 'solr.NRTCachingDirectoryFactory')
         options['extralibs'] = []
         extralibs = options_orig.get('extralibs', '').strip()
         for lib in extralibs.splitlines():
@@ -588,7 +589,8 @@ class SolrSingleRecipe(SolrBase):
             extralibs=self.solropts['extralibs'],
             location=self.install_dir,
             artifact_prefix=self.solropts['artifact_prefix'],
-            abortOnConfigurationError=self.solropts['abortOnConfigurationError']
+            abortOnConfigurationError=self.solropts['abortOnConfigurationError'],
+            directoryFactory=self.solropts['directoryFactory']
             )
 
         self.generate_solr_schema(
@@ -689,9 +691,14 @@ class MultiCoreRecipe(SolrBase):
 
         #generate defined cores
         for core in self.cores:
-            options_core = self.buildout[core]
+            # mghh: We take here the original_options
+            #       and merge in the options from every core.
+            #       This allows us to define/override options
+            #       for all cores.
+            options_core = dict(self.options_orig)
+            options_core.update(self.buildout[core])
             options_core = self.initSolrOpts(self.buildout, core,
-                                             self.buildout[core])
+                                             options_core)
             conf_dir = os.path.join(solr_dir, core, "conf")
 
             if not os.path.exists(conf_dir):
@@ -740,7 +747,8 @@ class MultiCoreRecipe(SolrBase):
                 extralibs=options_core['extralibs'],
                 location=self.install_dir,
                 artifact_prefix=options_core['artifact_prefix'],
-                abortOnConfigurationError=options_core['abortOnConfigurationError']
+                abortOnConfigurationError=options_core['abortOnConfigurationError'],
+                directoryFactory=options_core['directoryFactory']
                 )
 
             self.generate_stopwords(
