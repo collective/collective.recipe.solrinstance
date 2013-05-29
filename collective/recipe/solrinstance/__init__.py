@@ -6,12 +6,6 @@ import shutil
 import os
 import glob
 
-
-FILE_TO_COPY = set(["*.txt", "*.html", "currency.xml", "elevate.xml",
-    "scripts.conf"])
-
-FOLDER_TO_COPY = set(["lang", "xslt", "velocity"])
-
 INDEX_TYPES = set(['text', 'text_ws', 'ignored', 'date', 'string',
                    'boolean', 'integer', 'long', 'float', 'double'])
 
@@ -190,6 +184,8 @@ class SolrBase(object):
                 regex = ".*\.jar"
             if path.strip():
                 options['extralibs'].append({'path': path, 'regex': regex})
+        options['abortOnConfigurationError'] = options_orig.get('abortOnConfigurationError', 'false')
+
         return options
 
     def parse_filter(self, options):
@@ -369,7 +365,7 @@ class SolrBase(object):
                 script,
                 kwargs).install()
 
-    def copy_folder(self, source, destination):
+    def copysolr(self, source, destination):
         # Copy the instance files
         shutil.copytree(source, destination)
 
@@ -401,11 +397,11 @@ class SolrSingleRecipe(SolrBase):
             shutil.rmtree(self.install_dir)
 
         # Copy the instance files
-        self.copy_folder(os.path.join(self.instanceopts['solr-location'],
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'example'), self.install_dir)
-        self.copy_folder(os.path.join(self.instanceopts['solr-location'], 'dist'),
+        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'dist'),
                       os.path.join(self.install_dir, 'dist'))
-        self.copy_folder(os.path.join(self.instanceopts['solr-location'],
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'contrib'),
                       os.path.join(self.install_dir, 'contrib'))
 
@@ -458,6 +454,7 @@ class SolrSingleRecipe(SolrBase):
             documentCacheInitialSize=self.solropts['documentCacheInitialSize'],
             extralibs=self.solropts['extralibs'],
             location=self.install_dir,
+            abortOnConfigurationError=self.solropts['abortOnConfigurationError']
             )
 
         self.generate_solr_schema(
@@ -525,12 +522,13 @@ class MultiCoreRecipe(SolrBase):
             shutil.rmtree(self.install_dir)
 
         # Copy the instance files
-        self.copy_folder(os.path.join(self.instanceopts['solr-location'],
-            'example'), self.install_dir)
-        self.copy_folder(os.path.join(self.instanceopts['solr-location'],
-            'dist'), os.path.join(self.install_dir, 'dist'))
-        self.copy_folder(os.path.join(self.instanceopts['solr-location'],
-            'contrib'), os.path.join(self.install_dir, 'contrib'))
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
+                                   'example'), self.install_dir)
+        self.copysolr(os.path.join(self.instanceopts['solr-location'], 'dist'),
+                      os.path.join(self.install_dir, 'dist'))
+        self.copysolr(os.path.join(self.instanceopts['solr-location'],
+                                   'contrib'),
+                      os.path.join(self.install_dir, 'contrib'))
 
         solr_var = self.instanceopts['vardir']
         if self.instanceopts['logdir']:
@@ -561,14 +559,9 @@ class MultiCoreRecipe(SolrBase):
             if not os.path.exists(conf_dir):
                 os.makedirs(conf_dir)
 
-            for i in FILE_TO_COPY:
-                self.copy_files(os.path.join(
-                    self.instanceopts['solr-location'], 'example', 'solr',
-                    'conf', i), conf_dir)
-            for i in FOLDER_TO_COPY:
-                self.copy_folder(os.path.join(
-                    self.instanceopts['solr-location'], 'example', 'solr',
-                    'conf', i), os.path.join(conf_dir, i))
+            self.copy_files(os.path.join(self.instanceopts['solr-location'],
+                                         'example', 'solr', 'conf', '*.txt'),
+                            conf_dir)
 
             solr_data = os.path.join(solr_var, 'data', core)
             if not os.path.exists(solr_data):
@@ -605,6 +598,7 @@ class MultiCoreRecipe(SolrBase):
                     'documentCacheInitialSize'],
                 extralibs=options_core['extralibs'],
                 location=self.install_dir,
+                abortOnConfigurationError=options_core['abortOnConfigurationError']
                 )
 
             self.generate_stopwords(

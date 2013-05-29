@@ -29,9 +29,9 @@
     If 'null' (or absent), cores will not be manageable via request handler
   -->
   #if $options.defaultCoreName
-  <cores adminPath="/admin/cores" defaultCoreName="$options.defaultCoreName" host="\${host:}" hostPort="\${jetty.port:}">
+  <cores adminPath="/admin/cores" defaultCoreName="$options.defaultCoreName">
   #else
-  <cores adminPath="/admin/cores" host="\${host:}" hostPort="\${jetty.port:}">
+  <cores adminPath="/admin/cores">
   #end if
     #for $core in $options.cores
     <core name="$core" instanceDir="$core" />
