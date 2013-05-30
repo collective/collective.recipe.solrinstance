@@ -423,6 +423,15 @@ additional-schema-config
     and anything else that's part of the schema configuration (see
     http://wiki.apache.org/solr/SchemaXml).
 
+additionalFieldConfig
+    Optional additional configuration which is placed inside
+    the <fields>...</fields> directive in schema.xml
+    Use this e.g. to insert dynamic fields.
+    example:  
+    additionalFieldConfig = 
+         <dynamicField name="..." type="string" indexed="true" stored="true" />
+    Defaults to ''
+
 Multi-core
 ==========
 

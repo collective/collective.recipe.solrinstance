@@ -228,6 +228,9 @@ class SolrBase(object):
             'documentCacheAutowarmCount', '0')
         options['directoryFactory'] = options_orig.get(
             'directoryFactory', 'solr.NRTCachingDirectoryFactory')
+        options['additionalFieldConfig'] = options_orig.get(
+            'additionalFieldConfig', '')
+
         options['extralibs'] = []
         extralibs = options_orig.get('extralibs', '').strip()
         for lib in extralibs.splitlines():
@@ -590,7 +593,7 @@ class SolrSingleRecipe(SolrBase):
             location=self.install_dir,
             artifact_prefix=self.solropts['artifact_prefix'],
             abortOnConfigurationError=self.solropts['abortOnConfigurationError'],
-            directoryFactory=self.solropts['directoryFactory']
+            directoryFactory=self.solropts['directoryFactory'],
             )
 
         self.generate_solr_schema(
@@ -748,7 +751,7 @@ class MultiCoreRecipe(SolrBase):
                 location=self.install_dir,
                 artifact_prefix=options_core['artifact_prefix'],
                 abortOnConfigurationError=options_core['abortOnConfigurationError'],
-                directoryFactory=options_core['directoryFactory']
+                directoryFactory=options_core['directoryFactory'],
                 )
 
             self.generate_stopwords(

@@ -31,6 +31,11 @@ index =
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
     name:BlaWS type:text_ws
+
+additionalFieldConfig =
+   <dynamicField name="*_public" type="string" indexed="true" stored="true"  multiValued="true"/>
+   <dynamicField name="*_restricted" type="string" indexed="true" stored="true"  multiValued="true"/>
+
 char-filter =
     text_ws solr.HTMLStripCharFilterFactory
 char-filter-index =
@@ -57,6 +62,11 @@ index =
     name:Foo type:text
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
+
+additionalFieldConfig =
+   <dynamicField name="*_public" type="string" indexed="true" stored="true"  multiValued="true"/>
+   <dynamicField name="*_restricted" type="string" indexed="true" stored="true"  multiValued="true"/>
+
 char-filter =
     text_ws solr.HTMLStripCharFilterFactory
 char-filter-index =
@@ -93,6 +103,11 @@ index =
     name:Foo type:text
     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
     name:Foo bar type:text
+
+additionalFieldConfig =
+   <dynamicField name="*_public" type="string" indexed="true" stored="true"  multiValued="true"/>
+   <dynamicField name="*_restricted" type="string" indexed="true" stored="true"  multiValued="true"/>
+
 char-filter =
     text_ws solr.HTMLStripCharFilterFactory
 char-filter-index =
@@ -151,6 +166,9 @@ class TestSolr4(unittest.TestCase):
         self.assertTrue('<filter class="Baz"' in schema_file)
         self.assertTrue('<filter class="solr.PorterStemFilterFactory' \
                         in schema_file)
+
+        self.assertTrue('dynamicField name="*_public" ' in schema_file)
+        self.assertTrue('dynamicField name="*_restricted" ' in schema_file)
 
     def _basic_install(self):
         with open(join(self.globs['sample_buildout'], 'buildout.cfg'), 'w') as fh:
@@ -272,7 +290,6 @@ class TestSolr40(TestSolr4):
         solrconfig_file = self.getfile(
             'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
         self.assertTrue('apache-' in solrconfig_file)
-
 
 
 def test_suite():
