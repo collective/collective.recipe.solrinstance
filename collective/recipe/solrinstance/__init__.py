@@ -627,9 +627,17 @@ class SolrSingleRecipe(SolrBase):
 
     def update(self):
         """
-        We don't need to do anythin on update - install will get called if any of our settings change
+        Normally We don't need to do anythin on update -
+        install will get called if any of our settings change
+        But we allow a workflow for users who wish
+        to delete the whole solr-instance folder and
+        recreate it with a buildout update. We do this
+        often while testing our application.
         """
-        pass
+        if os.path.exists(self.install_dir):
+            pass
+        else:
+            self.install()
 
 
 class MultiCoreRecipe(SolrBase):
@@ -799,6 +807,14 @@ class MultiCoreRecipe(SolrBase):
 
     def update(self):
         """
-        We don't need to do anythin on update - install will get called if any of our settings change
+        Normally We don't need to do anythin on update -
+        install will get called if any of our settings change
+        But we allow a workflow for users who wish
+        to delete the whole solr-instance folder and
+        recreate it with a buildout update. We do this
+        often while testing our application.
         """
-        pass
+        if os.path.exists(self.install_dir):
+            pass
+        else:
+            self.install()

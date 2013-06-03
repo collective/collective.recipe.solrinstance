@@ -4,6 +4,16 @@ Change History
 5.0 (unreleased)
 ================
 
+- New option 'additionalFieldConfig'.
+  This option allows for additional configuration options
+  in <fields>...</fields> section of schema.xml
+  Use this if you have dynamicFields
+  [mghh]
+
+- New option 'directoryFactory'.
+  Use it to define the solr directoryFactory for a Solr instance.
+  [mghh]
+
 - Allow Buildout to be re-run without breaking a running Solr instance.
   Previously, Solr required a restart to restore removed files.
   [Jc2k]

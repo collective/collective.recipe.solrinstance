@@ -1,5 +1,7 @@
-import unittest
 import os
+import shutil
+import time
+import unittest
 from textwrap import dedent
 from os.path import join
 from zc.buildout.testing import buildoutSetUp, buildoutTearDown
@@ -148,10 +150,14 @@ class TestSolr4(unittest.TestCase):
     def tearDown(self):
         buildoutTearDown(self)
 
-    def getfile(self, *args):
+    def getpath(self, *args):
         filepath = os.path.join(*(
             [self.globs['sample_buildout']] + list(args)
         ))
+        return filepath
+
+    def getfile(self, *args):
+        filepath = self.getpath(*args)
         with open(filepath) as fh:
             return fh.read()
 
@@ -275,6 +281,29 @@ class TestSolr4(unittest.TestCase):
         self.assertTrue(
             'class="${solr.directoryFactory:solr.RAMDirectoryFactory}' in
             core2_config)
+
+    def test_install_is_not_called_on_update_if_instance_exists(self):
+        self._basic_install()
+        solrconfig_file = self.getpath(
+            'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
+        ctime = os.stat(solrconfig_file).st_ctime
+
+        time.sleep(1)
+        buildout = self.globs['buildout']
+        self.globs['system'](buildout)
+        self.assertEqual(os.stat(solrconfig_file).st_ctime, ctime)
+
+    def test_install_is_called_on_update_if_not_instance_exists(self):
+        self._basic_install()
+        solrconfig_file = self.getpath(
+            'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
+        ctime = os.stat(solrconfig_file).st_ctime
+        shutil.rmtree(self.getpath('parts', 'solr'))
+
+        time.sleep(1)
+        buildout = self.globs['buildout']
+        self.globs['system'](buildout)
+        self.assertNotEqual(os.stat(solrconfig_file).st_ctime, ctime)
 
 
 class TestSolr40(TestSolr4):
