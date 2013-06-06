@@ -543,6 +543,10 @@
 
    <dynamicField name="tika_*" type="ignored" />
 
+  {% if options.options.additionalFieldConfig %}\
+    ${options.options.additionalFieldConfig}
+  {% end %}\
+
  </fields>
 
  <!-- Field to use to determine and enforce document uniqueness.
