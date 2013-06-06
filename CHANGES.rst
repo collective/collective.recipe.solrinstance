@@ -4,6 +4,10 @@ Change History
 5.0 (unreleased)
 ================
 
+- Recreate solr config on buildout update if the
+  directory of the solr-instance was deleted.
+  [mghh]
+
 - New option 'additionalFieldConfig'.
   This option allows for additional configuration options
   in <fields>...</fields> section of schema.xml
