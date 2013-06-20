@@ -1082,3 +1082,50 @@ The parameter should thus end up in ``solr.xml``:
       </cores>
     ...
 
+You can specify a fallback-template with:
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... cores = core1 core2
+    ... fallback-template = core-template
+    ...
+    ... [core-template]
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:uuid indexed:true stored:true default:NEW
+    ... """)
+
+Ok, let's run the buildout:
+
+    >>> print system(buildout)
+    Uninstalling solr-mc.
+    Installing solr-mc.
+    solr.xml: Generated file 'solr.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    schema.xml: Generated file 'schema.xml'.
+    solrconfig.xml: Generated file 'solrconfig.xml'.
+    stopwords.txt: Generated file 'stopwords.txt'.
+    schema.xml: Generated file 'schema.xml'.
+    jetty.xml: Generated file 'jetty.xml'.
+    logging.properties: Generated file 'logging.properties'.
+    solr-instance: Generated script 'solr-instance'.
+
+The cores should end up in ``solr.xml`` although we didn't configure a core1 or core2
+section:
+
+    >>> cat(sample_buildout, 'parts', 'solr-mc', 'solr', 'solr.xml')
+    <?xml...
+    <solr persistent="true">
+    ...
+      <cores adminPath="/admin/cores">
+        <core name="core1" instanceDir="core1" />
+        <core name="core2" instanceDir="core2" />
+      </cores>
+    ...
+

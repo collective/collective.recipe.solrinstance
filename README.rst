@@ -437,6 +437,23 @@ default-core-name
     the ``defaultCoreName`` option described at
     http://wiki.apache.org/solr/CoreAdmin#cores.
 
+fallback-template
+    Optional. If ``collective.recipe.solrinstance:mc`` is specified as the
+    recipe, then this option allows you to specify the settings that should
+    be used if there is no section with the name of a core.
+    This allows configurations like this::
+    
+        [solr-instance]
+        ...
+        cores = core1 core2 corex
+        template = solrcore-template
+
+        [solrcore-template]
+        basepath = /solr/${:_buildout_section_name_}
+        default-search-field = default
+        default-operator = and
+        ...
+
 Zope Integration
 ================
 
