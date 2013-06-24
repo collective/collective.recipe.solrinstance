@@ -1,7 +1,7 @@
 Change History
 **************
 
-5.0 (unreleased)
+5.0 (2013-06-24)
 ================
 
 - Recreate solr config on buildout update if the
