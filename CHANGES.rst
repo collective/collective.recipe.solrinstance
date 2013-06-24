@@ -4,7 +4,8 @@ Change History
 5.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Minor reST changes to readme and change log to fix long description.
+  [davidjb]
 
 
 5.0 (2013-06-24)
@@ -33,7 +34,7 @@ Change History
   see this prefix included within configuration files.
   [davidjb]  
 
-- Ensure Solr 4 templates do not have two ``autoCommit``directives, mirroring
+- Ensure Solr 4 templates do not have two ``autoCommit`` directives, mirroring
   how Solr 3 templates operate.
 
   **Backwards incompatibility**: if relying on a default ``autoCommit``
