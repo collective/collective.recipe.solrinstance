@@ -1,8 +1,8 @@
 Change History
 **************
 
-5.1 (unreleased)
-================
+5.0.1 (2013-06-24)
+==================
 
 - Minor reST changes to readme and change log to fix long description.
   [davidjb]
