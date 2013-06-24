@@ -183,6 +183,15 @@ requestParsers-multipartUploadLimitInKB
     very large documents to Solr. May be the case if Solr is indexing binaries
     extracted from request.
 
+directoryFactory
+    Solr4 allows for different directoryFactories:
+    solr.StandardDirectoryFactory, solr.MMapDirectoryFactory,
+    solr.NIOFSDirectoryFactory, solr.SimpleFSDirectoryFactory,
+    sorl.RAMDirectoryFactory or solr.NRTCachingDirectoryFactory.
+    The default is: solr.NRTCachingDirectoryFactory
+    If you are running a solr-instance for unit-testing of an
+    application it could be useful to use solr.RAMDirectoryFactory.
+
 additional-solrconfig
     Optional additional configuration to be included inside the
     ``solrconfig.xml``. For instance, ``<requestHandler />`` directives.
@@ -414,11 +423,22 @@ additional-schema-config
     and anything else that's part of the schema configuration (see
     http://wiki.apache.org/solr/SchemaXml).
 
+additionalFieldConfig
+    Optional additional configuration which is placed inside
+    the <fields>...</fields> directive in schema.xml
+    Use this e.g. to insert dynamic fields.
+    example:  
+    additionalFieldConfig = 
+         <dynamicField name="..." type="string" indexed="true" stored="true" />
+    Defaults to ''
+
 Multi-core
 ==========
 
 The following options only apply if ``collective.recipe.solrinstance:mc`` is
 specified. They are optional if the normal recipe is being used.
+All options defined in the solr-instance section will we inherited to cores.
+A core could override a previous defined option.
 
 cores
     A list of identifiers of Buildout configuration sections that correspond
@@ -517,6 +537,7 @@ configuration could look like the following::
     host = 127.0.0.1
     port = 1234
     section-name = SOLR
+    directoryFactory = solr.NRTCachingDirectoryFactory
     cores = core1 core2
 
     [core1]
