@@ -554,7 +554,9 @@ class SolrSingleRecipe(SolrBase):
         self.generate_logging(
             source=(self.instanceopts.get('logging-template') or
                 '%s/logging.properties.tmpl' % self.tpldir),
-            destination=jetty_destination)
+            destination=jetty_destination,
+            logdir=solr_log
+        )
         config_template = (self.solropts.get('config-template') or
             '%s/solrconfig.xml.tmpl' % self.tpldir)
         default_config_destination = os.path.join(self.install_dir, 'solr', 'conf')
@@ -789,7 +791,9 @@ class MultiCoreRecipe(SolrBase):
         self.generate_logging(
             source=(self.instanceopts.get('logging-template') or
                 '%s/logging.properties.tmpl' % self.tpldir),
-            destination=jetty_destination)
+            destination=jetty_destination,
+            logdir=solr_log
+        )
 
         self.create_bin_scripts(
             self.instanceopts.get('script'),
