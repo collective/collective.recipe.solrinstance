@@ -18,3 +18,4 @@
 - Gerhard Weis
 - David Beitey
 - Richard Mitchell
+- Pedro Romano

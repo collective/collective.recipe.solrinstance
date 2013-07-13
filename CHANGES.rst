@@ -4,7 +4,7 @@ Change History
 5.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- ``logdir`` option is now available for ``logging.properties`` template.
 
 
 5.0.1 (2013-06-24)
