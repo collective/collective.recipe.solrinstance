@@ -8,6 +8,7 @@ install:
   - mkdir -p buildout-cache/downloads
   - "export V=`python -c \"import sys;print(sys.version_info[0]==3 and 3 or '')\"`"
   - pip install -U setuptools==0.9.6
+  - pip uninstall -y distribute
   - python bootstrap.py -c buildout$V.cfg
   - bin/buildout -c buildout$V.cfg
 script:
