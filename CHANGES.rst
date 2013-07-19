@@ -5,6 +5,9 @@ Change History
 ================
 
 - ``logdir`` option is now available for ``logging.properties`` template.
+  [pmcnr]
+- Fix testing for Python 3 and enable Python 3.3 testing for Travis.
+  [davidjb]
 
 
 5.0.1 (2013-06-24)
