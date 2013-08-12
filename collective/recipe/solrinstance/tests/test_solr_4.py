@@ -195,6 +195,7 @@ class TestSolr4(unittest.TestCase):
         install_output = dedent("""
             Installing solr.
             solr: Generated file 'jetty.xml'.
+            solr: Generated file 'log4j.properties'.
             solr: Generated file 'logging.properties'.
             solr: Generated file 'solrconfig.xml'.
             solr: Generated file 'schema.xml'.
@@ -253,6 +254,7 @@ class TestSolr4(unittest.TestCase):
             solr-mc: Generated file 'stopwords.txt'.
             solr-mc: Generated file 'schema.xml'.
             solr-mc: Generated file 'jetty.xml'.
+            solr-mc: Generated file 'log4j.properties'.
             solr-mc: Generated file 'logging.properties'.
             solr-mc: Generated script 'solr-instance'.
         """).strip()
