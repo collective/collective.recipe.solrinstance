@@ -8,6 +8,9 @@ Change History
   [pmcnr]
 - Fix testing for Python 3 and enable Python 3.3 testing for Travis.
   [davidjb]
+- Enable generation of ``log4j.properties`` from template (Solr >= 4.3 defaults
+  to using log4j as its SLF4J implementation).
+  [pmcnr]
 
 
 5.0.1 (2013-06-24)
