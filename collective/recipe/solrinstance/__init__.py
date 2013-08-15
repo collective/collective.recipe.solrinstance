@@ -96,6 +96,7 @@ class SolrBase(object):
         options['solr-location'] = os.path.abspath(
             options_orig.get('solr-location', '').strip())
         options['jetty-template'] = options_orig.get("jetty-template")
+        options['log4j-template'] = options_orig.get("log4j-template")
         options['logging-template'] = options_orig.get("logging-template")
 
         options['jetty-destination'] = options_orig.get('jetty-destination')
@@ -453,6 +454,10 @@ class SolrBase(object):
         self._generate_from_template(source=source, destination=destination,
                                      name='jetty.xml', **kwargs)
 
+    def generate_log4j(self, source, destination, **kwargs):
+        self._generate_from_template(source=source, destination=destination,
+                                     name='log4j.properties', **kwargs)
+
     def generate_logging(self, source, destination, **kwargs):
         self._generate_from_template(source=source, destination=destination,
                                      name='logging.properties', **kwargs)
@@ -549,6 +554,13 @@ class SolrSingleRecipe(SolrBase):
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
             destination=jetty_destination
+        )
+
+        self.generate_log4j(
+            source=(self.instanceopts.get('log4j-template') or
+                '%s/log4j.properties.tmpl' % self.tpldir),
+            destination=jetty_destination,
+            logdir=solr_log
         )
 
         self.generate_logging(
@@ -787,6 +799,13 @@ class MultiCoreRecipe(SolrBase):
             serverhost=self.instanceopts['host'],
             serverport=self.instanceopts['port'],
             destination=jetty_destination)
+
+        self.generate_log4j(
+            source=(self.instanceopts.get('log4j-template') or
+                '%s/log4j.properties.tmpl' % self.tpldir),
+            destination=jetty_destination,
+            logdir=solr_log
+        )
 
         self.generate_logging(
             source=(self.instanceopts.get('logging-template') or

@@ -53,6 +53,7 @@ Ok, let's run the buildout:
 
     >>> install_output = """Installing solr.
     ... solr: Generated file 'jetty.xml'.
+    ... solr: Generated file 'log4j.properties'.
     ... solr: Generated file 'logging.properties'.
     ... solr: Generated file 'solrconfig.xml'.
     ... solr: Generated file 'schema.xml'.
@@ -80,6 +81,7 @@ Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
+    -  log4j.properties
     -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
@@ -280,6 +282,7 @@ With the index set up correctly, things work again:
     >>> print(system(buildout))
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -310,6 +313,7 @@ There's no default for the default search field, however:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -349,6 +353,7 @@ You can also define extra field types:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -402,6 +407,7 @@ to be used to generate `schema.xml`:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -441,6 +447,7 @@ variable that can then be conveniently used in the template:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -495,6 +502,7 @@ Additional solrconfig should also be allowed:
     >>> print(system(buildout))
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -533,6 +541,7 @@ Additional solrconfig query section should also be allowed:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -570,6 +579,7 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -605,6 +615,7 @@ Test autoCommit arguments:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -639,6 +650,7 @@ Testing the request parsers default limit:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -671,6 +683,7 @@ Test changing the request parsers limit:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -706,6 +719,7 @@ alternative template to be used to generate `solrconfig.xml`:
     Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -750,6 +764,7 @@ Solr instances to coexist in a single buildout:
     Uninstalling solr.
     Installing solr-main.
     solr-main: Generated file 'jetty.xml'.
+    solr-main: Generated file 'log4j.properties'.
     solr-main: Generated file 'logging.properties'.
     solr-main: Generated file 'solrconfig.xml'.
     solr-main: Generated file 'schema.xml'.
@@ -757,6 +772,7 @@ Solr instances to coexist in a single buildout:
     solr-main: Generated script 'solr-main'.
     Installing solr-functest.
     solr-functest: Generated file 'jetty.xml'.
+    solr-functest: Generated file 'log4j.properties'.
     solr-functest: Generated file 'logging.properties'.
     solr-functest: Generated file 'solrconfig.xml'.
     solr-functest: Generated file 'schema.xml'.
@@ -797,6 +813,7 @@ Ok, let's run the buildout:
     Uninstalling solr-main.
     Installing solr.
     solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
@@ -959,6 +976,7 @@ Ok, let's run the buildout:
     solr-mc: Generated file 'stopwords.txt'.
     solr-mc: Generated file 'schema.xml'.
     solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'log4j.properties'.
     solr-mc: Generated file 'logging.properties'.
     solr-mc: Generated script 'solr-instance'.
 
@@ -1066,6 +1084,7 @@ Ok, let's run the buildout:
     solr-mc: Generated file 'stopwords.txt'.
     solr-mc: Generated file 'schema.xml'.
     solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'log4j.properties'.
     solr-mc: Generated file 'logging.properties'.
     solr-mc: Generated script 'solr-instance'.
     
