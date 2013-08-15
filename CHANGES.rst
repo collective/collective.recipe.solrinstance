@@ -41,7 +41,7 @@ Change History
 - Remove ``apache-`` prefix from artifact filenames (jar files) to handle
   naming changes introduced with Solr 4.1.  Versions earlier than 4.1 will
   see this prefix included within configuration files.
-  [davidjb]  
+  [davidjb]
 
 - Ensure Solr 4 templates do not have two ``autoCommit`` directives, mirroring
   how Solr 3 templates operate.
@@ -54,7 +54,7 @@ Change History
 - Python 3 support added. Python < 2.6 support dropped. Dropped
   dependency on iw.recipe.template as Cheetah does not support Python
   3. Replaced with Genshi, as used by collective.recipe.template.
-  
+
   **Backwards incompatibility**: custom templates must be converted to
   Genshi format.
   [mitchellrj]
