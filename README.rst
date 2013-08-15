@@ -83,6 +83,10 @@ jetty-template
     Optional override for the ``jetty.xml`` template. Defaults to
     ``templates/jetty.xml.tmpl``.
 
+log4j-template
+    Optional override for the ``log4j.properties`` template. Defaults to
+    ``templates/log4j.properties.tmpl``.
+
 logging-template
     Optional override for the ``logging.properties`` template. Defaults to
     ``templates/logging.properties.tmpl``.
