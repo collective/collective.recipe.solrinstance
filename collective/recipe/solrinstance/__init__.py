@@ -679,6 +679,10 @@ class MultiCoreRecipe(SolrBase):
             raise zc.buildout.UserError(
                     'Core attributes are not allowed in multicore recipe')
 
+        #Ensure Buildout tracks changes for configuration regeneration
+        for core in self.cores:
+            options['core-config-' + core] = str(buildout[core])
+
     def install(self):
         """installer"""
         # Copy the instance files

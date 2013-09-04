@@ -4,6 +4,9 @@ Change History
 5.1 (unreleased)
 ================
 
+- Ensure that changing part of a ``core`` section will cause Solr configuration
+  to be regenerated. Fixes #24.
+  [davidjb]
 - ``logdir`` option is now available for ``logging.properties`` template.
   [pmcnr]
 - Fix testing for Python 3 and enable Python 3.3 testing for Travis.

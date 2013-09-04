@@ -1101,3 +1101,103 @@ The parameter should thus end up in ``solr.xml``:
       </cores>
     ...
 
+Regeneration of files
+~~~~~~~~~~~~~~~~~~~~~
+
+Files should regenerate whenever Buildout is re-run and the underlying cores
+have changed. We'll create a basic configuration, run it, modify the result
+and make sure regeneration happens when it should.
+
+    >>> configuration = """
+    ... [buildout]
+    ... parts = solr-mc
+    ...
+    ... [solr-mc]
+    ... recipe = collective.recipe.solrinstance:mc
+    ... cores =
+    ...     core1
+    ...     core2
+    ... default-core-name = core1
+    ...
+    ... [core1]
+    ... unique-key = {0}
+    ... index =
+    ...     name:{0} type:string indexed:true stored:true required:true
+    ...
+    ... [core2]
+    ... unique-key = {1} 
+    ... index =
+    ...     name:{1} type:string indexed:true stored:true required:true
+    ... """
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ...       configuration.format('value1', 'value2'))
+    >>> print(system(buildout))
+    Uninstalling solr-mc.
+    Installing solr-mc.
+    solr-mc: Generated file 'solr.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'log4j.properties'.
+    solr-mc: Generated file 'logging.properties'.
+    solr-mc: Generated script 'solr-instance'.
+
+Firstly, make no changes. No files should be regenerated.
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ...       configuration.format('value1', 'value2'))
+    >>> print(system(buildout))
+    Updating solr-mc.
+
+Now, modify one of the cores to ensure the configuration is regenerated.
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ...       configuration.format('value1', 'value3'))
+    >>> print(system(buildout))
+    Uninstalling solr-mc.
+    Installing solr-mc.
+    solr-mc: Generated file 'solr.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'log4j.properties'.
+    solr-mc: Generated file 'logging.properties'.
+    solr-mc: Generated script 'solr-instance'.
+
+
+Modify both cores and ensure configuration is still regenerated.
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ...       configuration.format('value2', 'value4'))
+    >>> print(system(buildout))
+    Uninstalling solr-mc.
+    Installing solr-mc.
+    solr-mc: Generated file 'solr.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'solrconfig.xml'.
+    solr-mc: Generated file 'stopwords.txt'.
+    solr-mc: Generated file 'schema.xml'.
+    solr-mc: Generated file 'jetty.xml'.
+    solr-mc: Generated file 'log4j.properties'.
+    solr-mc: Generated file 'logging.properties'.
+    solr-mc: Generated script 'solr-instance'.
+
+Finally, re-run with both values changed to ensure no regeneration happens.
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ...       configuration.format('value2', 'value4'))
+    >>> print(system(buildout))
+    Updating solr-mc.
+
+That's all folks!
