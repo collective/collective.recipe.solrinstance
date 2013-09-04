@@ -1,7 +1,7 @@
 Change History
 **************
 
-5.1 (unreleased)
+5.1 (2013-09-04)
 ================
 
 - Ensure that changing part of a ``core`` section will cause Solr configuration
