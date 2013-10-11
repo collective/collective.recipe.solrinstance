@@ -39,7 +39,6 @@
   {% for filter in options.extralibs %}\
   <lib dir="${filter.path}" regex="${filter.regex}" />
   {% end %}\
-  <dataDir>${options.datadir}</dataDir>
 
   <!-- <lib/> directives can be used to instruct Solr to load an Jars
        identified and use them to resolve any "plugins" specified in
@@ -95,7 +94,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
-  <dataDir>$${solr.data.dir:}</dataDir>
+  <dataDir>${options.datadir}</dataDir>
 
 
   <!-- The DirectoryFactory to use for indexes.
