@@ -64,6 +64,7 @@ setup(
     install_requires=requires,
     setup_requires=[
         'setuptools',
+        'setuptools-git',
     ],
     tests_require=test_requires,
     extras_require=dict(
