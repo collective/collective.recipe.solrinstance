@@ -94,8 +94,12 @@
        replication is in use, this should match the replication
        configuration.
     -->
+  {%if options.datadir %}\
   <dataDir>${options.datadir}</dataDir>
-
+  {%end%}\
+  {%if not options.datadir%}\
+  <dataDir>$${solr.data.dir:}</dataDir>
+  {%end%}\
 
   <!-- The DirectoryFactory to use for indexes.
 
