@@ -4,8 +4,9 @@ Change History
 5.2 (unreleased)
 ================
 
-- Nothing changed yet.
-
+- Ensure only one ``dataDir`` option is generated in ``solrconfig.xml``
+  using the default template. Fixes start-up in Solr 4.5.0.
+  [mitchellrj, pmcnr]
 
 5.1 (2013-09-04)
 ================
