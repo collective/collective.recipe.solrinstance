@@ -1,7 +1,7 @@
 Change History
 **************
 
-5.2 (unreleased)
+5.2 (2013-10-22)
 ================
 
 - Ensure only one ``dataDir`` option is generated in ``solrconfig.xml``
