@@ -2,8 +2,8 @@
 Change History
 **************
 
-5.3 (unreleased)
-================
+5.2.1 (2013-10-22)
+==================
 
 - Fix formatting for change log and PyPI display
   [davidjb]
