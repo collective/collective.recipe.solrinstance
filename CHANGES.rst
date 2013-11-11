@@ -5,7 +5,9 @@ Change History
 5.2.2 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Added ``extra-conf-files`` to schema generation. Now we can add extra files
+  to conf folder.
+  [jod]
 
 
 5.2.1 (2013-10-22)

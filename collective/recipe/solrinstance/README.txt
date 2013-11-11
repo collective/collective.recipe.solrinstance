@@ -37,7 +37,16 @@ extracted in the parts directory:
     ...     text solr.HTMLStripCharFilterFactory
     ... additional-schema-config =
     ...      <copyField source="*" dest="Everything"/>
+    ... extra-conf-files =
+    ...      extra/foo.txt
+    ...      extra/bar.txt
     ... """)
+
+Create extra files:
+
+    >>> os.makedirs(join(sample_buildout, 'extra'))
+    >>> open(join(sample_buildout, 'extra', 'foo.txt'), 'w').close()
+    >>> open(join(sample_buildout, 'extra', 'bar.txt'), 'w').close()
 
 Create the default structure. We assume the solr distribution was
 downloaded before:
@@ -85,6 +94,8 @@ Also check that the XML files are where we expect them to be:
     -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
+    -  bar.txt
+    -  foo.txt
     -  schema.xml
     -  solrconfig.xml
     -  stopwords.txt
@@ -935,6 +946,9 @@ Test our first core:
     ... tokenizer-query =
     ...     text solr.StandardTokenizerFactory
     ...     text solr.WhitespaceTokenizerFactory
+    ... extra-conf-files =
+    ...      extra/foo.txt
+    ...      extra/bar.txt
     ...
     ... [core2]
     ... max-num-results = 99
@@ -1002,6 +1016,17 @@ See if there is ``solr.xml``:
 See if there are all needed files in `core1`:
 
     >>> ls(sample_buildout, 'parts', 'solr-mc', 'solr', 'core1', 'conf')
+    - bar.txt
+    - foo.txt
+    - schema.xml
+    - solrconfig.xml
+    - stopwords.txt
+    - test1.txt
+    - test2.txt
+
+See if there are all needed files in `core2`:
+
+    >>> ls(sample_buildout, 'parts', 'solr-mc', 'solr', 'core2', 'conf')
     - schema.xml
     - solrconfig.xml
     - stopwords.txt
