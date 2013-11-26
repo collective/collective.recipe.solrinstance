@@ -2,8 +2,8 @@
 Change History
 **************
 
-5.2.2 (unreleased)
-==================
+5.3.0lu (2013-11-26)
+====================
 
 - Added ``extra-conf-files`` to schema generation. Now we can add extra files
   to conf folder.
