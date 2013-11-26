@@ -5,7 +5,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-version = '5.3.0lu'
+version = '5.4.0.dev0'
 
 
 def read(name):
