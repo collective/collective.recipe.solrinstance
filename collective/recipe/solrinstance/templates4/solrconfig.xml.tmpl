@@ -1023,8 +1023,8 @@
     <!-- a spellchecker that can break or combine words.  See "/spell" handler below for usage -->
     <lst name="spellchecker">
       <str name="name">wordbreak</str>
+      <str name="field">${options.spellcheckField}</str>
       <str name="classname">solr.WordBreakSolrSpellChecker</str>
-      <str name="field">name</str>
       <str name="combineWords">true</str>
       <str name="breakWords">true</str>
       <int name="maxChanges">10</int>
