@@ -2,7 +2,7 @@
 Change History
 **************
 
-5.3.1lu (unreleased)
+5.3.1lu (2013-11-26)
 ====================
 
 - Minor fix added ``spellcheckField`` to wrodbreak in spellchecker.
