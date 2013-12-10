@@ -198,6 +198,10 @@ class SolrBase(object):
             'requestParsers-multipartUploadLimitInKB', '102400').strip()
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
 
+        options['maxWarmingSearchers'] = options_orig.get(
+            'maxWarmingSearchers', '4')
+        options['useColdSearcher'] = options_orig.get(
+            'useColdSearcher', 'false')
         options['mergeFactor'] = options_orig.get('mergeFactor', '10')
         options['ramBufferSizeMB'] = options_orig.get('ramBufferSizeMB', '16')
         options['unlockOnStartup'] = options_orig.get('unlockOnStartup',
