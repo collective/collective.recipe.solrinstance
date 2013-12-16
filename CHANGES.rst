@@ -2,10 +2,14 @@
 Change History
 **************
 
-5.2.2 (unreleased)
+5.3.0 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Minor fix added ``spellcheckField`` to wrodbreak in spellchecker.
+  [jod]
+- Added ``extra-conf-files`` to schema generation. Now we can add extra files
+  to conf folder.
+  [jod]
 
 
 5.2.1 (2013-10-22)

@@ -143,14 +143,14 @@ class SolrBase(object):
         options = {'analyzers': {},
                    'artifact_prefix': self.get_artifact_prefix()}
 
-
         options['name'] = name
         options['index'] = options_orig.get('index')
 
-        #General filters apply to both querying/indexing analyzers for fields
         filter = options_orig.get('filter', DEFAULT_FILTERS).strip()
         char_filter = options_orig.get('char-filter',
                                        DEFAULT_CHAR_FILTERS).strip()
+        options['extra_conf_files'] = options_orig.get(
+            'extra-conf-files', "").strip().splitlines()
         tokenizer = options_orig.get('tokenizer', DEFAULT_TOKENIZER).strip()
         for analyzer_type in ('query', 'index'):
             options['analyzers'][analyzer_type] = {'filter': filter,
@@ -511,6 +511,14 @@ class SolrBase(object):
         shutil.rmtree(os.path.join(path, 'solr'))
         os.makedirs(os.path.join(path, 'solr'))
 
+    def copy_extra_conf(self, extra_conf_files, core=""):
+        if extra_conf_files:
+            solr_dir = os.path.join(self.install_dir, 'solr')
+            conf_dir = os.path.join(solr_dir, core, "conf")
+            for i in extra_conf_files:
+                #file = os.path.join(self.buildout['buildout']['directory'], i)
+                self.copy_files(i, conf_dir)
+
 
 class SolrSingleRecipe(SolrBase):
     """This recipe builds a single solr index"""
@@ -529,6 +537,8 @@ class SolrSingleRecipe(SolrBase):
         self.copysolr(os.path.join(self.instanceopts['solr-location'],
                                    'contrib'),
                       os.path.join(self.install_dir, 'contrib'))
+
+        self.copy_extra_conf(self.solropts['extra_conf_files'])
 
         solr_var = self.instanceopts['vardir']
         solr_data = os.path.join(solr_var, 'data')
@@ -793,6 +803,9 @@ class MultiCoreRecipe(SolrBase):
                 analyzers=self.parse_analyzer(options_core),
                 indeces=self.parse_index(options_core),
                 options=options_core)
+
+            self.copy_extra_conf(options_core['extra_conf_files'], core=core)
+
         jetty_destination = (self.instanceopts.get('jetty-destination') or
             os.path.join(self.install_dir, 'etc'))
 

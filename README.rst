@@ -248,6 +248,10 @@ extra-field-types
     analyzers and tokenizers, check Solr's complete reference:
     http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters
 
+extra-conf-files
+    Add extra files to conf folder like synonyms.txt or hunspell files
+    https://wiki.apache.org/solr/Hunspell
+
 filter
     Configure filters for analyzers for the default field types.
     These accept tokens produced by a given ``tokenizer`` and process them
