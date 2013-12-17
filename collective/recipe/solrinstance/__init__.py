@@ -31,7 +31,8 @@ INDEX_ATTRIBUTES = {'name': '',
                     'termOffsets': 'false',
                     'extras': '',
                     'default': '',
-                    'keepinzope': 'true'}
+                    'keepinzope': 'true',
+                    'storeOffsetsWithPositions': ''}
 
 DEFAULT_FILTERS = """
     text solr.ICUFoldingFilterFactory
@@ -363,7 +364,8 @@ class SolrBase(object):
                     entry[key] = value
                 elif key == 'type':
                     entry[key] = value.lower()
-                elif key == 'omitnorms' and not value:
+                elif key in ('omitnorms',
+                             'storeOffsetsWithPositions') and not value:
                     # don't override omitNorms default value
                     entry[key] = value
                 else:

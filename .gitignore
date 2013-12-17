@@ -12,3 +12,4 @@ share
 *.egg-info
 *.pyc
 *.egg
+*.swp

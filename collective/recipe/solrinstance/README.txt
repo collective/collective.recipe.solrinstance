@@ -1225,4 +1225,108 @@ Finally, re-run with both values changed to ensure no regeneration happens.
     >>> print(system(buildout))
     Updating solr-mc.
 
+Test Solr4
+----------
+
+Test solr 4 templates.
+
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... host = 127.0.0.1
+    ... port = 1234
+    ... max-num-results = 99
+    ... section-name = SOLR
+    ... unique-key = uniqueID
+    ... index =
+    ...     name:uniqueID type:string indexed:true stored:true required:true
+    ...     name:Foo type:text copyfield:Baz
+    ...     name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true copyfield:Baz
+    ...     name:Foo bar type:text
+    ...     name:Baz type:text
+    ...     name:Everything type:text
+    ...     name:Fisch type:text storeOffsetsWithPositions:true
+    ... """)
+
+Indicate that we are using solr4 (collection1):
+
+    >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'collection1'))
+    >>> os.makedirs(join(sample_buildout, 'example', 'solr', 'collection1', 'conf'))
+
+Ok, let's run the buildout:
+
+    >>> install_output = """Installing solr.
+    ... solr: Generated file 'jetty.xml'.
+    ... solr: Generated file 'log4j.properties'.
+    ... solr: Generated file 'logging.properties'.
+    ... solr: Generated file 'solrconfig.xml'.
+    ... solr: Generated file 'schema.xml'.
+    ... solr: Generated file 'stopwords.txt'.
+    ... solr: Generated script 'solr-instance'"""
+    >>> install_output in system(buildout)
+    True
+
+Also check that the XML files are where we expect them to be:
+
+    >>> ls(sample_buildout, 'parts', 'solr', 'etc')
+    -  jetty.xml
+    -  log4j.properties
+    -  logging.properties
+
+    >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'collection1' , 'conf')
+    -  schema.xml
+    -  solrconfig.xml
+    -  stopwords.txt
+
+`schema.xml`:
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+    <field name="uniqueID" type="string" indexed="true"
+           stored="true" required="true" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"
+    />
+    <field name="Foo" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"
+    />
+    <field name="Bar" type="date" indexed="false"
+           stored="false" required="true" multiValued="true"
+           omitNorms="true" termVectors="false"
+           termPositions="false" termOffsets="false"
+    />
+    <field name="Foo bar" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"
+    />
+    <field name="Baz" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"
+    />
+    <field name="Everything" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"
+    />
+    <field name="Fisch" type="text" indexed="true"
+           stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false" storeOffsetsWithPositions="true"
+    />
+    ...
+    <uniqueKey>uniqueID</uniqueKey>
+    ...
+    <copyField source="Foo" dest="Baz"/>
+    <copyField source="Bar" dest="Baz"/>
+    ...
+
 That's all folks!

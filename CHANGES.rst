@@ -5,7 +5,9 @@ Change History
 5.3.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Added ``storeOffsetsWithPositions`` to get ``PostingsSolrHighlighter``
+  working.
+  [jod]
 
 
 5.3.0 (2013-12-16)
