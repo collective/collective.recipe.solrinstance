@@ -2,7 +2,7 @@
 Change History
 **************
 
-5.3.1 (unreleased)
+5.3.1 (2013-12-17)
 ==================
 
 - Added ``storeOffsetsWithPositions`` to get ``PostingsSolrHighlighter``
