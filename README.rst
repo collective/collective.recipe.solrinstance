@@ -191,7 +191,7 @@ directoryFactory
     Solr4 allows for different directoryFactories:
     solr.StandardDirectoryFactory, solr.MMapDirectoryFactory,
     solr.NIOFSDirectoryFactory, solr.SimpleFSDirectoryFactory,
-    sorl.RAMDirectoryFactory or solr.NRTCachingDirectoryFactory.
+    solr.RAMDirectoryFactory or solr.NRTCachingDirectoryFactory.
     The default is: solr.NRTCachingDirectoryFactory
     If you are running a solr-instance for unit-testing of an
     application it could be useful to use solr.RAMDirectoryFactory.
