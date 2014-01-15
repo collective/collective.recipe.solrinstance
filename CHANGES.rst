@@ -5,7 +5,9 @@ Change History
 5.3.2 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Remove missing library directory from solrconfig.xml files being
+  generated.
+  [davidjb]
 
 
 5.3.1 (2013-12-17)
