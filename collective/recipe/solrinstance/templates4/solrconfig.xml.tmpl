@@ -494,7 +494,7 @@
          using enableRemoteStreaming="true"
 
       -->
-    <requestParsers enableRemoteStreaming="false"
+    <requestParsers enableRemoteStreaming="true"
                     multipartUploadLimitInKB="${options.requestParsers_multipartUploadLimitInKB}" />
 
     <!-- HTTP Caching
@@ -780,7 +780,7 @@
                   startup="lazy"
                   class="solr.extraction.ExtractingRequestHandler" >
     <lst name="defaults">
-      <str name="lowernames">true</str>
+      <!--str name="lowernames">true</str-->
       <str name="uprefix">ignored_</str>
 
       <!-- capture link hrefs but ignore div attributes -->

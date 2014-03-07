@@ -558,6 +558,7 @@
    {% end %}\
 
    <dynamicField name="tika_*" type="ignored" />
+   <dynamicField name="ignored_*" type="ignored" indexed="false" stored="false" multiValued="true"/>
 
   {% if options.options.additionalFieldConfig %}\
     ${options.options.additionalFieldConfig}
