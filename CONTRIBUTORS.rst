@@ -19,3 +19,4 @@
 - David Beitey
 - Richard Mitchell
 - Pedro Romano
+- Giacomo Spettoli

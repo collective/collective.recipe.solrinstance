@@ -8,6 +8,7 @@ Change History
 - Remove missing library directory from solrconfig.xml files being
   generated.
   [davidjb]
+- Fix solrconfig.xml for indexing binary files [giacomos]
 
 
 5.3.1 (2013-12-17)
