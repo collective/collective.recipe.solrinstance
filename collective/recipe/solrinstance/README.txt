@@ -176,6 +176,7 @@ And make sure the substitution worked for all files.
     an
     ...
 
+
 Let's check that the zope-conf snippet was correctly generated:
 
     >>> cat(sample_buildout, '.installed.cfg')
@@ -206,6 +207,40 @@ unique key.  Without a matching index this yields an error, though:
     ...
     Error: Unique key without matching index: uniqueID
 
+Files should support Unicode output if present in templates::
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'unicode_test.xml',
+    ... """<schema>
+    ... <!-- Mønti Pythøn ik den Hølie Gräilen. A Møøse once bit my sister... -->
+    ... </schema>""")
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... schema-template = unicode_test.xml
+    ... unique-key =
+    ... index =
+    ... """)
+    >>> print(system(buildout))
+    Installing solr.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated script 'solr-instance'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    <schema>
+    <!-- Mønti Pythøn ik den Hølie Gräilen. A Møøse once bit my sister... -->
+    </schema>
+
+
 If a unique key was specified, it'll also be mandatory to pass it in, i.e.
 the index needs to be declared to be "required".  Aside from that, we need
 to remove the "solr" part before re-running the the buildout, which is a
@@ -225,7 +260,7 @@ bit stupid, but oh well:
     ...     name:Foo type:text
     ... """)
     >>> print(system(buildout))
-    Installing solr.
+    Uninstalling solr.
     ...
     Error: Unique key needs to declared "required"=true or "default"=NEW: uniqueID
 

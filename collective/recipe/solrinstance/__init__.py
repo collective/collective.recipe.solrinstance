@@ -434,8 +434,8 @@ class SolrBase(object):
             self.generated.append(exe)
             output_file = output_file + '-script.py'
 
-        with open(output_file, 'w') as outfile:
-            outfile.write(output)
+        with open(output_file, 'wb') as outfile:
+            outfile.write(output.encode('utf8'))
 
         if executable:
             self.logger.info("Generated script %r.", name)

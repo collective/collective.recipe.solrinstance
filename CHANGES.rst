@@ -5,6 +5,9 @@ Change History
 5.3.2 (unreleased)
 ==================
 
+- Encode strings written to templated files as UTF-8. This solves issue #29
+  and allows Unicode characters to be present in templates.
+  [davidjb]
 - Remove missing library directory from solrconfig.xml files being
   generated.
   [davidjb]
