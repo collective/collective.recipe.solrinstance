@@ -182,6 +182,10 @@ autoCommitMaxTime
     Lets you enable auto commit handling after a specified time in
     milliseconds. This is disabled by default.
 
+requestParsers-enableRemoteStreaming
+    Let's you enable remote streaming. Defalts to ``false`` as this is the Solr
+    default.
+
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case if Solr is indexing binaries

@@ -64,7 +64,8 @@ NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
                         "additional-solrconfig",
                         "additional-solrconfig-query",
                         "autoCommitMaxDocs", "autoCommitMaxTime",
-                        "requestParsers-multipartUploadLimitInKB"])
+                        "requestParsers-multipartUploadLimitInKB",
+                        "requestParsers-enableRemoteStreaming"])
 
 
 class SolrBase(object):
@@ -197,6 +198,9 @@ class SolrBase(object):
             'additional-schema-config', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
             'requestParsers-multipartUploadLimitInKB', '102400').strip()
+        options['requestParsers-enableRemoteStreaming'] = options_orig.get(
+            'requestParsers-enableRemoteStreaming', 'false'
+        )
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
 
         options['mergeFactor'] = options_orig.get('mergeFactor', '10')
@@ -599,6 +603,8 @@ class SolrSingleRecipe(SolrBase):
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=self.solropts[
                 'requestParsers-multipartUploadLimitInKB'],
+            requestParsers_enableRemoteStreaming=self.solropts[
+                'requestParsers-enableRemoteStreaming'],
             autoCommit=self.parseAutoCommit(self.solropts),
             mergeFactor=self.solropts['mergeFactor'],
             ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
@@ -767,6 +773,8 @@ class MultiCoreRecipe(SolrBase):
                                                      '4'),
                 requestParsers_multipartUploadLimitInKB=options_core[
                     'requestParsers-multipartUploadLimitInKB'],
+                requestParsers_enableRemoteStreaming=options_core[
+                    'requestParsers_enableRemoteStreaming'],
                 autoCommit=self.parseAutoCommit(options_core),
                 mergeFactor=options_core['mergeFactor'],
                 ramBufferSizeMB=options_core['ramBufferSizeMB'],
