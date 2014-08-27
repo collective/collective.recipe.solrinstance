@@ -5,6 +5,8 @@ Change History
 5.3.2 (unreleased)
 ==================
 
+- Remove dependency on ipdb.
+  [saily]
 - Add option to enable ``updateLog`` for atomic update usage in SOLR 4.0.
   This will automatically add a new field ``_version_`` to your schema, see:
   http://wiki.apache.org/solr/SchemaXml#Fields
