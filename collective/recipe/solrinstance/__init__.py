@@ -63,7 +63,7 @@ NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
                         "default-search-field", "default-operator",
                         "additional-solrconfig",
                         "additional-solrconfig-query",
-                        "autoCommitMaxDocs", "autoCommitMaxTime",
+                        "autoCommitMaxDocs", "autoCommitMaxTime", "updateLog",
                         "requestParsers-multipartUploadLimitInKB"])
 
 
@@ -209,6 +209,8 @@ class SolrBase(object):
                                                         '')
         options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime',
                                                         '')
+        options['updateLog'] = options_orig.get(
+            'updateLog', 'false').strip().lower() in TRUE_VALUES
 
         options['filterCacheSize'] = options_orig.get('filterCacheSize',
                                                       '16384')
@@ -600,6 +602,7 @@ class SolrSingleRecipe(SolrBase):
             requestParsers_multipartUploadLimitInKB=self.solropts[
                 'requestParsers-multipartUploadLimitInKB'],
             autoCommit=self.parseAutoCommit(self.solropts),
+            updateLog=self.solropts.get('updateLog', 'false'),
             mergeFactor=self.solropts['mergeFactor'],
             ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
             unlockOnStartup=self.solropts['unlockOnStartup'],
@@ -768,6 +771,7 @@ class MultiCoreRecipe(SolrBase):
                 requestParsers_multipartUploadLimitInKB=options_core[
                     'requestParsers-multipartUploadLimitInKB'],
                 autoCommit=self.parseAutoCommit(options_core),
+                updateLog=options_core['updateLog'],
                 mergeFactor=options_core['mergeFactor'],
                 ramBufferSizeMB=options_core['ramBufferSizeMB'],
                 unlockOnStartup=options_core['unlockOnStartup'],

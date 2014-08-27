@@ -5,6 +5,10 @@ Change History
 5.3.2 (unreleased)
 ==================
 
+- Add option to enable ``updateLog`` for atomic update usage in SOLR 4.0.
+  This will automatically add a new field ``_version_`` to your schema, see:
+  http://wiki.apache.org/solr/SchemaXml#Fields
+  [saily]
 - Encode strings written to templated files as UTF-8. This solves issue #29
   and allows Unicode characters to be present in templates.
   [davidjb]
