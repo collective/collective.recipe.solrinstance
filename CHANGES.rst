@@ -2,7 +2,7 @@
 Change History
 **************
 
-5.3.2 (unreleased)
+5.3.2 (2014-08-27)
 ==================
 
 - Remove dependency on ipdb.
