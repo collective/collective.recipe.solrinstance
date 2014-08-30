@@ -5,6 +5,9 @@ Change History
 5.3.3 (unreleased)
 ==================
 
+- Added ``requestParsers-enableRemoteStreaming`` to allow configuring remote
+  streaming [wengole]
+
 - Update request handler in ``solrconfig.xml`` to avoid deprecation warnings
   for SOLR 4.  [mgrbyte]
 
@@ -25,8 +28,6 @@ Change History
   generated.
   [davidjb]
 - Fix solrconfig.xml for indexing binary files [giacomos]
-- Added ``requestParsers-enableRemoteStreaming`` to allow configuring remote
-  streaming [wengole]
 - Changed default for remote streaming in solr 4 templates back to false (the
   solr default) [wengole]
 
