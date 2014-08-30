@@ -215,7 +215,7 @@
          using enableRemoteStreaming="true"
 
       -->
-    <requestParsers enableRemoteStreaming="false"
+    <requestParsers enableRemoteStreaming="${options.requestParsers_enableRemoteStreaming}"
                     multipartUploadLimitInKB="${options.requestParsers_multipartUploadLimitInKB}" />
 
     <httpCaching lastModifiedFrom="openTime"

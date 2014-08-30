@@ -188,6 +188,10 @@ updateLog
     if you want to use Atomic Updates in Solr > 4.0. See:
     https://wiki.apache.org/solr/Atomic_Updates, defaults to ``false``.
 
+requestParsers-enableRemoteStreaming
+    Let's you enable remote streaming. Defalts to ``false`` as this is the Solr
+    default.
+
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case if Solr is indexing binaries
