@@ -12,7 +12,7 @@ Change History
   generated.
   [davidjb]
 - Fix solrconfig.xml for indexing binary files [giacomos]
-
+- Use UpdateHandler for /update/json and /update/csv (gets rid of deprecation warnings) [mgrbyte]
 
 5.3.1 (2013-12-17)
 ==================
