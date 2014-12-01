@@ -31,7 +31,7 @@ Change History
 - Changed default for remote streaming in solr 4 templates back to false (the
   solr default) [wengole]
 
-  
+
 5.3.1 (2013-12-17)
 ==================
 
