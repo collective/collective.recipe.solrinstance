@@ -182,6 +182,16 @@ autoCommitMaxTime
     Lets you enable auto commit handling after a specified time in
     milliseconds. This is disabled by default.
 
+updateLog
+    if updateLog is enabled an additional field ``_version_`` will be added
+    to schema and updateLog will be enabled in updateHandler. This is required
+    if you want to use Atomic Updates in Solr > 4.0. See:
+    https://wiki.apache.org/solr/Atomic_Updates, defaults to ``false``.
+
+requestParsers-enableRemoteStreaming
+    Let's you enable remote streaming. Defalts to ``false`` as this is the Solr
+    default.
+
 requestParsers-multipartUploadLimitInKB
     Optional ``<requestParsers />`` parameter useful if you are submitting
     very large documents to Solr. May be the case if Solr is indexing binaries
@@ -436,9 +446,9 @@ additionalFieldConfig
     ``<fields>...</fields>`` directive in ``schema.xml``. Use this to insert
     dynamic fields. For example::
 
-        additionalFieldConfig = 
+        additionalFieldConfig =
             <dynamicField name="..." type="string" indexed="true" stored="true" />
-    
+
     Defaults to ``''`` (empty string).
 
 Multi-core

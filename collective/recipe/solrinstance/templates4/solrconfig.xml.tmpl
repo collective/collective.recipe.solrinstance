@@ -62,7 +62,7 @@
     -->
 
 
-  <!-- A 'dir' option by itself adds any files found in the directory 
+  <!-- A 'dir' option by itself adds any files found in the directory
        to the classpath, this is useful for including all jars in a
        directory.
 
@@ -73,7 +73,7 @@
        If a 'dir' option (with or without a regex) is used and nothing
        is found that matches, a warning will be logged.
 
-       The examples below can be used to load some solr-contribs along 
+       The examples below can be used to load some solr-contribs along
        with their external dependencies.
     -->
 
@@ -166,13 +166,14 @@
        </listener>
       -->
 
+    {%if options.updateLog %}\
     <!-- Enables a transaction log, currently used for real-time get.
          "dir" - the target directory for transaction logs, defaults to the
-            solr data directory.
+            solr data directory. -->
     <updateLog>
-      <str name="dir">$${solr.data.dir:}</str>
+      <str name="dir">$${solr.ulog.dir:}</str>
     </updateLog>
-    -->
+    {%end%}\
 
     <!-- AutoCommit
 
@@ -494,7 +495,7 @@
          using enableRemoteStreaming="true"
 
       -->
-    <requestParsers enableRemoteStreaming="true"
+    <requestParsers enableRemoteStreaming="${options.requestParsers_enableRemoteStreaming}"
                     multipartUploadLimitInKB="${options.requestParsers_multipartUploadLimitInKB}" />
 
     <!-- HTTP Caching

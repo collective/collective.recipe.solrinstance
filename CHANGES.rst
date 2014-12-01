@@ -2,9 +2,25 @@
 Change History
 **************
 
-5.3.2 (unreleased)
+5.3.3 (unreleased)
 ==================
 
+- Added ``requestParsers-enableRemoteStreaming`` to allow configuring remote
+  streaming [wengole]
+
+- Update request handler in ``solrconfig.xml`` to avoid deprecation warnings
+  for SOLR 4.  [mgrbyte]
+
+
+5.3.2 (2014-08-27)
+==================
+
+- Remove dependency on ipdb.
+  [saily]
+- Add option to enable ``updateLog`` for atomic update usage in SOLR 4.0.
+  This will automatically add a new field ``_version_`` to your schema, see:
+  http://wiki.apache.org/solr/SchemaXml#Fields
+  [saily]
 - Encode strings written to templated files as UTF-8. This solves issue #29
   and allows Unicode characters to be present in templates.
   [davidjb]
@@ -12,8 +28,10 @@ Change History
   generated.
   [davidjb]
 - Fix solrconfig.xml for indexing binary files [giacomos]
-- Use UpdateHandler for /update/json and /update/csv (gets rid of deprecation warnings) [mgrbyte]
+- Changed default for remote streaming in solr 4 templates back to false (the
+  solr default) [wengole]
 
+  
 5.3.1 (2013-12-17)
 ==================
 

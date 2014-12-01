@@ -557,6 +557,10 @@
    {% end %}\
    {% end %}\
 
+   {%if options.options.updateLog %}\
+   <field name="_version_" type="long" indexed="true" stored="true" multiValued="false" docValues="true" />
+   {%end%}
+
    <dynamicField name="tika_*" type="ignored" />
    <dynamicField name="ignored_*" type="ignored" indexed="false" stored="false" multiValued="true"/>
 

@@ -63,8 +63,9 @@ NOT_ALLOWED_ATTR = set(["index", "filter", "unique-key", "max-num-results",
                         "default-search-field", "default-operator",
                         "additional-solrconfig",
                         "additional-solrconfig-query",
-                        "autoCommitMaxDocs", "autoCommitMaxTime",
-                        "requestParsers-multipartUploadLimitInKB"])
+                        "autoCommitMaxDocs", "autoCommitMaxTime", "updateLog",
+                        "requestParsers-multipartUploadLimitInKB",
+                        "requestParsers-enableRemoteStreaming"])
 
 
 class SolrBase(object):
@@ -197,6 +198,9 @@ class SolrBase(object):
             'additional-schema-config', '').strip()
         options['requestParsers-multipartUploadLimitInKB'] = options_orig.get(
             'requestParsers-multipartUploadLimitInKB', '102400').strip()
+        options['requestParsers-enableRemoteStreaming'] = options_orig.get(
+            'requestParsers-enableRemoteStreaming', 'false'
+        )
         options['extraFieldTypes'] = options_orig.get('extra-field-types', '')
 
         options['mergeFactor'] = options_orig.get('mergeFactor', '10')
@@ -209,6 +213,8 @@ class SolrBase(object):
                                                         '')
         options['autoCommitMaxTime'] = options_orig.get('autoCommitMaxTime',
                                                         '')
+        options['updateLog'] = options_orig.get(
+            'updateLog', 'false').strip().lower() in TRUE_VALUES
 
         options['filterCacheSize'] = options_orig.get('filterCacheSize',
                                                       '16384')
@@ -599,7 +605,10 @@ class SolrSingleRecipe(SolrBase):
             maxWarmingSearchers=self.solropts.get('maxWarmingSearchers', '4'),
             requestParsers_multipartUploadLimitInKB=self.solropts[
                 'requestParsers-multipartUploadLimitInKB'],
+            requestParsers_enableRemoteStreaming=self.solropts[
+                'requestParsers-enableRemoteStreaming'],
             autoCommit=self.parseAutoCommit(self.solropts),
+            updateLog=self.solropts.get('updateLog', 'false'),
             mergeFactor=self.solropts['mergeFactor'],
             ramBufferSizeMB=self.solropts['ramBufferSizeMB'],
             unlockOnStartup=self.solropts['unlockOnStartup'],
@@ -767,7 +776,10 @@ class MultiCoreRecipe(SolrBase):
                                                      '4'),
                 requestParsers_multipartUploadLimitInKB=options_core[
                     'requestParsers-multipartUploadLimitInKB'],
+                requestParsers_enableRemoteStreaming=options_core[
+                    'requestParsers-enableRemoteStreaming'],
                 autoCommit=self.parseAutoCommit(options_core),
+                updateLog=options_core['updateLog'],
                 mergeFactor=options_core['mergeFactor'],
                 ramBufferSizeMB=options_core['ramBufferSizeMB'],
                 unlockOnStartup=options_core['unlockOnStartup'],
