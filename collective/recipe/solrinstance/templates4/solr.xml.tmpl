@@ -33,7 +33,7 @@
   You can read more about SolrCloud mode at http://wiki.apache.org/solr/SolrCloud
   -->
   {% if options.defaultCoreName %}\
-  <cores adminPath="/admin/cores" defaultCoreName="$options.defaultCoreName}" host="$${host:}" hostPort="$${jetty.port:}" hostContext="$${hostContext:}" zkClientTimeout="$${zkClientTimeout:15000}">
+  <cores adminPath="/admin/cores" defaultCoreName="${options.defaultCoreName}" host="$${host:}" hostPort="$${jetty.port:}" hostContext="$${hostContext:}" zkClientTimeout="$${zkClientTimeout:15000}">
   {% end %}\
   {% if not options.defaultCoreName %}\
   <cores adminPath="/admin/cores" host="$${host:}" hostPort="$${jetty.port:}" hostContext="$${hostContext:}" zkClientTimeout="$${zkClientTimeout:15000}">
