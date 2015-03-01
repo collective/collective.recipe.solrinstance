@@ -334,7 +334,12 @@ class SolrBase(object):
                 continue  # Allow comments
             entry = {}
             for item in self._splitIndexLine(line):
-                attr, value = item.split(':')[:2]
+                if item.count(':') > 1:
+                    pos = item.find(':')
+                    attr = item[:pos]
+                    value = item[pos+1:]
+                else:
+                    attr, value = item.split(':')[:2]
                 if attr == 'copyfield':
                     entry.setdefault(attr, []).append(value)
                 else:
