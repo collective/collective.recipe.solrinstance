@@ -57,8 +57,8 @@
     <Call name="addConnector">
       <Arg>
           <New class="org.eclipse.jetty.server.bio.SocketConnector">
-            <Set name="host">${options.serverhost}</Set>
-            <Set name="port">${options.serverport}</Set>
+            <Set name="host">${options.host}</Set>
+            <Set name="port">${options.port}</Set>
             <Set name="maxIdleTime">50000</Set>
             <Set name="lowResourceMaxIdleTime">1500</Set>
             <Set name="statsOn">false</Set>

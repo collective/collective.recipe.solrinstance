@@ -2,6 +2,22 @@
 Change History
 **************
 
+6.0.0 (unreleased)
+==================
+
+- Huge refactoring
+
+  - Support SOLR 5.0
+  - Cleanup ``options``, reduce reassignment of attributes
+  - PEP8
+  - Create template subfolders for ``3``, ``4``, ``5``.
+  - Integrate ``hexagonit.recipe.download`` to allow auto-downloading of
+    solr releases
+  - Split into multiple files for single and multi-core solr creation
+
+  [saily]
+
+
 5.3.3 (unreleased)
 ==================
 

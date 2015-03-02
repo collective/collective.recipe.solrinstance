@@ -13,3 +13,4 @@ share
 *.pyc
 *.egg
 *.swp
+.Python
