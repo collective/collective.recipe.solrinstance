@@ -502,7 +502,7 @@ class SolrBase(object):
         """Generic installer for single and multi core setups"""
 
         # First wipe instance
-        if os.path.exists(self.instance_dir):
+        if os.path.exists(self.install_dir):
             shutil.rmtree(self.install_dir)
 
         # Create directories if they don't exist
