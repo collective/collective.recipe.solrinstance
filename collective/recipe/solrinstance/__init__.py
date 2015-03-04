@@ -12,7 +12,6 @@ import pkg_resources
 import shutil
 import sys
 import zc.buildout
-import re
 
 DEFAULT_DOWNLOAD_URLS = {
     5: 'http://archive.apache.org/dist/lucene/solr/5.0.0/solr-5.0.0.tgz',
@@ -380,16 +379,38 @@ class SolrBase(object):
         cmd_opts.append(_jar)
         return cmd_opts
 
+    def _split_index_line(self, line):
+        # Split an index line.
+        # XXX should be implemented using re
+        params = []
+        for each in line.split():
+            if each.find(':') == -1:
+                # The former attr value contains a whitespace which is
+                # allowed.
+                if len(params) == 0:
+                    raise zc.buildout.UserError(
+                        'Invalid index definition: %s' % line)
+                params[len(params) - 1] += ' ' + each
+            else:
+                params.append(each)
+        return params
+
     def get_indexes(self, options):
         """Parses the index definitions from the options."""
         indexAttrs = set(INDEX_ATTRIBUTES.keys())
         indeces = []
         names = []
-        for line in options.get('index', '').strip().splitlines():
+        for line in options['index'].strip().splitlines():
             if line.strip().startswith('#'):
                 continue  # Allow comments
             entry = {}
-            for attr, value in re.findall(r'([^:\s]+):([^:\s]+)\s?', line):
+            for item in self._split_index_line(line):
+                if item.count(':') > 1:
+                    pos = item.find(':')
+                    attr = item[:pos]
+                    value = item[pos+1:]
+                else:
+                    attr, value = item.split(':')[:2]
                 if attr == 'copyfield':
                     entry.setdefault(attr, []).append(value)
                 else:
