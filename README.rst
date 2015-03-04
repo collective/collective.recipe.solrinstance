@@ -24,8 +24,8 @@ https://github.com/collective/collective.recipe.solrinstance
 Notes
 =====
 
-- This version of the recipe supports Solr 3.5, 4.x (including 4.0, 4.1, 4.2
-  and 4.5). Please use a release from the 2.x series if you are using Solr 1.4.
+- This version of the recipe supports Solr 3.5, 4.x, and 5.x.
+  Please use a release from the 2.x series if you are using Solr 1.4.
 
 - This version supports Genshi_ templates **only**. Please use a release
   less than 5.x if you require Cheetah_ templating and do not require
@@ -46,7 +46,13 @@ Solr Server
 
 solr-location
     Path to the location of the Solr installation. This should be
-    the top-level installation directory.
+    the top-level installation directory. This is not a mandatory option, since
+    we introduced ``solr-version`` in 6.0.0 release.
+
+solr-version
+    Required. Tell recipe which solr version you want to use. If you don't set
+    ``solr-location``, the recipe will automatically download the given version
+    for you. Currently supported: ``3``, ``4`` and ``5``.
 
 host
     Name or IP address of the Solr server, e.g. some.server.com.
