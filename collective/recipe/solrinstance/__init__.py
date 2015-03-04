@@ -88,9 +88,11 @@ class SolrBase(object):
 
     def __init__(self, buildout, name, options):
         self.name = name
-        self.options_orig = options
         self.buildout = buildout
         self.logger = logging.getLogger(self.name)
+
+        self.options_orig = options
+        self.options_orig['location'] = self.install_dir
 
     @property
     def solr_version(self):
@@ -601,7 +603,6 @@ class SolrSingleRecipe(SolrBase):
             defaultSearchField=options['default-search-field'],
             destination=options['config-destination'],
             extralibs=self.extralibs,
-            location=self.install_dir,
             name='solrconfig.xml',
             requestParsers_enableRemoteStreaming=options[
                 'requestParsers-enableRemoteStreaming'],
