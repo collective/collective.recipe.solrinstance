@@ -595,6 +595,8 @@ class SolrSingleRecipe(SolrBase):
 
     def install_core(self, name, options):
 
+        self.logger.name = name
+
         # Create directories
         make_dirs(options['basedir'])
         make_dirs(options['config-destination'])
