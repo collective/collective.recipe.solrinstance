@@ -339,15 +339,14 @@ class SolrBase(object):
                     filters[index].append(filter)
         return filters
 
-    @property
-    def analyzer(self):
+    def get_analyzers(self, options):
         """Parse all analyzers and their configuration from the options."""
         analyzers = {}
         for analyzer_type in ('query', 'index'):
             analyzers[analyzer_type] = {
-                'filter': self.options['filter'],
-                'char_filter': self.options['char-filter'],
-                'tokenizer': self.options['tokenizer']
+                'filter': options['filter'],
+                'char_filter': options['char-filter'],
+                'tokenizer': options['tokenizer']
             }
 
             for proc in ('filter', 'char-filter', 'tokenizer'):
@@ -355,7 +354,7 @@ class SolrBase(object):
                 processor = '{0}-{1}'.format(proc, analyzer_type)
                 proc_store = proc.replace('-', '_')
                 analyzers[analyzer_type][proc_store] += '\n {0:s}'.format(
-                    self.options.get(processor, '').strip())
+                    options.get(processor, '').strip())
 
             for processor in analyzers[analyzer_type]:
                 unique = processor in UNIQUE_PROCESSORS
@@ -638,7 +637,7 @@ class SolrSingleRecipe(SolrBase):
         # Schema
         self._generate_from_template(
             additionalSchemaConfig=options['additional-schema-config'],
-            analyzers=self.analyzer,
+            analyzers=self.get_analyzers(options),
             defaultOperator=options['default-operator'],
             defaultSearchField=options['default-search-field'],
             destination=options['schema-destination'],
