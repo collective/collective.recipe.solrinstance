@@ -24,20 +24,23 @@
 
   <abortOnConfigurationError>${options.abortOnConfigurationError}</abortOnConfigurationError>
 
-  <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
+  <luceneMatchVersion>LUCENE_36</luceneMatchVersion>
 
-  <lib dir="${options.location}/contrib/extraction/lib" regex=".*\.jar" />
   <lib dir="${options.location}/contrib/analysis-extras/lib" regex=".*\.jar" />
   <lib dir="${options.location}/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
-
-  <lib dir="${options.location}/dist/" regex="apache-solr-cell-\d.*\.jar" />
-  <lib dir="${options.location}/dist/" regex="apache-solr-core-\d.*\.jar" />
-  <lib dir="${options.location}/dist/" regex="apache-solr-analysis-extras-\d.*\.jar" />
-  <lib dir="${options.location}/dist/" regex="apache-solr-langid-\d.*\.jar" />
-
-  {% for filter in options.extralibs %}\
+  <lib dir="${options.location}/contrib/clustering/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/extraction/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/langid/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/velocity/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-analysis-extras-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-cell-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-clustering-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-core-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-langid-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-velocity-extras-\d.*\.jar" />
+{% for filter in options.extralibs %}\
   <lib dir="${filter.path}" regex="${filter.regex}" />
-  {% end %}\
+{% end %}\
 
   <dataDir>${options.datadir}</dataDir>
 
@@ -367,7 +370,7 @@
        RequestHandlers.
     -->
   <requestHandler name="/admin/"
-                  class="solr.admin.AdminHandlers" />
+                  class="org.apache.solr.handler.admin.AdminHandlers" />
 
   <!-- ping/healthcheck -->
   <requestHandler name="/admin/ping" class="solr.PingRequestHandler">

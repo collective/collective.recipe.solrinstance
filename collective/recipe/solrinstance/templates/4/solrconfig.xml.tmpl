@@ -23,22 +23,21 @@
 <config>
   <abortOnConfigurationError>${options.abortOnConfigurationError}</abortOnConfigurationError>
   <luceneMatchVersion>LUCENE_40</luceneMatchVersion>
-  <lib dir="${options.location}/contrib/extraction/lib" regex=".*\.jar" />
   <lib dir="${options.location}/contrib/analysis-extras/lib" regex=".*\.jar" />
   <lib dir="${options.location}/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
-
-  <lib dir="${options.location}/dist/" regex="${options.artifact_prefix}solr-cell-\d.*\.jar" />
-  <lib dir="${options.location}/dist/" regex="${options.artifact_prefix}solr-core-\d.*\.jar" />
-  <lib dir="${options.location}/dist/" regex="${options.artifact_prefix}solr-analysis-extras-\d.*\.jar" />
-  <lib dir="${options.location}/dist/" regex="${options.artifact_prefix}solr-langid-\d.*\.jar" />
-  <lib dir="${options.location}/contrib/langid/lib" regex=".*\.jar" />
   <lib dir="${options.location}/contrib/clustering/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/extraction/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/contrib/langid/lib" regex=".*\.jar" />
   <lib dir="${options.location}/contrib/velocity/lib" regex=".*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-analysis-extras-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-cell-\d.*\.jar" />
   <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-clustering-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-core-\d.*\.jar" />
+  <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-langid-\d.*\.jar" />
   <lib dir="${options.location}/dist" regex="${options.artifact_prefix}solr-velocity-extras-\d.*\.jar" />
-  {% for filter in options.extralibs %}\
+{% for filter in options.extralibs %}\
   <lib dir="${filter.path}" regex="${filter.regex}" />
-  {% end %}\
+{% end %}\
 
   <!-- <lib/> directives can be used to instruct Solr to load an Jars
        identified and use them to resolve any "plugins" specified in

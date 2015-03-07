@@ -18,24 +18,24 @@
 
 <!--
  All (relative) paths are relative to the installation path
-  
+
   persistent: Save changes made via the API to this file
   sharedLib: path to a lib directory that will be shared across all cores
 -->
 <solr persistent="true">
 
   <!--
-  adminPath: RequestHandler path to manage cores.  
+  adminPath: RequestHandler path to manage cores.
     If 'null' (or absent), cores will not be manageable via request handler
   -->
-  {% if options.defaultCoreName %}\
+{% if options.defaultCoreName %}\
   <cores adminPath="/admin/cores" defaultCoreName="${options.defaultCoreName}">
-  {% end %}\
-  {% if not options.defaultCoreName %}\
+{% end %}\
+{% if not options.defaultCoreName %}\
   <cores adminPath="/admin/cores">
-  {% end %}\
-    {% for core in options.cores %}\
+{% end %}\
+{% for core in options.cores %}\
     <core name="${core}" instanceDir="${core}" />
-    {% end %}\
+{% end %}\
   </cores>
 </solr>
