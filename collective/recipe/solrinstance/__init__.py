@@ -689,7 +689,7 @@ class MultiCoreRecipe(SolrSingleRecipe):
     @property
     def cores(self):
         cores = set()
-        for core in self.options.get('cores', '').splitlines():
+        for core in self.options.get('cores', '').split():
             cores.add(core.strip())
 
         if not cores:
