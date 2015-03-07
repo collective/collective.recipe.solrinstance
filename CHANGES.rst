@@ -5,6 +5,8 @@ Change History
 6.0.0 (unreleased)
 ==================
 
+- Refactor test boilerplate to support multiple solr versions.
+  [saily]
 - Refactoring, cleanup, pep8, etc. to support SOLR 5.0
   [saily]
 - Cleanup ``options``, reduce reassignment of attributes
