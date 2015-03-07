@@ -687,14 +687,18 @@ class MultiCoreRecipe(SolrSingleRecipe):
 
     @property
     def cores(self):
-        cores = set()
+        cores = []
         for core in self.options.get('cores', '').split():
-            cores.add(core.strip())
+            if core in cores:
+                raise zc.buildout.UserError(
+                    'Core %r was already defined.' % core)
+
+            cores.append(core.strip())
 
         if not cores:
             raise zc.buildout.UserError(
                 'Attribute `cores` is not correctly defined. Define as a '
-                'whitespace separated list like `cores = X1 X2 X3`'
+                'whitespace or line separated list like `cores = X1 X2 X3`'
             )
 
         return cores
