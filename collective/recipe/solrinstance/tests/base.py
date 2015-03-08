@@ -4,7 +4,12 @@ from os.path import join
 from zc.buildout.testing import buildoutSetUp
 from zc.buildout.testing import buildoutTearDown
 from zc.buildout.testing import install_develop
-import unittest2 as unittest  # for py2.6
+import sys
+
+if sys.version_info <= (2, 7):
+    import unittest2 as unittest  # for py2.6
+else:
+    import unittest
 
 BASE_CONF = """\
 [buildout]
