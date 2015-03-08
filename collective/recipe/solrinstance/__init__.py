@@ -25,10 +25,10 @@ ZOPE_CONF = """
 </product-config>
 """
 
-INDEX_TYPES = {
+INDEX_TYPES = set([
     'text', 'text_ws', 'ignored', 'date', 'string',
     'boolean', 'integer', 'long', 'float', 'double'
-}
+])
 
 INDEX_ATTRIBUTES = {'name': '',
                     'type': '',
@@ -69,13 +69,13 @@ ALLOWED_OPERATORS = ('OR', 'AND')
 UNIQUE_PROCESSORS = ('tokenizer',)
 
 
-NOT_ALLOWED_ATTR = {
+NOT_ALLOWED_ATTR = set([
     'index', 'filter', 'unique-key', 'max-num-results', 'default-search-field',
     'default-operator', 'additional-solrconfig', 'additional-solrconfig-query',
     'autoCommitMaxDocs', 'autoCommitMaxTime', 'updateLog',
     'requestParsers-multipartUploadLimitInKB',
     'requestParsers-enableRemoteStreaming',
-}
+])
 
 
 def make_dirs(path):
