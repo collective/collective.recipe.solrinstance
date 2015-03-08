@@ -69,8 +69,8 @@ setup(
     test_suite='collective.recipe.solrinstance.tests.test_doctests.test_suite',
     entry_points={
         "zc.buildout": [
-            "default = collective.recipe.solrinstance:SolrSingleRecipe",
-            "mc = collective.recipe.solrinstance:MultiCoreRecipe",
+            "default = collective.recipe.solrinstance:SingleCoreSolrRecipe",
+            "mc = collective.recipe.solrinstance:MultiCoreSolrRecipe",
         ]
     },
 )

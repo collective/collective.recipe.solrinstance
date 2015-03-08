@@ -8,7 +8,6 @@ from hexagonit.recipe.download import TRUE_VALUES
 import glob
 import logging
 import os
-import pkg_resources
 import shutil
 import sys
 import zc.buildout
@@ -64,6 +63,8 @@ DEFAULT_TOKENIZER = """
     text_ws solr.WhitespaceTokenizerFactory
 """
 
+ALLOWED_OPERATORS = ('OR', 'AND')
+
 #: Processors that allow just one entry per field type
 UNIQUE_PROCESSORS = ('tokenizer',)
 
@@ -82,20 +83,121 @@ def make_dirs(path):
         os.makedirs(path)
 
 
-class SolrBase(object):
-    """This class hold every base functions """
+class MultiCoreSolrRecipe(object):
+    """Generates a Solr setup with multiple cores
+    """
 
     def __init__(self, buildout, name, options):
         self.name = name
         self.buildout = buildout
         self.logger = logging.getLogger(self.name)
+        self.options = options
+        self.options_orig = options.copy()
 
-        self.options_orig = options
-        self.options_orig['location'] = self.install_dir
+        # Set default values for options
+        self.options['location'] = self.install_dir
+
+        # BBB
+        if 'solr-location' not in self.options:
+            self.options['solr-location'] = self.solr_autoinstall()
+
+        # only strings are allowed in UserDict types.
+        self.options['customTemplate'] = \
+            str('schema-template' in self.options_orig).lower()
+
+        # Shorten some methods
+        sd = self.options.setdefault
+        join = os.path.join
+
+        sd('section-name', self.name)
+        sd('host', 'localhost')
+        sd('port', '8983')
+
+        # Base configuration, base_dir is solr core root and will be
+        # overwritten in multicore recipe for each core.
+        options['basedir'] = join(self.install_dir, 'solr')
+        sd('vardir', join(self.buildout['buildout']['directory'], 'var'))
+        sd('pidpath', join(options['vardir'], 'solr'))
+        sd('logdir', join(options['vardir'], 'log'))
+        sd('datadir', join(options['vardir'], 'solr', 'data'))
+        sd('java_opts', '')
+        sd('basepath', '/solr')
+        sd('zope-conf', ZOPE_CONF.format(**options))
+
+        # jetty
+        sd('jetty-destination', join(self.install_dir, 'etc'))
+        sd('jetty-template', join(self.template_dir, 'jetty.xml.tmpl'))
+
+        # log4j
+        sd('log4j-template', os.path.realpath(join(
+            self.template_dir, '..', 'log4j.properties.tmpl')))
+        sd('logging-template', os.path.realpath(join(
+            self.template_dir, '..', 'logging.properties.tmpl')))
+
+        # Config
+        conf_dir = join(options['basedir'], 'conf')
+        sd('config-destination', conf_dir)
+        sd('config-template', join(self.template_dir, 'solrconfig.xml.tmpl'))
+
+        # Schema
+        sd('schema-template', join(self.template_dir, 'schema.xml.tmpl'))
+        sd('schema-destination', conf_dir)
+
+        # Stopwords
+        sd('stopwords-template', os.path.realpath(join(
+            self.template_dir, '..', 'stopwords.txt.tmpl')))
+
+        # Solr defaults
+        sd('max-num-results', '500')
+        sd('abortOnConfigurationError', 'false')
+        sd('additional-schema-config', '')
+        sd('additional-solrconfig', '')
+        sd('additional-solrconfig-query', '')
+        sd('additionalFieldConfig', '')
+        sd('autoCommitMaxDocs', '')
+        sd('autoCommitMaxTime', '')
+        sd('char-filter', DEFAULT_CHAR_FILTERS)
+        sd('default-core-name', '')
+        sd('default-operator', 'OR')
+        sd('default-search-field', '')
+        sd('directoryFactory', 'solr.NRTCachingDirectoryFactory')
+        sd('documentCacheAutowarmCount', '0')
+        sd('documentCacheInitialSize', '512')
+        sd('documentCacheSize', '512')
+        sd('filter', DEFAULT_FILTERS)
+        sd('extra-field-types', '')
+        sd('extra-conf-files', '')
+        sd('filterCacheAutowarmCount', '4096')
+        sd('filterCacheInitialSize', '4096')
+        sd('filterCacheSize', '16384')
+        sd('maxWarmingSearchers', '4')
+        sd('mergeFactor', '10')
+        sd('queryResultCacheAutowarmCount', '32')
+        sd('queryResultCacheInitialSize', '64')
+        sd('queryResultCacheSize', '128')
+        sd('ramBufferSizeMB', '16')
+        sd('requestParsers-enableRemoteStreaming', 'false')
+        sd('requestParsers-multipartUploadLimitInKB', '102400')
+        sd('script', 'solr-instance')
+        sd('spellcheckField', 'default')
+        sd('tokenizer', DEFAULT_TOKENIZER)
+        sd('unique-key', 'uid')
+        sd('unlockOnStartup', 'true')
+        sd('updateLog', 'false')
+        sd('useColdSearcher', 'true')
+
+        # see self.extralibs property
+        self.options.pop('extralibs', None)
+
+        # strip whitespaces
+        for k, v in options.items():
+            self.options[k] = v.strip()
+
+        self.validate_options(self.options)
 
     @property
     def solr_version(self):
-        return int(self.options_orig['solr-version'])
+        return int(self.options['solr-version'])
 
     @property
     def install_dir(self):
@@ -123,124 +225,14 @@ class SolrBase(object):
         directory = os.path.join(
             self.buildout['buildout']['parts-directory'], name)
 
-        if os.path.exists(directory):
-            shutil.rmtree(directory)
-
-        DownloadRecipe(self.buildout, name, {
-            'url': DEFAULT_DOWNLOAD_URLS[self.solr_version],
-            'strip-top-level-dir': 'true',
-            'destination': directory,
-        }).install()
+        if not os.path.exists(directory):
+            DownloadRecipe(self.buildout, name, {
+                'url': DEFAULT_DOWNLOAD_URLS[self.solr_version],
+                'strip-top-level-dir': 'true',
+                'destination': directory,
+            }).install()
 
         return directory
-
-    @property
-    def options(self):
-        options = self.options_orig
-
-        # BBB
-        if 'solr-location' not in self.options_orig:
-            options.setdefault('solr-location', self.solr_autoinstall())
-
-        options.setdefault('section-name', self.name)
-        options.setdefault('host', 'localhost')
-        options.setdefault('port', '8983')
-
-        # Base configuration, base_dir is solr core root and will be
-        # overwritten in multicore recipe for each core.
-        options['basedir'] = os.path.join(self.install_dir, 'solr')
-
-        var_dir = os.path.join(self.buildout['buildout']['directory'], 'var')
-        options.setdefault('vardir', os.path.join(var_dir, 'solr'))
-        options.setdefault('pidpath', os.path.join(var_dir, 'solr'))
-        options.setdefault('datadir', os.path.join(var_dir, 'solr', 'data'))
-        options.setdefault('logdir', os.path.join(var_dir, 'log'))
-        options.setdefault('java_opts', '')
-        options.setdefault('basepath', '/solr')
-        options.setdefault('zope-conf', ZOPE_CONF.format(**options))
-
-        # jetty
-        options.setdefault('jetty-destination', os.path.join(
-            self.install_dir, 'etc'))
-        options.setdefault('jetty-template', os.path.join(
-            self.template_dir, 'jetty.xml.tmpl'))
-        options.setdefault('jetty-destination', os.path.join(
-            self.install_dir, 'etc'))
-
-        # log4j
-        options.setdefault('log4j-template', os.path.realpath(os.path.join(
-            self.template_dir, '..', 'log4j.properties.tmpl')))
-        options.setdefault('logging-template', os.path.realpath(os.path.join(
-            self.template_dir, '..', 'logging.properties.tmpl')))
-
-        # Config
-        conf_dir = os.path.join(options['basedir'], 'conf')
-        options.setdefault('config-destination', conf_dir)
-        options.setdefault('config-template', os.path.join(
-            self.template_dir, 'solrconfig.xml.tmpl'))
-
-        # Schema
-        options.setdefault('schema-template', os.path.join(
-            self.template_dir, 'schema.xml.tmpl'))
-        options.setdefault('schema-destination', conf_dir)
-
-        # Stopwords
-        options.setdefault('stopwords-template', os.path.realpath(os.path.join(
-            self.template_dir, '..', 'stopwords.txt.tmpl')))
-
-        # Solr defaults
-        options.setdefault('max-num-results', '500')
-        try:
-            assert int(options['max-num-results']) > 1
-        except (AssertionError, TypeError, ValueError):
-            raise zc.buildout.UserError('Please use a positive integer for '
-                                        'the number of default results')
-
-        options.setdefault('abortOnConfigurationError', 'false')
-        options.setdefault('additional-schema-config', '')
-        options.setdefault('additional-solrconfig', '')
-        options.setdefault('additional-solrconfig-query', '')
-        options.setdefault('additionalFieldConfig', '')
-        options.setdefault('autoCommitMaxDocs', '')
-        options.setdefault('autoCommitMaxTime', '')
-        options.setdefault('char-filter', DEFAULT_CHAR_FILTERS)
-        options.setdefault('default-core-name', '')
-        options.setdefault('default-operator', 'OR')
-        options.setdefault('default-search-field', '')
-        options.setdefault('directoryFactory',
-                           'solr.NRTCachingDirectoryFactory')
-        options.setdefault('documentCacheAutowarmCount', '0')
-        options.setdefault('documentCacheInitialSize', '512')
-        options.setdefault('documentCacheSize', '512')
-        options.setdefault('filter', DEFAULT_FILTERS)
-        options.setdefault('extra-field-types', '')
-        options.setdefault('extra-conf-files', '')
-        options.setdefault('filterCacheAutowarmCount', '4096')
-        options.setdefault('filterCacheInitialSize', '4096')
-        options.setdefault('filterCacheSize', '16384')
-        options.setdefault('maxWarmingSearchers', '4')
-        options.setdefault('mergeFactor', '10')
-        options.setdefault('queryResultCacheAutowarmCount', '32')
-        options.setdefault('queryResultCacheInitialSize', '64')
-        options.setdefault('queryResultCacheSize', '128')
-        options.setdefault('ramBufferSizeMB', '16')
-        options.setdefault('requestParsers-enableRemoteStreaming', 'false')
-        options.setdefault('requestParsers-multipartUploadLimitInKB', '102400')
-        options.setdefault('script', 'solr-instance')
-        options.setdefault('spellcheckField', 'default')
-        options.setdefault('tokenizer', DEFAULT_TOKENIZER)
-        options.setdefault('unique-key', 'uid')
-        options.setdefault('unlockOnStartup', 'true')
-        options.setdefault('updateLog', 'false')
-        options.setdefault('useColdSearcher', 'true')
-
-        options.pop('extralibs', None)
-
-        # strip whitespaces
-        for k, v in options.items():
-            options[k] = v.strip()
-
-        return options
 
     @property
     def extralibs(self):
@@ -292,11 +284,9 @@ class SolrBase(object):
             output = '#!{0:s}\n{1:s}'.format(sys.executable, output)
 
         if executable and sys.platform == 'win32':
+            from pkg_resources import resource_string
             exe = output_file + '.exe'
-            open(exe, 'wb').write(
-                pkg_resources.resource_string('setuptools', 'cli.exe')
-            )
-            self.generated.append(exe)
+            open(exe, 'wb').write(resource_string('setuptools', 'cli.exe'))
             output_file = output_file + '-script.py'
 
         with open(output_file, 'wb') as outfile:
@@ -366,10 +356,8 @@ class SolrBase(object):
     @property
     def java_opts(self):
         """Parsed the java opts from `options`. """
-        cmd_opts = []
         _start = ['java', '-jar']
         _jar = 'start.jar'
-        _opts = []
         if not self.options['java_opts']:
             cmd_opts = _start
         else:
@@ -380,7 +368,6 @@ class SolrBase(object):
 
     def _split_index_line(self, line):
         # Split an index line.
-        # XXX should be implemented using re
         params = []
         for each in line.split():
             if each.find(':') == -1:
@@ -417,7 +404,7 @@ class SolrBase(object):
 
             keys = set(entry.keys())
             if not keys.issubset(indexAttrs):
-                if options.get('customTemplate'):
+                if options.get('customTemplate', 'false') in TRUE_VALUES:
                     extras = []
                     for key in sorted(keys.difference(indexAttrs)):
                         extras.append('{0:s}="{1:s}"'.format(key, entry[key]))
@@ -518,12 +505,44 @@ class SolrBase(object):
         for conf_file in extra_conf_files:
             self.copy_files(conf_file, options['config-destination'])
 
+    def validate_options(self, options):
+        # Solr 5 accepts OR|AND only
+
+        if options['default-operator'] not in ALLOWED_OPERATORS:
+            raise zc.buildout.UserError(
+                'Only one of {0:s} allowed as default-operator.'.format(
+                    ALLOWED_OPERATORS))
+
+        try:
+            assert int(options['max-num-results']) > 1
+        except (AssertionError, TypeError, ValueError):
+            raise zc.buildout.UserError(
+                'Please use a positive integer as max-num-results.')
+
+    @property
+    def cores(self):
+        cores = []
+        for core in self.options['cores'].split():
+            if core in cores:
+                raise zc.buildout.UserError(
+                    'Core %r was already defined.' % core)
+
+            cores.append(core.strip())
+
+        if not cores:
+            raise zc.buildout.UserError(
+                'Attribute `cores` is not correctly defined. Define as a '
+                'whitespace or line separated list like `cores = X1 X2 X3`'
+            )
+
+        return cores
+
     def install_base(self):
         """Generic installer for single and multi core setups"""
 
         # First wipe instance
-        if os.path.exists(self.install_dir):
-            shutil.rmtree(self.install_dir)
+        # if os.path.exists(self.install_dir):
+        #     shutil.rmtree(self.install_dir)
 
         # Create directories if they don't exist
         make_dirs(self.options['vardir'])
@@ -536,6 +555,12 @@ class SolrBase(object):
            self.instance_dir,
            self.install_dir
         )
+
+        #
+        if self.cores:
+            shutil.rmtree(self.options['basedir'])
+            os.makedirs(self.options['basedir'])
+
         self.copy_solr(
             os.path.join(self.options['solr-location'], 'dist'),
             os.path.join(self.install_dir, 'dist')
@@ -587,14 +612,9 @@ class SolrBase(object):
                 **self.options
             )
 
-
-class SolrSingleRecipe(SolrBase):
-    """This recipe builds a single solr index"""
-
-    cores = set()
-
     def install_core(self, name, options):
 
+        self.validate_options(options)
         self.logger.name = name
 
         # Create directories
@@ -662,6 +682,10 @@ class SolrSingleRecipe(SolrBase):
         # This may also contain a stopwords.txt file which overwrites the one
         # created above.
         self.copy_extra_conf(options)
+        self.copy_files(
+            os.path.join(self.instance_dir, 'solr', 'conf', '*.txt'),
+            options['config-destination']
+        )
 
         # New style core.properties file, see:
         # https://cwiki.apache.org/confluence/display/solr/Defining+core.properties
@@ -678,38 +702,6 @@ class SolrSingleRecipe(SolrBase):
         # Run generic install
         self.install_base()
 
-        # Install a single solr core
-        self.install_core(self.name, self.options)
-
-        return ()
-
-
-class MultiCoreRecipe(SolrSingleRecipe):
-    """Builds a multicore solr without any instances"""
-
-    @property
-    def cores(self):
-        cores = []
-        for core in self.options.get('cores', '').split():
-            if core in cores:
-                raise zc.buildout.UserError(
-                    'Core %r was already defined.' % core)
-
-            cores.append(core.strip())
-
-        if not cores:
-            raise zc.buildout.UserError(
-                'Attribute `cores` is not correctly defined. Define as a '
-                'whitespace or line separated list like `cores = X1 X2 X3`'
-            )
-
-        return cores
-
-    def install(self):
-        # Run generic install
-        self.install_base()
-
-        # Build core document
         solr_dir = os.path.join(self.install_dir, 'solr')
         self._generate_from_template(
             defaultCoreName=self.options['default-core-name'],
@@ -727,14 +719,14 @@ class MultiCoreRecipe(SolrSingleRecipe):
             conf_dir = os.path.join(core_dir, 'conf')
             data_dir = os.path.join(self.options['datadir'], core)
 
-            # XXX: We take here the original_options and merge in the options
-            #      from every core. This allows us to define/override options
-            #      for all cores.
+            # We take here the original_options and merge in the options
+            # from every core. This allows us to define/override options
+            # for all cores.
             options_core = self.options.copy()
 
             # options_core.update(self.buildout[core])
             # ... does not strip whitespaces from core buildout attributes
-            for k, v in self.buildout[core].items():
+            for k, v in self.buildout.get(core, {}).items():
                 options_core[k] = v.strip()
 
             options_core['basedir'] = core_dir
@@ -746,16 +738,36 @@ class MultiCoreRecipe(SolrSingleRecipe):
 
         return ()
 
-    # def update(self):
-    #     """
-    #     Normally We don't need to do anythin on update -
-    #     install will get called if any of our settings change
-    #     But we allow a workflow for users who wish
-    #     to delete the whole solr-instance folder and
-    #     recreate it with a buildout update. We do this
-    #     often while testing our application.
-    #     """
-    #     if os.path.exists(self.install_dir):
-    #         pass
-    #     else:
-    #         self.install()
+    def update(self):
+        """
+        Normally We don't need to do anythin on update -
+        install will get called if any of our settings change
+        But we allow a workflow for users who wish
+        to delete the whole solr-instance folder and
+        recreate it with a buildout update. We do this
+        often while testing our application.
+        """
+        if os.path.exists(self.install_dir):
+            pass
+        self.install()
+
+
+class SingleCoreSolrRecipe(MultiCoreSolrRecipe):
+    """Builds a single core solr setup - DEPRECATED"""
+
+    # This collection1 demo core is used by solr 4 only.
+    cores = ['collection1', ]
+
+    def install(self):
+        if self.solr_version < 4:
+            self.install_base()
+            self.install_core(self.name, self.options)
+            return ()
+
+        if self.solr_version == 4:
+            return super(SingleCoreSolrRecipe, self).install()
+
+        raise zc.buildout.UserError(
+            'Solr {0} no longer supports deprecated single core setups. '
+            'Please use a multicore setup with one core.'.format(
+                self.solr_version))
