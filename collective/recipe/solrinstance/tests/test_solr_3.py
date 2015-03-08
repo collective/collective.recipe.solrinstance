@@ -1,75 +1,50 @@
 # -*- coding: utf-8 -*-
-from collective.recipe.solrinstance.tests.base import BASE_CONF
 from collective.recipe.solrinstance.tests.base import MULTICORE_CONF
 from collective.recipe.solrinstance.tests.base import SINGLE_CORE_CONF
 from collective.recipe.solrinstance.tests.base import SolrBaseTestCase
-from os.path import join
 import os
+import shutil
+import time
 
 
 class Solr3TestCase(SolrBaseTestCase):
 
     version = 3
 
-    def test_solr_install_invalid_config_missing_uid_index(self):
+    def create_sample_download_directories(self):
+        # Create Solr 3 download package directory structure
         sample = self.globs['sample_buildout']
-        os.makedirs(join(sample, 'example', 'etc'))
-        os.makedirs(join(sample, 'example', 'solr', 'conf'))
-        os.makedirs(join(sample, 'dist'))
-        os.makedirs(join(sample, 'contrib'))
+        os.makedirs(os.path.join(sample, 'example', 'etc'))
+        os.makedirs(os.path.join(sample, 'example', 'solr', 'conf'))
+        os.makedirs(os.path.join(sample, 'dist'))
+        os.makedirs(os.path.join(sample, 'contrib'))
 
-        config = BASE_CONF.format(addon="""
-solr-version={0}
-solr-location={1}
-unique-key = uid
-index =
-    name:uniqueID type:string indexed:true stored:true required:true
-""".format(self.version, sample))
-
-        aI = self.assertIn
-        out = self._basic_install(config)
-        aI('Installing solr.', out)
-        aI('Error: Unique key without matching index: uid', out)
-
-    def test_solr_install_invalid_config_duplicate_fields(self):
-        sample = self.globs['sample_buildout']
-        os.makedirs(join(sample, 'example', 'etc'))
-        os.makedirs(join(sample, 'example', 'solr', 'conf'))
-        os.makedirs(join(sample, 'dist'))
-        os.makedirs(join(sample, 'contrib'))
-
-        config = BASE_CONF.format(addon="""
-solr-version={0}
-solr-location={1}
-unique-key = uniqueID
-index =
-    name:uniqueID type:string indexed:true stored:true required:true
-    # You can add comment lines among index definitions
-    name:Foo type:text
-    name:Bar type:date indexed:false stored:false required:true multivalued:true omitnorms:true
-    name:Foo type:text
-""".format(self.version, sample))  # noqa
-
-        out = self._basic_install(config)
-
-        aI = self.assertIn
-        aI('Installing solr.', out)
-        aI('Error: Duplicate name error: "Foo" already defined.', out)
-
-    def test_singlecore_install(self):
-        sample = self.globs['sample_buildout']
-        os.makedirs(join(sample, 'example', 'etc'))
-        os.makedirs(join(sample, 'example', 'solr', 'conf'))
-        os.makedirs(join(sample, 'dist'))
-        os.makedirs(join(sample, 'contrib'))
-
+    def _basic_singlecore_install(self):
+        self.create_sample_download_directories()
         config = SINGLE_CORE_CONF.format(addon="""
 solr-version={0}
 solr-location={1}
-""".format(self.version, sample))
+""".format(self.version, self.globs['sample_buildout']))
+        return self._basic_install(config)
 
+    def _basic_multicore_install(self):
+        self.create_sample_download_directories()
+        config = MULTICORE_CONF.format(addon="""
+solr-version={0}
+solr-location={1}
+""".format(self.version, self.globs['sample_buildout']))
+
+        return self._basic_install(config)
+
+    def test_artifact_prefix(self):
+        self._basic_singlecore_install()
+
+        with self.use_core('parts', 'solr', 'solr') as c:
+            self.assertIn('apache-', c['config'])
+
+    def test_singlecore_install(self):
+        out = self._basic_singlecore_install()
         aI = self.assertIn
-        out = self._basic_install(config)
         aI('Installing solr.', out)
         aI('solr: Generated file \'jetty.xml\'.', out)
         aI('solr: Generated file \'log4j.properties\'.', out)
@@ -100,23 +75,11 @@ solr-location={1}
             self._test_field_types(c['schema'])
 
             aI('<int name="rows">99</int>', c['config'])
-            aI('<dataDir>{0:s}/var/solr/data</dataDir>'.format(sample),
-               c['config'])
+            aI('<dataDir>{0:s}/var/solr/data</dataDir>'.format(
+                self.globs['sample_buildout']), c['config'])
 
     def test_multicore_install(self):
-        sample = self.globs['sample_buildout']
-        os.makedirs(join(sample, 'example', 'etc'))
-        os.makedirs(join(sample, 'example', 'solr', 'conf'))
-        os.makedirs(join(sample, 'dist'))
-        os.makedirs(join(sample, 'contrib'))
-
-        config = MULTICORE_CONF.format(addon="""
-solr-version={0}
-solr-location={1}
-""".format(self.version, sample))
-
-        out = self._basic_install(config)
-
+        out = self._basic_multicore_install()
         aI = self.assertIn
         aI('Installing solr-mc.', out)
         aI('solr-mc: Generated file \'jetty.xml\'.', out)
@@ -129,19 +92,11 @@ solr-location={1}
         self.assertNotIn('solr-mc: Generated file \'schema.xml\'.', out)
         self.assertNotIn('solr-mc: Generated file \'stopwords.txt\'.', out)
 
-        # ... but solr.xml with core setup
-        aI('solr-mc: Generated file \'solr.xml\'.', out)
-
-        # ... and for each core an entry in solr.xml and it's config files
-        core_conf = self.getfile('parts', 'solr-mc', 'solr', 'solr.xml')
+        # ... and it's config files
         for core in ('core1', 'core2'):
             aI('{0:s}: Generated file \'solrconfig.xml\'.'.format(core), out)
             aI('{0:s}: Generated file \'schema.xml\'.'.format(core), out)
             aI('{0:s}: Generated file \'stopwords.txt\'.'.format(core), out)
-
-            # solr.xml
-            aI('<core name="{0:s}" instanceDir="{0:s}" />'.format(core),
-               core_conf)
 
         # Jetty
         jetty_file = self.getfile('parts', 'solr-mc', 'etc', 'jetty.xml')
@@ -166,7 +121,7 @@ solr-location={1}
 
             aI('<int name="rows">55</int>', c['config'])
             aI('<dataDir>{0:s}/var/solr/data/{1:s}</dataDir>'.format(
-                sample, c['name']), c['config'])
+                self.globs['sample_buildout'], c['name']), c['config'])
 
         with self.use_core('parts', 'solr-mc', 'solr', 'core2') as c:
 
@@ -183,4 +138,39 @@ solr-location={1}
 
             aI('<int name="rows">99</int>', c['config'])
             aI('<dataDir>{0:s}/var/solr/data/{1:s}</dataDir>'.format(
-                sample, c['name']), c['config'])
+                self.globs['sample_buildout'], c['name']), c['config'])
+
+    def test_core_configuration_on_multicore_install(self):
+        out = self._basic_multicore_install()
+
+        # ... but solr.xml with core setup
+        aI = self.assertIn
+        aI('solr-mc: Generated file \'solr.xml\'.', out)
+
+        core_conf = self.getfile('parts', 'solr-mc', 'solr', 'solr.xml')
+        for core in ('core1', 'core2'):
+            aI('<core name="{0:s}" instanceDir="{0:s}" />'.format(core),
+               core_conf)
+
+    # def test_install_is_not_called_on_update_if_instance_exists(self):
+    #     self._basic_singlecore_install()
+    #     solrconfig_file = self.getpath(
+    #         'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    #     ctime = os.stat(solrconfig_file).st_ctime
+
+    #     time.sleep(1)
+    #     buildout = self.globs['buildout']
+    #     self.globs['system'](buildout)
+    #     self.assertEqual(os.stat(solrconfig_file).st_ctime, ctime)
+
+    # def test_install_is_called_on_update_if_instance_not_exists(self):
+    #     self._basic_singlecore_install()
+    #     solrconfig_file = self.getpath(
+    #         'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    #     ctime = os.stat(solrconfig_file).st_ctime
+    #     shutil.rmtree(self.getpath('parts', 'solr'))
+
+    #     time.sleep(1)
+    #     buildout = self.globs['buildout']
+    #     self.globs['system'](buildout)
+    #     self.assertNotEqual(os.stat(solrconfig_file).st_ctime, ctime)
