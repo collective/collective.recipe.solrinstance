@@ -142,12 +142,12 @@ class SolrBaseTestCase(unittest.TestCase):
 
     def setUp(self):
         buildoutSetUp(self)
+        install_develop('Genshi', self)
+        install_develop('collective.recipe.solrinstance', self)
+        install_develop('hexagonit.recipe.download', self)
         install_develop('zope.exceptions', self)
         install_develop('zope.interface', self)
         install_develop('zope.testing', self)
-        install_develop('Genshi', self)
-        install_develop('hexagonit.recipe.download', self)
-        install_develop('collective.recipe.solrinstance', self)
 
     def tearDown(self):
         buildoutTearDown(self)
