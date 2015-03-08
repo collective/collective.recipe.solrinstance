@@ -44,15 +44,15 @@ The recipe supports the following options.
 Solr Server
 ===========
 
-solr-location
-    Path to the location of the Solr installation. This should be
-    the top-level installation directory. This is not a mandatory option, since
-    we introduced ``solr-version`` in 6.0.0 release.
-
 solr-version
     Required. Tell recipe which solr version you want to use. If you don't set
     ``solr-location``, the recipe will automatically download the given version
     for you. Currently supported: ``3``, ``4`` and ``5``.
+
+solr-location
+    Path to the location of the Solr installation. This should be
+    the top-level installation directory. This is optional, since
+    we introduced ``solr-version`` in 6.0.0 release.
 
 host
     Name or IP address of the Solr server, e.g. some.server.com.
@@ -283,15 +283,16 @@ filter
     Each filter is configured on a separated line and each filter will be
     applied to tokens (during Solr operation) in the order specified.
 
-    Each line should read like::
+    Each line should read like (Solr 5 does not support ``side="front"``
+    or ``side="back"`` any more)::
 
-        text solr.EdgeNGramFilterFactory minGramSize="2" maxGramSize="15" side="front"
+        text solr.EdgeNGramFilterFactory minGramSize="2" maxGramSize="15"
 
     In the above example:
 
     * ``text`` is the ``type``, one of the built-in field types;
     * ``solr.EdgeNGramFilterFactory`` is the ``class`` for this filter; and
-    * ``minGramSize="2"  maxGramSize="15" side="front"`` are the parameters
+    * ``minGramSize="2"  maxGramSize="15"`` are the parameters
       for the filter's configuration. They should be formatted as XML
       attributes.
 
