@@ -1253,8 +1253,7 @@ and make sure regeneration happens when it should.
     >>> write(sample_buildout, 'buildout.cfg',
     ...       configuration.format(sample_buildout, 'value1', 'value2'))
     >>> print(system(buildout))
-    Uninstalling solr-mc.
-    Installing solr-mc.
+    Updating solr-mc.
     solr-mc: Generated file 'jetty.xml'.
     solr-mc: Generated file 'log4j.properties'.
     solr-mc: Generated file 'logging.properties'.
@@ -1274,14 +1273,14 @@ Firstly, make no changes. No files should be regenerated.
     ...       configuration.format(sample_buildout, 'value1', 'value2'))
     >>> print(system(buildout))
     Updating solr-mc.
+    ...
 
 Now, modify one of the cores to ensure the configuration is regenerated.
 
     >>> write(sample_buildout, 'buildout.cfg',
     ...       configuration.format(sample_buildout, 'value1', 'value3'))
     >>> print(system(buildout))
-    Uninstalling solr-mc.
-    Installing solr-mc.
+    Updating solr-mc.
     solr-mc: Generated file 'jetty.xml'.
     solr-mc: Generated file 'log4j.properties'.
     solr-mc: Generated file 'logging.properties'.
@@ -1300,8 +1299,7 @@ Modify both cores and ensure configuration is still regenerated.
     >>> write(sample_buildout, 'buildout.cfg',
     ...       configuration.format(sample_buildout, 'value2', 'value4'))
     >>> print(system(buildout))
-    Uninstalling solr-mc.
-    Installing solr-mc.
+    Updating solr-mc.
     solr-mc: Generated file 'jetty.xml'.
     solr-mc: Generated file 'log4j.properties'.
     solr-mc: Generated file 'logging.properties'.
@@ -1321,6 +1319,7 @@ Finally, re-run with both values changed to ensure no regeneration happens.
     ...       configuration.format(sample_buildout, 'value2', 'value4'))
     >>> print(system(buildout))
     Updating solr-mc.
+    ...
 
 Test Solr4
 ----------
@@ -1359,11 +1358,13 @@ Indicate that we are using solr4 (collection1):
 Ok, let's run the buildout:
 
     >>> print(system(buildout))
+    Uninstalling solr-mc.
     Installing solr.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
+    solr: Generated file 'solr.xml'.
     collection1: Generated file 'solrconfig.xml'.
     collection1: Generated file 'schema.xml'.
     collection1: Generated file 'stopwords.txt'.
@@ -1380,6 +1381,8 @@ Also check that the XML files are where we expect them to be:
     -  schema.xml
     -  solrconfig.xml
     -  stopwords.txt
+    -  test1.txt
+    -  test2.txt
 
 `schema.xml`:
 
