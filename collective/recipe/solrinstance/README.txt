@@ -71,7 +71,6 @@ Ok, let's run the buildout:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
 
 Check if the run script is here and the template substitution worked:
 
@@ -241,7 +240,7 @@ Files should support Unicode output if present in templates::
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
     <!-- Mønti Pythøn ik den Hølie Gräilen. A Møøse once bit my sister... -->
@@ -349,7 +348,7 @@ With the index set up correctly, things work again:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -382,7 +381,7 @@ There's no default for the default search field, however:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
     Traceback (most recent call last):
@@ -424,7 +423,7 @@ You can also define extra field types:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -480,7 +479,7 @@ to be used to generate `schema.xml`:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
     schema here
@@ -522,7 +521,7 @@ variable that can then be conveniently used in the template:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema name="foo">
     <field name="Foo" another="one" foo="bar" />
@@ -581,7 +580,7 @@ Additional solrconfig should also be allowed:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -622,7 +621,7 @@ Additional solrconfig query section should also be allowed:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -662,7 +661,7 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -699,7 +698,7 @@ Test autoCommit arguments:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -736,7 +735,7 @@ Testing the request parsers default limit:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -771,7 +770,7 @@ Test changing the request parsers limit:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
@@ -809,7 +808,7 @@ alternative template to be used to generate `solrconfig.xml`:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
+
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <config>
     configure me here
@@ -865,7 +864,7 @@ Solr instances to coexist in a single buildout:
     solr-functest: Generated file 'solrconfig.xml'.
     solr-functest: Generated file 'schema.xml'.
     solr-functest: Generated file 'stopwords.txt'.
-    ...
+
     >>> ls(sample_buildout, 'var')
     d  solr-functest
     d  solr-main
@@ -909,7 +908,6 @@ Ok, let's run the buildout:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
-    ...
 
 Check if the run script is here and the template substitution worked
 with java_opts:
@@ -953,7 +951,6 @@ Ok, let's run the buildout:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr-mc.
-    ...
     While:
       Installing solr-mc.
     Error: Missing option: solr-mc:cores
@@ -983,11 +980,11 @@ Ok, let's run the buildout:
 
     >>> print(system(buildout))
     Installing solr-mc.
-    ...
     While:
-    ...
+      Installing solr-mc.
     Error: Attribute `cores` is not correctly defined. Define as a whitespace
     or line separated list like `cores = X1 X2 X3`
+
 
 Note that you can specify the ``cores`` option as either newline separated or
 other whitespace separated.
@@ -1083,7 +1080,6 @@ Ok, let's run the buildout:
     core2: Generated file 'solrconfig.xml'.
     core2: Generated file 'schema.xml'.
     core2: Generated file 'stopwords.txt'.
-    ...
 
 See if there are all needed files:
 
@@ -1205,7 +1201,6 @@ Ok, let's run the buildout:
     core2: Generated file 'solrconfig.xml'.
     core2: Generated file 'schema.xml'.
     core2: Generated file 'stopwords.txt'.
-    ...
 
 The parameter should thus end up in ``solr.xml``:
 
@@ -1254,7 +1249,6 @@ and make sure regeneration happens when it should.
     ...       configuration.format(sample_buildout, 'value1', 'value2'))
     >>> print(system(buildout))
     Updating solr-mc.
-    ...
 
 Firstly, make no changes. No files should be regenerated.
 
@@ -1262,7 +1256,6 @@ Firstly, make no changes. No files should be regenerated.
     ...       configuration.format(sample_buildout, 'value1', 'value2'))
     >>> print(system(buildout))
     Updating solr-mc.
-    ...
 
 Now, modify one of the cores to ensure the configuration is regenerated.
 
@@ -1270,7 +1263,6 @@ Now, modify one of the cores to ensure the configuration is regenerated.
     ...       configuration.format(sample_buildout, 'value1', 'value3'))
     >>> print(system(buildout))
     Updating solr-mc.
-    ...
 
 Modify both cores and ensure configuration is still regenerated.
 
@@ -1278,7 +1270,6 @@ Modify both cores and ensure configuration is still regenerated.
     ...       configuration.format(sample_buildout, 'value2', 'value4'))
     >>> print(system(buildout))
     Updating solr-mc.
-    ...
 
 Finally, re-run with both values changed to ensure no regeneration happens.
 
@@ -1286,7 +1277,6 @@ Finally, re-run with both values changed to ensure no regeneration happens.
     ...       configuration.format(sample_buildout, 'value2', 'value4'))
     >>> print(system(buildout))
     Updating solr-mc.
-    ...
 
 Test Solr4
 ----------
@@ -1335,7 +1325,6 @@ Ok, let's run the buildout:
     collection1: Generated file 'solrconfig.xml'.
     collection1: Generated file 'schema.xml'.
     collection1: Generated file 'stopwords.txt'.
-    ...
 
 Also check that the XML files are where we expect them to be:
 
