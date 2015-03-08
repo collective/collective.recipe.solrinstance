@@ -152,25 +152,25 @@ solr-location={1}
             aI('<core name="{0:s}" instanceDir="{0:s}" />'.format(core),
                core_conf)
 
-    # def test_install_is_not_called_on_update_if_instance_exists(self):
-    #     self._basic_singlecore_install()
-    #     solrconfig_file = self.getpath(
-    #         'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
-    #     ctime = os.stat(solrconfig_file).st_ctime
+    def test_install_is_not_called_on_update_if_instance_exists(self):
+        # we test this on multicore setups, because they're setup are
+        # equal among all supported solr versions.
+        self._basic_multicore_install()
+        conf = self.getpath(
+            'parts', 'solr-mc', 'solr', 'core1', 'conf', 'solrconfig.xml')
+        ctime = os.stat(conf).st_ctime
+        time.sleep(1)
+        self.globs['system'](self.globs['buildout'])
+        self.assertEqual(os.stat(conf).st_ctime, ctime)
 
-    #     time.sleep(1)
-    #     buildout = self.globs['buildout']
-    #     self.globs['system'](buildout)
-    #     self.assertEqual(os.stat(solrconfig_file).st_ctime, ctime)
-
-    # def test_install_is_called_on_update_if_instance_not_exists(self):
-    #     self._basic_singlecore_install()
-    #     solrconfig_file = self.getpath(
-    #         'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
-    #     ctime = os.stat(solrconfig_file).st_ctime
-    #     shutil.rmtree(self.getpath('parts', 'solr'))
-
-    #     time.sleep(1)
-    #     buildout = self.globs['buildout']
-    #     self.globs['system'](buildout)
-    #     self.assertNotEqual(os.stat(solrconfig_file).st_ctime, ctime)
+    def test_install_is_called_on_update_if_instance_not_exists(self):
+        # we test this on multicore setups, because they're setup are
+        # equal among all supported solr versions.
+        self._basic_multicore_install()
+        conf = self.getpath(
+            'parts', 'solr-mc', 'solr', 'core1', 'conf', 'solrconfig.xml')
+        ctime = os.stat(conf).st_ctime
+        shutil.rmtree(self.getpath('parts', 'solr-mc'))
+        time.sleep(1)
+        self.globs['system'](self.globs['buildout'])
+        self.assertNotEqual(os.stat(conf).st_ctime, ctime)

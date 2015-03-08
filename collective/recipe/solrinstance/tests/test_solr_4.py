@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from collective.recipe.solrinstance.tests.test_solr_3 import Solr3TestCase
 import os
-import shutil
-import time
 
 
 class Solr4xTestCase(Solr3TestCase):
@@ -57,43 +55,18 @@ class Solr4xTestCase(Solr3TestCase):
             aI('<dataDir>{0:s}/var/solr/data/collection1</dataDir>'.format(
                 self.globs['sample_buildout']), c['config'])
 
-    def test_single_directory_factory_default(self):
-        self._basic_singlecore_install()
-        with self.use_core('parts', 'solr', 'solr', 'collection1') as c:
             self.assertIn('class="${solr.directoryFactory:solr.'
                           'NRTCachingDirectoryFactory}', c['config'])
 
-    def test_multicore_directory_factory(self):
-        self._basic_multicore_install()
+    def test_multicore_install(self):
+        super(Solr4xTestCase, self).test_multicore_install()
+
         with self.use_core('parts', 'solr-mc', 'solr', 'core1') as c:
             self.assertIn('class="${solr.directoryFactory:solr.'
                           'StandardDirectoryFactory}', c['config'])
         with self.use_core('parts', 'solr-mc', 'solr', 'core2') as c:
             self.assertIn('class="${solr.directoryFactory:solr.'
                           'RAMDirectoryFactory}', c['config'])
-
-    # def test_install_is_not_called_on_update_if_instance_exists(self):
-    #     self._basic_singlecore_install()
-    #     solrconfig_file = self.getpath(
-    #         'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
-    #     ctime = os.stat(solrconfig_file).st_ctime
-
-    #     time.sleep(1)
-    #     buildout = self.globs['buildout']
-    #     self.globs['system'](buildout)
-    #     self.assertEqual(os.stat(solrconfig_file).st_ctime, ctime)
-
-    # def test_install_is_called_on_update_if_instance_not_exists(self):
-    #     self._basic_singlecore_install()
-    #     solrconfig_file = self.getpath(
-    #         'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
-    #     ctime = os.stat(solrconfig_file).st_ctime
-    #     shutil.rmtree(self.getpath('parts', 'solr'))
-
-    #     time.sleep(1)
-    #     buildout = self.globs['buildout']
-    #     self.globs['system'](buildout)
-    #     self.assertNotEqual(os.stat(solrconfig_file).st_ctime, ctime)
 
 
 class Solr40TestCase(Solr4xTestCase):

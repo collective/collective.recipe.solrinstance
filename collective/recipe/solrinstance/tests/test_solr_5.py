@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from collective.recipe.solrinstance.tests.test_solr_4 import Solr4xTestCase
 import os
-import shutil
-import time
 
 
 class Solr5TestCase(Solr4xTestCase):
@@ -24,34 +22,16 @@ class Solr5TestCase(Solr4xTestCase):
             sample, 'server', 'solr', 'configsets',
             'sample_techproducts_configs', 'conf'))
 
-    def test_single_directory_factory_default(self):
-        self._basic_singlecore_install()
-        with self.use_core('parts', 'solr', 'solr') as c:
-            self.assertIn('class="${solr.directoryFactory:solr.'
-                          'NRTCachingDirectoryFactory}', c['config'])
+    def test_artifact_prefix(self):
+        self._basic_multicore_install()
+        with self.use_core('parts', 'solr-mc', 'solr', 'core1') as c:
+            self.assertNotIn('apache-', c['config'])
 
-    def test_install_is_not_called_on_update_if_instance_exists(self):
-        self._basic_singlecore_install()
-        solrconfig_file = self.getpath(
-            'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
-        ctime = os.stat(solrconfig_file).st_ctime
-
-        time.sleep(1)
-        buildout = self.globs['buildout']
-        self.globs['system'](buildout)
-        self.assertEqual(os.stat(solrconfig_file).st_ctime, ctime)
-
-    def test_install_is_called_on_update_if_instance_not_exists(self):
-        self._basic_singlecore_install()
-        solrconfig_file = self.getpath(
-            'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
-        ctime = os.stat(solrconfig_file).st_ctime
-        shutil.rmtree(self.getpath('parts', 'solr'))
-
-        time.sleep(1)
-        buildout = self.globs['buildout']
-        self.globs['system'](buildout)
-        self.assertNotEqual(os.stat(solrconfig_file).st_ctime, ctime)
+    def test_singlecore_install(self):
+        output = self._basic_singlecore_install()
+        self.assertIn('Error: Solr 5 no longer supports deprecated single '
+                      'core setups. Please use a multicore setup with one '
+                      'core.', output)
 
     def test_core_configuration_on_multicore_install(self):
         out = self._basic_multicore_install()

@@ -552,8 +552,8 @@ class MultiCoreSolrRecipe(object):
 
         # Copy the instance files
         self.copy_solr(
-           self.instance_dir,
-           self.install_dir
+            self.instance_dir,
+            self.install_dir
         )
 
         #
@@ -736,7 +736,7 @@ class MultiCoreSolrRecipe(object):
 
             self.install_core(core, options_core)
 
-        return ()
+        return (self.options['location'], )
 
     def update(self):
         """
@@ -747,9 +747,8 @@ class MultiCoreSolrRecipe(object):
         recreate it with a buildout update. We do this
         often while testing our application.
         """
-        if os.path.exists(self.install_dir):
-            pass
-        self.install()
+        if not os.path.exists(self.install_dir):
+            return self.install()
 
 
 class SingleCoreSolrRecipe(MultiCoreSolrRecipe):
@@ -762,7 +761,7 @@ class SingleCoreSolrRecipe(MultiCoreSolrRecipe):
         if self.solr_version < 4:
             self.install_base()
             self.install_core(self.name, self.options)
-            return ()
+            return (self.options['location'], )
 
         if self.solr_version == 4:
             return super(SingleCoreSolrRecipe, self).install()

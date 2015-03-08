@@ -1254,17 +1254,6 @@ and make sure regeneration happens when it should.
     ...       configuration.format(sample_buildout, 'value1', 'value2'))
     >>> print(system(buildout))
     Updating solr-mc.
-    solr-mc: Generated file 'jetty.xml'.
-    solr-mc: Generated file 'log4j.properties'.
-    solr-mc: Generated file 'logging.properties'.
-    solr-mc: Generated script 'solr-instance'.
-    solr-mc: Generated file 'solr.xml'.
-    core1: Generated file 'solrconfig.xml'.
-    core1: Generated file 'schema.xml'.
-    core1: Generated file 'stopwords.txt'.
-    core2: Generated file 'solrconfig.xml'.
-    core2: Generated file 'schema.xml'.
-    core2: Generated file 'stopwords.txt'.
     ...
 
 Firstly, make no changes. No files should be regenerated.
@@ -1281,17 +1270,6 @@ Now, modify one of the cores to ensure the configuration is regenerated.
     ...       configuration.format(sample_buildout, 'value1', 'value3'))
     >>> print(system(buildout))
     Updating solr-mc.
-    solr-mc: Generated file 'jetty.xml'.
-    solr-mc: Generated file 'log4j.properties'.
-    solr-mc: Generated file 'logging.properties'.
-    solr-mc: Generated script 'solr-instance'.
-    solr-mc: Generated file 'solr.xml'.
-    core1: Generated file 'solrconfig.xml'.
-    core1: Generated file 'schema.xml'.
-    core1: Generated file 'stopwords.txt'.
-    core2: Generated file 'solrconfig.xml'.
-    core2: Generated file 'schema.xml'.
-    core2: Generated file 'stopwords.txt'.
     ...
 
 Modify both cores and ensure configuration is still regenerated.
@@ -1300,17 +1278,6 @@ Modify both cores and ensure configuration is still regenerated.
     ...       configuration.format(sample_buildout, 'value2', 'value4'))
     >>> print(system(buildout))
     Updating solr-mc.
-    solr-mc: Generated file 'jetty.xml'.
-    solr-mc: Generated file 'log4j.properties'.
-    solr-mc: Generated file 'logging.properties'.
-    solr-mc: Generated script 'solr-instance'.
-    solr-mc: Generated file 'solr.xml'.
-    core1: Generated file 'solrconfig.xml'.
-    core1: Generated file 'schema.xml'.
-    core1: Generated file 'stopwords.txt'.
-    core2: Generated file 'solrconfig.xml'.
-    core2: Generated file 'schema.xml'.
-    core2: Generated file 'stopwords.txt'.
     ...
 
 Finally, re-run with both values changed to ensure no regeneration happens.

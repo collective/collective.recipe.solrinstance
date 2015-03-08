@@ -5,6 +5,8 @@ Change History
 6.0.0 (unreleased)
 ==================
 
+- Add tests for each solr version, fix doctests.
+  [saily]
 - Update templates to match to each solr version.
   [saily]
 - Refactor test boilerplate to support multiple solr versions.
