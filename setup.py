@@ -28,6 +28,9 @@ test_requires = requires + [
     'zope.testing',
 ]
 
+if sys.version_info <= (2, 7):
+    test_requires.append('unittest2')
+
 long_description = '\n'.join([
     read('README.rst'),
     read('CHANGES.rst'),

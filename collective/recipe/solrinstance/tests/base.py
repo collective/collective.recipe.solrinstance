@@ -4,7 +4,7 @@ from os.path import join
 from zc.buildout.testing import buildoutSetUp
 from zc.buildout.testing import buildoutTearDown
 from zc.buildout.testing import install_develop
-import unittest
+import unittest2 as unittest  # for py2.6
 
 BASE_CONF = """\
 [buildout]
