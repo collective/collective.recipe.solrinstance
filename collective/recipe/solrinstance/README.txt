@@ -71,6 +71,7 @@ Ok, let's run the buildout:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
 Check if the run script is here and the template substitution worked:
 
@@ -100,6 +101,7 @@ Also check that the XML files are where we expect them to be:
     -  schema.xml
     -  solrconfig.xml
     -  stopwords.txt
+    -  synonyms.txt
     -  test1.txt
     -  test2.txt
 
@@ -240,6 +242,7 @@ Files should support Unicode output if present in templates::
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
@@ -348,6 +351,7 @@ With the index set up correctly, things work again:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -381,6 +385,7 @@ There's no default for the default search field, however:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
@@ -423,6 +428,7 @@ You can also define extra field types:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -479,6 +485,7 @@ to be used to generate `schema.xml`:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema>
@@ -580,6 +587,7 @@ Additional solrconfig should also be allowed:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -621,6 +629,7 @@ Additional solrconfig query section should also be allowed:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -661,6 +670,7 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -698,6 +708,7 @@ Test autoCommit arguments:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -735,6 +746,7 @@ Testing the request parsers default limit:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -770,6 +782,7 @@ Test changing the request parsers limit:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -808,6 +821,7 @@ alternative template to be used to generate `solrconfig.xml`:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
     <config>
@@ -857,6 +871,7 @@ Solr instances to coexist in a single buildout:
     solr-main: Generated file 'solrconfig.xml'.
     solr-main: Generated file 'schema.xml'.
     solr-main: Generated file 'stopwords.txt'.
+    solr-main: Generated file 'synonyms.txt'.
     Installing solr-functest.
     solr-functest: Generated file 'jetty.xml'.
     solr-functest: Generated file 'log4j.properties'.
@@ -864,6 +879,7 @@ Solr instances to coexist in a single buildout:
     solr-functest: Generated file 'solrconfig.xml'.
     solr-functest: Generated file 'schema.xml'.
     solr-functest: Generated file 'stopwords.txt'.
+    solr-functest: Generated file 'synonyms.txt'.
 
     >>> ls(sample_buildout, 'var')
     d  solr-functest
@@ -908,6 +924,7 @@ Ok, let's run the buildout:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
 Check if the run script is here and the template substitution worked
 with java_opts:
@@ -1080,6 +1097,7 @@ Ok, let's run the buildout:
     core2: Generated file 'solrconfig.xml'.
     core2: Generated file 'schema.xml'.
     core2: Generated file 'stopwords.txt'.
+    core2: Generated file 'synonyms.txt'.
 
 See if there are all needed files:
 
@@ -1108,6 +1126,7 @@ See if there are all needed files in `core1`:
     - schema.xml
     - solrconfig.xml
     - stopwords.txt
+    - synonyms.txt
     - test1.txt
     - test2.txt
 
@@ -1117,6 +1136,7 @@ See if there are all needed files in `core2`:
     - schema.xml
     - solrconfig.xml
     - stopwords.txt
+    - synonyms.txt
     - test1.txt
     - test2.txt
 
@@ -1201,6 +1221,7 @@ Ok, let's run the buildout:
     core2: Generated file 'solrconfig.xml'.
     core2: Generated file 'schema.xml'.
     core2: Generated file 'stopwords.txt'.
+    core2: Generated file 'synonyms.txt'.
 
 The parameter should thus end up in ``solr.xml``:
 
@@ -1325,6 +1346,7 @@ Ok, let's run the buildout:
     collection1: Generated file 'solrconfig.xml'.
     collection1: Generated file 'schema.xml'.
     collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
 Also check that the XML files are where we expect them to be:
 
