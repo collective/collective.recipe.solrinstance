@@ -29,7 +29,7 @@
  http://wiki.apache.org/solr/SchemaXml
 -->
 
-<schema name="${options.options.name}" version="1.4">
+<schema name="${options.name}" version="1.4">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="1.4" is Solr's version number for the schema syntax and semantics.  It should
@@ -199,9 +199,9 @@
    -->
     <fieldtype name="geohash" class="solr.GeoHashField"/>
 
-    {% if options.options.extraFieldTypes %}\
+    {% if options.extraFieldTypes %}\
     <!-- Extra field types: -->
-    ${options.options.extraFieldTypes}
+    ${options.extraFieldTypes}
     {% end %}
 
  </types>
@@ -264,22 +264,26 @@
 
    <dynamicField name="tika_*" type="ignored" />
 
+   {% if options.additionalFieldConfig %}\
+     ${options.additionalFieldConfig}
+   {% end %}\
+
  </fields>
 
  <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
- {% if options.options.uniqueKey %}\
- <uniqueKey>${options.options.uniqueKey}</uniqueKey>
+ {% if options.uniqueKey %}\
+ <uniqueKey>${options.uniqueKey}</uniqueKey>
  {% end %}\
 
- {% if options.options.defaultSearchField %}\
+ {% if options.defaultSearchField %}\
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
- <defaultSearchField>${options.options.defaultSearchField}</defaultSearchField>
+ <defaultSearchField>${options.defaultSearchField}</defaultSearchField>
  {% end %}\
 
  <!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
- <solrQueryParser defaultOperator="${options.options.defaultOperator}"/>
+ <solrQueryParser defaultOperator="${options.defaultOperator}"/>
 
   <!-- copyField commands copy one field to another at the time a document
         is added to the index.  It's used either to index the same field differently,
@@ -291,9 +295,9 @@
   {% end %}\
   {% end %}\
 
-  {% if options.options.additionalSchemaConfig %}\
+  {% if options.additionalSchemaConfig %}\
   <!-- Additional schema configuration -->
-  ${options.options.additionalSchemaConfig}
+  ${options.additionalSchemaConfig}
   {% end %}\
 
 </schema>

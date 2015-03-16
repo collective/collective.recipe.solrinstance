@@ -2,6 +2,33 @@
 Change History
 **************
 
+6.0.0 (unreleased)
+==================
+
+- Copy over default sample core files into each created core
+  [saily]
+- Update documentation
+  [saily]
+- Add tests for each solr version, fix doctests.
+  [saily]
+- Update templates to match to each solr version.
+  [saily]
+- Refactor test boilerplate to support multiple solr versions.
+  [saily]
+- Refactoring, cleanup, pep8, etc. to support SOLR 5.0
+  [saily]
+- Cleanup ``options``, reduce reassignment of attributes
+  [saily]
+- Create template subfolders for each solr version we support within this
+  recipe.
+  [saily]
+- Integrate ``hexagonit.recipe.download`` to allow auto-downloading of solr
+  releases and avoid dealing around with different download locations. This
+  may be overridden by defining ``solr-location`` in your recipe definition, so
+  by default nothing will change if you update this recipe.
+  [saily]
+
+
 5.3.3 (unreleased)
 ==================
 
