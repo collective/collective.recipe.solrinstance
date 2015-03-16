@@ -70,6 +70,8 @@ setup(
         test=test_requires,
     ),
     test_suite='collective.recipe.solrinstance.tests.test_doctests.test_suite',
+    # TODO: Make multicore the default behavior in next major releases
+    # since its solr default setup since 5.0.0
     entry_points={
         "zc.buildout": [
             "default = collective.recipe.solrinstance:SingleCoreSolrRecipe",
