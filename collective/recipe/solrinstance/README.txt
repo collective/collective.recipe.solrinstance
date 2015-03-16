@@ -528,6 +528,7 @@ variable that can then be conveniently used in the template:
     solr: Generated file 'solrconfig.xml'.
     solr: Generated file 'schema.xml'.
     solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
 
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
     <schema name="foo">
@@ -1094,6 +1095,7 @@ Ok, let's run the buildout:
     core1: Generated file 'solrconfig.xml'.
     core1: Generated file 'schema.xml'.
     core1: Generated file 'stopwords.txt'.
+    core1: Generated file 'synonyms.txt'.
     core2: Generated file 'solrconfig.xml'.
     core2: Generated file 'schema.xml'.
     core2: Generated file 'stopwords.txt'.
@@ -1218,6 +1220,7 @@ Ok, let's run the buildout:
     core1: Generated file 'solrconfig.xml'.
     core1: Generated file 'schema.xml'.
     core1: Generated file 'stopwords.txt'.
+    core1: Generated file 'synonyms.txt'.
     core2: Generated file 'solrconfig.xml'.
     core2: Generated file 'schema.xml'.
     core2: Generated file 'stopwords.txt'.
@@ -1359,6 +1362,7 @@ Also check that the XML files are where we expect them to be:
     -  schema.xml
     -  solrconfig.xml
     -  stopwords.txt
+    -  synonyms.txt
     -  test1.txt
     -  test2.txt
 
