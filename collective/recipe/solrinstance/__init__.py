@@ -220,6 +220,16 @@ class MultiCoreSolrRecipe(object):
 
         return os.path.join(self.options['solr-location'], 'server')
 
+    @property
+    def sample_conf_dir(self):
+        base = os.path.join(self.instance_dir, 'solr')
+        if self.solr_version < 4:
+            return os.path.join(base, 'conf')
+        elif self.solr_version == 4:
+            return os.path.join(base, 'collection1', 'conf')
+
+        return os.path.join(base, 'configsets', 'basic_configs', 'conf')
+
     def solr_autoinstall(self):
         if self.solr_version not in DEFAULT_DOWNLOAD_URLS:
             raise zc.buildout.UserError(
@@ -560,7 +570,6 @@ class MultiCoreSolrRecipe(object):
             self.install_dir
         )
 
-        #
         if self.cores:
             shutil.rmtree(self.options['basedir'])
             os.makedirs(self.options['basedir'])
@@ -625,6 +634,9 @@ class MultiCoreSolrRecipe(object):
         make_dirs(options['basedir'])
         make_dirs(options['config-destination'])
         make_dirs(options['datadir'])
+
+        # Copy solr sampledata provided in sample_core
+        self.copy_solr(self.sample_conf_dir, options['config-destination'])
 
         # BBB: Support old customized schema.xml, solrconfig.xml files by
         # providing information to genshi templates on options.options

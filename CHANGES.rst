@@ -5,6 +5,8 @@ Change History
 6.0.0 (unreleased)
 ==================
 
+- Copy over default sample core files into each created core
+  [saily]
 - Update documentation
   [saily]
 - Add tests for each solr version, fix doctests.
