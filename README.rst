@@ -478,10 +478,10 @@ cores
     configuration.
 
 default-core-name
-    Optional. This option controls which core is set as the default for
-    incoming requests that do not specify a core name. This corresponds to
-    the ``defaultCoreName`` option described at
-    http://wiki.apache.org/solr/CoreAdmin#cores.
+    Optional and deprecated. This option controls which core is set as the
+    default for incoming requests that do not specify a core name. This
+    corresponds to the ``defaultCoreName`` option described at
+    http://wiki.apache.org/solr/CoreAdmin#cores. *No longer* used in Solr 5.
 
 Zope Integration
 ================
