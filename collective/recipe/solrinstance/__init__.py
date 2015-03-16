@@ -27,7 +27,7 @@ ZOPE_CONF = """
 
 INDEX_TYPES = set([
     'text', 'text_ws', 'ignored', 'date', 'string',
-    'boolean', 'integer', 'long', 'float', 'double'
+    'boolean', 'int', 'integer', 'long', 'float', 'double'
 ])
 
 INDEX_ATTRIBUTES = {'name': '',
@@ -146,6 +146,10 @@ class MultiCoreSolrRecipe(object):
         # Stopwords
         sd('stopwords-template', os.path.realpath(join(
             self.template_dir, '..', 'stopwords.txt.tmpl')))
+
+        # Synonyms
+        sd('synonyms-template', os.path.realpath(join(
+            self.template_dir, '..', 'synonyms.txt.tmpl')))
 
         # Solr defaults
         sd('max-num-results', '500')
@@ -679,8 +683,15 @@ class MultiCoreSolrRecipe(object):
             source=options['stopwords-template']
         )
 
-        # This may also contain a stopwords.txt file which overwrites the one
-        # created above.
+        # Synonyms
+        self._generate_from_template(
+            destination=options['config-destination'],
+            name='synonyms.txt',
+            source=options['synonyms-template']
+        )
+
+        # This may also contain a stopwords.txt & synonyms.txt
+        # file which overwrites the ones created above.
         self.copy_extra_conf(options)
         self.copy_files(
             os.path.join(self.instance_dir, 'solr', 'conf', '*.txt'),
