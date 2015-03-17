@@ -5,7 +5,9 @@ Change History
 6.0.0b2 (unreleased)
 ====================
 
-- Nothing changed yet.
+- Remove ``package_data`` from ``setup.py``. Files should be included
+  in ``MANIFEST.in``, see: http://bit.ly/19xqmCY
+  [saily]
 
 
 6.0.0b1 (2015-03-17)
