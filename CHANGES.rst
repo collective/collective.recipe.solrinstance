@@ -2,8 +2,8 @@
 Change History
 **************
 
-6.0.0 (unreleased)
-==================
+6.0.0b1 (2015-03-17)
+====================
 
 - Copy over default sample core files into each created core
   [saily]
