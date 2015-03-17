@@ -2,7 +2,7 @@
 Change History
 **************
 
-6.0.0b2 (unreleased)
+6.0.0b2 (2015-03-18)
 ====================
 
 - Remove ``package_data`` from ``setup.py``. Files should be included

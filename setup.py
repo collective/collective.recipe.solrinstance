@@ -4,7 +4,7 @@ from setuptools import setup
 import os
 import sys
 
-version = '6.0.0b2.dev0'
+version = '6.0.0b2'
 
 
 def read(name):
