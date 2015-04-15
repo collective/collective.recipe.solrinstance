@@ -5,6 +5,9 @@ Change History
 6.0.0b3 (unreleased)
 ====================
 
+- Fix a minor bug when using ``extralibs`` attribute
+  [saily]
+
 - Upgrade to most recent SOLR versions
   [saily]
 

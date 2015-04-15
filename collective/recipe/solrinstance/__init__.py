@@ -190,14 +190,17 @@ class MultiCoreSolrRecipe(object):
         sd('updateLog', 'false')
         sd('useColdSearcher', 'true')
 
-        # see self.extralibs property
-        self.options.pop('extralibs', None)
+        self._finalize_options(options, self.options)
 
+    def _finalize_options(self, source, target):
         # strip whitespaces
-        for k, v in options.items():
-            self.options[k] = v.strip()
+        for k, v in source.items():
+            target[k] = v.strip()
 
-        self.validate_options(self.options)
+        # see self.extralibs property
+        target.pop('extralibs', None)
+
+        self.validate_options(target)
 
     @property
     def solr_version(self):
@@ -749,8 +752,7 @@ class MultiCoreSolrRecipe(object):
 
             # options_core.update(self.buildout[core])
             # ... does not strip whitespaces from core buildout attributes
-            for k, v in self.buildout.get(core, {}).items():
-                options_core[k] = v.strip()
+            self._finalize_options(self.buildout.get(core, {}), options_core)
 
             options_core['basedir'] = core_dir
             options_core['datadir'] = data_dir
