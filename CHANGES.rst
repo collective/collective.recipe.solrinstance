@@ -5,7 +5,8 @@ Change History
 6.0.0b3 (unreleased)
 ====================
 
-- Nothing changed yet.
+- Upgrade to most recent SOLR versions
+  [saily]
 
 
 6.0.0b2 (2015-03-18)
