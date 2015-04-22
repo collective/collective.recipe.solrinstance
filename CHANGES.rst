@@ -2,7 +2,7 @@
 Change History
 **************
 
-6.0.0b3 (unreleased)
+6.0.0b3 (2015-04-22)
 ====================
 
 - Fix a minor bug when using ``extralibs`` attribute
