@@ -254,6 +254,9 @@
 
     <arr name="last-components">
       <str>spellcheck</str>
+      {% for component in options.default_handler_components %}
+      <str>${component}</str>
+      {% end %}
     </arr>
 
   </requestHandler>
