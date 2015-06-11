@@ -557,6 +557,48 @@ Without the custom template for `schema.xml` this should yield an error:
     ...
     Error: Invalid index attribute(s): foo. Allowed attributes are: ...
 
+Additional components can be added to the default request handler
+using defaultHandlerComponents:
+
+    >>> rmdir(sample_buildout, 'parts', 'solr')
+    >>> write(sample_buildout, 'buildout.cfg',
+    ... """
+    ... [buildout]
+    ... parts = solr
+    ...
+    ... [solr]
+    ... recipe = collective.recipe.solrinstance
+    ... solr-version = 3
+    ... solr-location = {0}
+    ... schema-template = schema.xml
+    ... unique-key =
+    ... index =
+    ...     name:Foo type:text foo:bar another:one
+    ...     name:Bar type:text
+    ... defaultHandlerComponents =
+    ...     elevator
+    ... """.format(sample_buildout))
+    >>> print(system(buildout))
+    Installing solr.
+    solr: Generated file 'jetty.xml'.
+    solr: Generated file 'log4j.properties'.
+    solr: Generated file 'logging.properties'.
+    solr: Generated script 'solr-instance'.
+    solr: Generated file 'solrconfig.xml'.
+    solr: Generated file 'schema.xml'.
+    solr: Generated file 'stopwords.txt'.
+    solr: Generated file 'synonyms.txt'.
+
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    <?xml version="1.0" encoding="UTF-8" ?>
+    ...
+        <arr name="last-components">
+    ...
+          <str>elevator</str>
+    ...
+      </requestHandler>
+    ...
+
 Additional solrconfig should also be allowed:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')
@@ -580,6 +622,7 @@ Additional solrconfig should also be allowed:
     ...     </foo>
     ... """.format(sample_buildout))
     >>> print(system(buildout))
+    Uninstalling solr.
     Installing solr.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.

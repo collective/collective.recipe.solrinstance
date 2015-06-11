@@ -266,6 +266,13 @@ class MultiCoreSolrRecipe(object):
 
         return extralibs
 
+    def get_default_handler_components(self, options):
+        components = []
+        option_dhc = options.get('defaultHandlerComponents', '').strip()
+        for comp in option_dhc.splitlines():
+            components.append(comp.strip())
+        return components
+
     def copy_solr(self, source, destination):
         for sourcedir, dirs, files in os.walk(source):
             relpath = os.path.relpath(sourcedir, source)
@@ -656,6 +663,8 @@ class MultiCoreSolrRecipe(object):
 
         # Config
         self._generate_from_template(
+            default_handler_components=self.get_default_handler_components(
+                options),
             additional_solrconfig=options['additional-solrconfig'],
             additional_solrconfig_query=options[
                 'additional-solrconfig-query'],
