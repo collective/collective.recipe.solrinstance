@@ -5,6 +5,11 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Remove startup-script generation for solr 5 and use it's shipped script.
+  Generate environment file to have no migration effort in most default
+  use-cases.
+  [saily]
+
 - Added option defaultHandlerComponents
   [reinhardt]
 

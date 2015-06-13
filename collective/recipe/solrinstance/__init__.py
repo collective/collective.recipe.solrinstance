@@ -13,7 +13,7 @@ import sys
 import zc.buildout
 
 DEFAULT_DOWNLOAD_URLS = {
-    5: 'http://archive.apache.org/dist/lucene/solr/5.1.0/solr-5.1.0.tgz',
+    5: 'http://archive.apache.org/dist/lucene/solr/5.2.0/solr-5.2.0.tgz',
     4: 'http://archive.apache.org/dist/lucene/solr/4.10.4/solr-4.10.4.tgz',
     3: 'http://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.tgz'
 }
@@ -593,16 +593,6 @@ class MultiCoreSolrRecipe(object):
             os.path.join(self.install_dir, 'contrib')
         )
 
-        # Jetty
-        self._generate_from_template(
-            destination=self.options['jetty-destination'],
-            name='jetty.xml',
-            serverhost=self.options['host'],  # BBB use host in jetty.xml.tpl
-            serverport=self.options['port'],  # BBB use port in jetty.xml.tpl
-            source=self.options['jetty-template'],
-            **self.options
-        )
-
         # Log4j
         self._generate_from_template(
             destination=self.options['jetty-destination'],
@@ -617,23 +607,49 @@ class MultiCoreSolrRecipe(object):
             **self.options
         )
 
-        # Startup script
-        if self.options['script']:
+        if self.solr_version >= 5:
+            shutil.copy2(
+                os.path.join(self.options['solr-location'], 'bin', 'solr'),
+                os.path.join(self.buildout['buildout']['bin-directory'],
+                             self.options['script'])
+            )
+
+            # ENV
             self._generate_from_template(
                 destination=self.buildout['buildout']['bin-directory'],
-                executable=True,
-                logfile=os.path.join(self.options['logdir'], 'solr.log'),
-                name=self.options['script'],
-                pidfile=os.path.join(self.options['pidpath'], 'solr.pid'),
-                solrdir=self.install_dir,
-                source=os.path.join(self.template_dir, 'solr-instance.tmpl'),
-                updateurl='http://{0:s}:{1:s}/solr/update'.format(
-                    self.options['host'],
-                    self.options['port']
-                ),
-                startcmd=self.java_opts,
+                source=os.path.join(self.template_dir, 'solr.in.tmpl'),
+                name='solr.in.sh',
                 **self.options
             )
+        else:
+            # Jetty
+            self._generate_from_template(
+                destination=self.options['jetty-destination'],
+                name='jetty.xml',
+                serverhost=self.options['host'],  # use host in jetty.xml.tpl
+                serverport=self.options['port'],  # use port in jetty.xml.tpl
+                source=self.options['jetty-template'],
+                **self.options
+            )
+
+            # Startup script
+            if self.options['script']:
+                self._generate_from_template(
+                    destination=self.buildout['buildout']['bin-directory'],
+                    executable=True,
+                    logfile=os.path.join(self.options['logdir'], 'solr.log'),
+                    name=self.options['script'],
+                    pidfile=os.path.join(self.options['pidpath'], 'solr.pid'),
+                    solrdir=self.install_dir,
+                    source=os.path.join(
+                        self.template_dir, 'solr-instance.tmpl'),
+                    updateurl='http://{0:s}:{1:s}/solr/update'.format(
+                        self.options['host'],
+                        self.options['port']
+                    ),
+                    startcmd=self.java_opts,
+                    **self.options
+                )
 
     def install_core(self, name, options):
 
