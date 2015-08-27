@@ -15,7 +15,6 @@ import zc.buildout
 DEFAULT_DOWNLOAD_URLS = {
     5: 'http://archive.apache.org/dist/lucene/solr/5.1.0/solr-5.1.0.tgz',
     4: 'http://archive.apache.org/dist/lucene/solr/4.10.4/solr-4.10.4.tgz',
-    3: 'http://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.tgz'
 }
 
 ZOPE_CONF = """
