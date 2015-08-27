@@ -5,6 +5,10 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Change port configuration so that it can be overwritten on
+  the command line with -Djetty-port=9999
+  [do3cc]
+
 - Added option defaultHandlerComponents
   [reinhardt]
 
