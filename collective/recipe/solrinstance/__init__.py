@@ -573,6 +573,8 @@ class MultiCoreSolrRecipe(object):
         make_dirs(self.options['logdir'])
         make_dirs(self.options['datadir'])
         make_dirs(self.options['pidpath'])
+        make_dirs(os.path.join(self.options['location'], 'lib', 'ext'))
+
 
         # Copy the instance files
         self.copy_solr(
@@ -721,6 +723,14 @@ class MultiCoreSolrRecipe(object):
             os.path.join(self.instance_dir, 'solr', 'conf', '*.txt'),
             options['config-destination']
         )
+
+        # Copy global extra libs
+        for global_extra_libs_folder in\
+                self.options['global-extra-libs'].split('\n'):
+            self.copy_files(
+                global_extra_libs_folder.strip() + '/*',
+                os.path.join(self.options['location'], 'lib', 'ext')
+            )
 
         # New style core.properties file, see:
         # https://cwiki.apache.org/confluence/display/solr/Defining+core.properties

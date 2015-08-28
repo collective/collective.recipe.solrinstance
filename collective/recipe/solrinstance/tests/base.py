@@ -41,6 +41,8 @@ additionalFieldConfig =
    <dynamicField name="*_public" type="string" indexed="true" stored="true"  multiValued="true"/>
    <dynamicField name="*_restricted" type="string" indexed="true" stored="true"  multiValued="true"/>
 
+global-extra-libs = {global_extra_libs:s}
+
 char-filter =
     text_ws solr.HTMLStripCharFilterFactory
 char-filter-index =

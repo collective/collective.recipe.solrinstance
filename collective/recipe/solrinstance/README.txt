@@ -723,6 +723,8 @@ solr-cell, ...). You can do this with the `extralibs`-option.
       <lib dir="/my/lava/libs" regex=".*\.jar" />
     ...
 
+You can also add libraries globally. This can be useful if you want solr to log to Sentry. All files for each directory declared in `global-extra-libs` get copied to the right location.
+
 Test autoCommit arguments:
 
     >>> rmdir(sample_buildout, 'parts', 'solr')

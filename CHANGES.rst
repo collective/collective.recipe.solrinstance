@@ -5,6 +5,9 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Add option ``global-extra-libs``.
+  [do3cc]
+
 - Added option defaultHandlerComponents
   [reinhardt]
 

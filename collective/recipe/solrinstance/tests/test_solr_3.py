@@ -5,6 +5,7 @@ from collective.recipe.solrinstance.tests.base import SolrBaseTestCase
 import os
 import shutil
 import time
+from pkg_resources import resource_filename
 
 
 class Solr3TestCase(SolrBaseTestCase):
@@ -20,11 +21,19 @@ class Solr3TestCase(SolrBaseTestCase):
         os.makedirs(os.path.join(sample, 'contrib'))
 
     def _basic_singlecore_install(self):
+        extra_lib = resource_filename('collective.recipe.solrinstance',
+                                      'tests/global_extra_libs')
+
+        global_extra_libs = "\n    {first}\n    {second}".format(
+            first=extra_lib,
+            second=extra_lib)
         self.create_sample_download_directories()
-        config = SINGLE_CORE_CONF.format(addon="""
+        config = SINGLE_CORE_CONF.format(
+            addon="""
 solr-version={0}
 solr-location={1}
-""".format(self.version, self.globs['sample_buildout']))
+            """.format(self.version, self.globs['sample_buildout']),
+            global_extra_libs=global_extra_libs)
         return self._basic_install(config)
 
     def _basic_multicore_install(self):
@@ -77,6 +86,10 @@ solr-location={1}
             aI('<int name="rows">99</int>', c['config'])
             aI('<dataDir>{0:s}/var/solr/data</dataDir>'.format(
                 self.globs['sample_buildout']), c['config'])
+
+        # Global Extra Libs
+        global_libs_location = self.getpath('parts', 'solr', 'lib', 'ext')
+        self.assertEqual(['notajar.txt'], os.listdir(global_libs_location))
 
     def test_multicore_install(self):
         out = self._basic_multicore_install()
