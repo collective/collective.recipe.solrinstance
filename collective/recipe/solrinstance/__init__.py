@@ -549,7 +549,7 @@ class MultiCoreSolrRecipe(object):
         for core in self.options['cores'].split():
             if core in cores:
                 raise zc.buildout.UserError(
-                    'Core {0} was already defined.'.format(core))
+                    'Core {0} was already defined.'.format(repr(core)))
 
             cores.append(core.strip())
 
