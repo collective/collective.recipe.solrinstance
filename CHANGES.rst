@@ -5,6 +5,10 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Allow to pass on additional arguments on ./bin/{__buildout_section_name__} start
+  For example, ./bin/solr-instance start -Dhttp.port=9999
+  [do3cc]
+
 - Change port configuration so that it can be overwritten on
   the command line with -Djetty-port=9999
   [do3cc]
