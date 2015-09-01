@@ -728,6 +728,8 @@ class MultiCoreSolrRecipe(object):
         # Copy global extra libs
         for global_extra_libs_folder in\
                 self.options['global-extra-libs'].split('\n'):
+            if not global_extra_libs_folder.strip():
+                continue
             self.copy_files(
                 global_extra_libs_folder.strip() + '/*',
                 os.path.join(self.options['location'], 'lib', 'ext')
