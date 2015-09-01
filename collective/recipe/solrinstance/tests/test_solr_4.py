@@ -62,7 +62,8 @@ solr-location={1}
 
         # Jetty
         jetty_file = self.getfile('parts', 'solr', 'etc', 'jetty.xml')
-        self.assertTrue('<Set name="port">1234</Set>' in jetty_file)
+        self.assertTrue('<Set name="port"><SystemProperty name="jetty.port"'
+                        ' default="1234" /></Set>' in jetty_file)
 
         # Schema
         with self.use_core('parts', 'solr', 'solr', 'collection1') as c:

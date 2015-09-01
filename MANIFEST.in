@@ -1,6 +1,7 @@
 recursive-include collective *
 include *.rst *.txt
 global-exclude *.pyc
+global-exclude *.un~
 exclude bootstrap.py
 exclude *.cfg
 exclude .coveragerc
