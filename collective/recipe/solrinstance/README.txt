@@ -93,8 +93,10 @@ Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
-    -  log4j.properties
     -  logging.properties
+
+    >>> ls(sample_buildout, 'parts', 'solr', 'resources')
+    -  log4j.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf')
     -  bar.txt
@@ -1427,7 +1429,6 @@ Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
-    -  log4j.properties
     -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'collection1' , 'conf')
