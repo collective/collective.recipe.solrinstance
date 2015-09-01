@@ -11,6 +11,9 @@ Change History
 - Removed solr 3 support
   [do3cc]
 
+- Put log4j properties file into the right location
+  [do3cc]
+
 6.0.0b3 (2015-04-22)
 ====================
 

@@ -125,6 +125,7 @@ class MultiCoreSolrRecipe(object):
 
         # jetty
         sd('jetty-destination', join(self.install_dir, 'etc'))
+        sd('jetty-resources', join(self.install_dir, 'resources'))
         sd('jetty-template', join(self.template_dir, 'jetty.xml.tmpl'))
 
         # log4j
@@ -604,7 +605,7 @@ class MultiCoreSolrRecipe(object):
 
         # Log4j
         self._generate_from_template(
-            destination=self.options['jetty-destination'],
+            destination=self.options['jetty-resources'],
             name='log4j.properties',
             source=self.options['log4j-template'],
             **self.options
