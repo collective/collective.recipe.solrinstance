@@ -573,6 +573,7 @@ class MultiCoreSolrRecipe(object):
         make_dirs(self.options['logdir'])
         make_dirs(self.options['datadir'])
         make_dirs(self.options['pidpath'])
+        make_dirs(self.options['jetty-resources'])
 
         # Copy the instance files
         self.copy_solr(
