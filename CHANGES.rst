@@ -8,6 +8,8 @@ Change History
 - Added option defaultHandlerComponents
   [reinhardt]
 
+- Removed solr 3 support
+  [do3cc]
 
 6.0.0b3 (2015-04-22)
 ====================
