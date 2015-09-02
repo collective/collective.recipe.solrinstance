@@ -85,7 +85,7 @@ Check if the run script is here and the template substitution worked:
     ...
     SOLR_DIR = r'.../parts/solr'
     ...
-    START_CMD = ['java', '-jar', 'start.jar']
+    START_CMD = ['java', '-jar', ... 'start.jar']
     UPDATE_URL = r'http://127.0.0.1:1234/solr/update'
     ...
 
@@ -93,10 +93,8 @@ Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
-    -  logging.properties
-
-    >>> ls(sample_buildout, 'parts', 'solr', 'resources')
     -  log4j.properties
+    -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf')
     -  bar.txt
@@ -1008,7 +1006,7 @@ with java_opts:
     import signal
     import sys, os
     ...
-    START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
+    START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', '-Dlog4j.configuration... 'start.jar']
     ...
 
 Testing multicore
@@ -1427,6 +1425,7 @@ Also check that the XML files are where we expect them to be:
 
     >>> ls(sample_buildout, 'parts', 'solr', 'etc')
     -  jetty.xml
+    -  log4j.properties
     -  logging.properties
 
     >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'collection1' , 'conf')
