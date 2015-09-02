@@ -125,7 +125,6 @@ class MultiCoreSolrRecipe(object):
 
         # jetty
         sd('jetty-destination', join(self.install_dir, 'etc'))
-        sd('jetty-resources', join(self.install_dir, 'resources'))
         sd('jetty-template', join(self.template_dir, 'jetty.xml.tmpl'))
 
         # log4j
@@ -382,12 +381,23 @@ class MultiCoreSolrRecipe(object):
         """Parsed the java opts from `options`. """
         _start = ['java', '-jar']
         _jar = 'start.jar'
+        _default_options = [('-Dlog4j.configuration',
+                             'file://{0}/log4j.properties'
+                             .format(self.options['jetty-destination']))]
         if not self.options['java_opts']:
             cmd_opts = _start
         else:
             _opts = self.options['java_opts'].splitlines()
             cmd_opts = _start + _opts
+        for key, value in _default_options:
+            if filter(lambda entry: entry.startswith(key), cmd_opts):
+                continue
+            if value:
+                cmd_opts.append('='.join([key, value]))
+            else:
+                cmd_opts.append(key)
         cmd_opts.append(_jar)
+
         return cmd_opts
 
     def _split_index_line(self, line):
@@ -573,7 +583,6 @@ class MultiCoreSolrRecipe(object):
         make_dirs(self.options['logdir'])
         make_dirs(self.options['datadir'])
         make_dirs(self.options['pidpath'])
-        make_dirs(self.options['jetty-resources'])
 
         # Copy the instance files
         self.copy_solr(
@@ -606,7 +615,7 @@ class MultiCoreSolrRecipe(object):
 
         # Log4j
         self._generate_from_template(
-            destination=self.options['jetty-resources'],
+            destination=self.options['jetty-destination'],
             name='log4j.properties',
             source=self.options['log4j-template'],
             **self.options
