@@ -399,13 +399,13 @@ class MultiCoreSolrRecipe(object):
                 # allowed.
                 if len(params) == 0:
                     raise zc.buildout.UserError(
-                        'Invalid index definition: %s' % line)
+                        'Invalid index definition: {0}'.format(line))
                 params[len(params) - 1] += ' ' + each
             else:
                 params.append(each)
         return params
 
-    def get_indexes(self, options):
+    def get_indexes(self, options):  # NOQA
         """Parses the index definitions from the options."""
         indexAttrs = set(INDEX_ATTRIBUTES.keys())
         indeces = []
@@ -549,7 +549,7 @@ class MultiCoreSolrRecipe(object):
         for core in self.options['cores'].split():
             if core in cores:
                 raise zc.buildout.UserError(
-                    'Core %r was already defined.' % core)
+                    'Core {0} was already defined.'.format(repr(core)))
 
             cores.append(core.strip())
 
