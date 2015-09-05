@@ -113,7 +113,7 @@ And make sure the substitution worked for all files.
     >>> cat(sample_buildout, 'parts', 'solr', 'etc', 'jetty.xml')
     <?xml version="1.0"?>
     ...
-    <Set name="port">1234</Set>
+    <Set name="port"><SystemProperty name="jetty.port" default="1234" /></Set>
     ...
 
 `schema.xml`:
