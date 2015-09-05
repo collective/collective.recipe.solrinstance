@@ -24,7 +24,7 @@ https://github.com/collective/collective.recipe.solrinstance
 Notes
 =====
 
-- This version of the recipe supports Solr 3.5, 4.x, and 5.x.
+- This version of the recipe supports Solr 4.x and 5.x.
   Please use a release from the 2.x series if you are using Solr 1.4.
 
 - This version supports Genshi_ templates **only**. Please use a release
@@ -521,7 +521,7 @@ A simple example how a single Solr configuration could look like this::
     [solr-download]
     recipe = hexagonit.recipe.download
     strip-top-level-dir = true
-    url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/3.5.0/apache-solr-3.5.0.zip
+    url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/4.10.0/apache-solr-4.10.0.zip
 
     [solr]
     recipe = collective.recipe.solrinstance
@@ -561,7 +561,7 @@ configuration could look like the following::
     [solr-download]
     recipe = hexagonit.recipe.download
     strip-top-level-dir = true
-    url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/3.5.0/apache-solr-3.5.0.zip
+    url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/4.10.0/apache-solr-4.10.0.zip
 
     [solr-mc]
     recipe = collective.recipe.solrinstance:mc

@@ -28,10 +28,15 @@ class SolrSmokeTestCase(SolrBaseTestCase):
         output = self._basic_install(config)
         self.assertIn('Error: Solr 2.x is not supported.', output)
 
+    def test_unsupported_solr3_install(self):
+        config = BASE_CONF.format(addon='\nsolr-version = 3')
+        output = self._basic_install(config)
+        self.assertIn('Error: Solr 3.x is not supported.', output)
+
     def test_duplicate_core_definition_on_multicore_setup(self):
         self.create_sample_download_directories()
         config = BASE_CONF.format(addon=""":mc
-solr-version = 3
+solr-version = 4
 solr-location = {0}
 cores =
     core1 core2
@@ -46,7 +51,7 @@ cores =
     def test_solr_install_invalid_config_missing_uid_index(self):
         self.create_sample_download_directories()
         config = BASE_CONF.format(addon="""
-solr-version = 3
+solr-version = 4
 solr-location = {0}
 unique-key = uid
 index =
@@ -62,7 +67,7 @@ index =
     def test_solr_install_invalid_config_duplicate_fields(self):
         self.create_sample_download_directories()
         config = BASE_CONF.format(addon="""
-solr-version = 3
+solr-version = 4
 solr-location = {0}
 unique-key = uniqueID
 index =
@@ -82,7 +87,7 @@ index =
     def test_solr_install_invalid_num_results(self):
         self.create_sample_download_directories()
         config = BASE_CONF.format(addon="""
-solr-version = 3
+solr-version = 4
 solr-location = {0}
 unique-key = uniqueID
 max-num-results = -1
@@ -98,7 +103,7 @@ index =
     def test_solr_install_invalid_default_operator(self):
         self.create_sample_download_directories()
         config = BASE_CONF.format(addon="""
-solr-version = 3
+solr-version = 4
 solr-location = {0}
 unique-key = uniqueID
 default-operator = and

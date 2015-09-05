@@ -16,7 +16,7 @@ extracted in the parts directory:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
     ... port = 1234
@@ -68,10 +68,11 @@ Ok, let's run the buildout:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
 Check if the run script is here and the template substitution worked:
 
@@ -95,7 +96,7 @@ Also check that the XML files are where we expect them to be:
     -  log4j.properties
     -  logging.properties
 
-    >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'conf')
+    >>> ls(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf')
     -  bar.txt
     -  foo.txt
     -  schema.xml
@@ -117,7 +118,7 @@ And make sure the substitution worked for all files.
 
 `schema.xml`:
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <filter class="Baz" foo="bar" juca="bala"/>
@@ -131,27 +132,33 @@ And make sure the substitution worked for all files.
     <field name="uniqueID" type="string" indexed="true"
            stored="true" required="true" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     <field name="Foo" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     <field name="Bar" type="date" indexed="false"
            stored="false" required="true" multiValued="true"
            omitNorms="true" termVectors="false"
-           termPositions="false" termOffsets="false"/>
+           termPositions="false" termOffsets="false"
+           />
     <field name="Foo bar" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     <field name="Baz" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     <field name="Everything" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     ...
     <uniqueKey>uniqueID</uniqueKey>
     ...
@@ -163,17 +170,17 @@ And make sure the substitution worked for all files.
 
 `solrconfig.xml`:
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
-    <dataDir>.../var/solr/data</dataDir>
+    <dataDir>.../var/solr/data/collection1</dataDir>
     ...
     <int name="rows">99</int>
     ...
 
 `stopwords.txt`:
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'stopwords.txt')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'stopwords.txt')
     # Standard english stop words taken from Lucene's StopAnalyzer
     a
     an
@@ -201,7 +208,7 @@ unique key.  Without a matching index this yields an error, though:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key = uniqueID
     ... index =
@@ -226,7 +233,7 @@ Files should support Unicode output if present in templates::
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = unicode_test.xml
     ... unique-key =
@@ -239,12 +246,13 @@ Files should support Unicode output if present in templates::
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <schema>
     <!-- Mønti Pythøn ik den Hølie Gräilen. A Møøse once bit my sister... -->
     </schema>
@@ -263,7 +271,7 @@ bit stupid, but oh well:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key = uniqueID
     ... index =
@@ -286,7 +294,7 @@ in the generated xml either:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key =
     ... index =
@@ -297,7 +305,7 @@ in the generated xml either:
     ...
     >>> def read(*path):
     ...     return open(os.path.join(*path)).read()
-    >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     >>> schema.index('<uniqueKey>')
     Traceback (most recent call last):
     ...
@@ -314,7 +322,7 @@ matching index to be set up:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... default-search-field = Foo
     ... unique-key =
@@ -335,7 +343,7 @@ With the index set up correctly, things work again:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... default-search-field = Foo
     ... unique-key =
@@ -348,12 +356,13 @@ With the index set up correctly, things work again:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <defaultSearchField>Foo</defaultSearchField>
@@ -369,7 +378,7 @@ There's no default for the default search field, however:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key =
     ... index =
@@ -382,12 +391,13 @@ There's no default for the default search field, however:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> schema = read(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     >>> schema.index('<defaultSearchField>')
     Traceback (most recent call last):
     ...
@@ -403,7 +413,7 @@ You can also define extra field types:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key =
     ... extra-field-types =
@@ -425,12 +435,13 @@ You can also define extra field types:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <types>
@@ -447,11 +458,13 @@ You can also define extra field types:
     <field name="Foo" type="foo_type" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     <field name="Bar" type="bar_type" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     ...
 
 For more complex setups it's also possible to specify an alternative template
@@ -469,7 +482,7 @@ to be used to generate `schema.xml`:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = alt_schema.xml
     ... unique-key =
@@ -482,12 +495,13 @@ to be used to generate `schema.xml`:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <schema>
     schema here
     </schema>
@@ -510,7 +524,7 @@ variable that can then be conveniently used in the template:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -525,12 +539,13 @@ variable that can then be conveniently used in the template:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'schema.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <schema name="foo">
     <field name="Foo" another="one" foo="bar" />
     <field name="Bar" />
@@ -546,7 +561,7 @@ Without the custom template for `schema.xml` this should yield an error:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key =
     ... index =
@@ -568,7 +583,7 @@ using defaultHandlerComponents:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -584,12 +599,13 @@ using defaultHandlerComponents:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
         <arr name="last-components">
@@ -609,7 +625,7 @@ Additional solrconfig should also be allowed:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -628,12 +644,13 @@ Additional solrconfig should also be allowed:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <foo attr="value1">
@@ -651,7 +668,7 @@ Additional solrconfig query section should also be allowed:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -670,12 +687,13 @@ Additional solrconfig query section should also be allowed:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <listener event="firstSearcher">
@@ -695,7 +713,7 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key = Foo
     ... index =
@@ -711,12 +729,13 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
       <lib dir="/foo/bar" regex=".*\.jarx" />
@@ -733,7 +752,7 @@ Test autoCommit arguments:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -749,12 +768,13 @@ Test autoCommit arguments:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <autoCommit>
@@ -773,7 +793,7 @@ Testing the request parsers default limit:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -787,12 +807,13 @@ Testing the request parsers default limit:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="102400" />
@@ -808,7 +829,7 @@ Test changing the request parsers limit:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... schema-template = schema.xml
     ... unique-key =
@@ -823,12 +844,13 @@ Test changing the request parsers limit:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
     <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="4096" />
@@ -849,7 +871,7 @@ alternative template to be used to generate `solrconfig.xml`:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... config-template = alt_solrconfig.xml
     ... unique-key =
@@ -862,12 +884,13 @@ alternative template to be used to generate `solrconfig.xml`:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
-    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'conf', 'solrconfig.xml')
+    >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'solrconfig.xml')
     <config>
     configure me here
     </config>
@@ -888,7 +911,7 @@ Solr instances to coexist in a single buildout:
     ...
     ... [solr-main]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key =
     ... index =
@@ -897,7 +920,7 @@ Solr instances to coexist in a single buildout:
     ...
     ... [solr-functest]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... unique-key =
     ... index =
@@ -912,18 +935,20 @@ Solr instances to coexist in a single buildout:
     solr-main: Generated file 'log4j.properties'.
     solr-main: Generated file 'logging.properties'.
     solr-main: Generated script 'solr-main'.
-    solr-main: Generated file 'solrconfig.xml'.
-    solr-main: Generated file 'schema.xml'.
-    solr-main: Generated file 'stopwords.txt'.
-    solr-main: Generated file 'synonyms.txt'.
+    solr-main: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
     Installing solr-functest.
     solr-functest: Generated file 'jetty.xml'.
     solr-functest: Generated file 'log4j.properties'.
     solr-functest: Generated file 'logging.properties'.
-    solr-functest: Generated file 'solrconfig.xml'.
-    solr-functest: Generated file 'schema.xml'.
-    solr-functest: Generated file 'stopwords.txt'.
-    solr-functest: Generated file 'synonyms.txt'.
+    solr-functest: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
     >>> ls(sample_buildout, 'var')
     d  solr-functest
@@ -941,7 +966,7 @@ Testing the java_opts optional params:
     ...
     ... [solr]
     ... recipe = collective.recipe.solrinstance
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
     ... port = 1234
@@ -965,10 +990,11 @@ Ok, let's run the buildout:
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
     solr: Generated script 'solr-instance'.
-    solr: Generated file 'solrconfig.xml'.
-    solr: Generated file 'schema.xml'.
-    solr: Generated file 'stopwords.txt'.
-    solr: Generated file 'synonyms.txt'.
+    solr: Generated file 'solr.xml'.
+    collection1: Generated file 'solrconfig.xml'.
+    collection1: Generated file 'schema.xml'.
+    collection1: Generated file 'stopwords.txt'.
+    collection1: Generated file 'synonyms.txt'.
 
 Check if the run script is here and the template substitution worked
 with java_opts:
@@ -996,7 +1022,7 @@ Testing multicore recipe without cores:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
     ... port = 1234
@@ -1025,7 +1051,7 @@ Testing multicore recipe with wrong cores:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
     ... cores =
@@ -1059,7 +1085,7 @@ Test our first core:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
     ... port = 1234
@@ -1157,7 +1183,7 @@ See if there is ``solr.xml``:
     <?xml...
     <solr persistent="true">
     ...
-      <cores adminPath="/admin/cores">
+      <cores adminPath="/admin/cores"...
         <core name="core1" instanceDir="core1" />
         <core name="core2" instanceDir="core2" />
       </cores>
@@ -1191,36 +1217,37 @@ See if name is set in `schema.xml`:
     <?xml...
     <schema ...
     <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100"...
+      <analyzer type="query">
+        <charFilter class="solr.HTMLStripCharFilterFactory" />
+        <tokenizer class="solr.WhitespaceTokenizerFactory" />
+        <filter class="Baz" foo="bar" juca="bala"/>
+      </analyzer>
       <analyzer type="index">
         <charFilter class="solr.HTMLStripCharFilterFactory" />
         <charFilter class="solr.MappingCharFilterFactory" mapping="my-mapping.txt"/>
         <tokenizer class="solr.WhitespaceTokenizerFactory" />
         <filter class="Baz" foo="bar" juca="bala"/>
       </analyzer>
-      <analyzer type="query">
-        <charFilter class="solr.HTMLStripCharFilterFactory" />
-        <tokenizer class="solr.WhitespaceTokenizerFactory" />
-        <filter class="Baz" foo="bar" juca="bala"/>
-      </analyzer>
     </fieldType>...
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100"...
-      <analyzer type="index">
-        <tokenizer class="solr.StandardTokenizerFactory" />
-        <filter class="solr.ISOLatin1AccentFilterFactory" />
-        <filter class="solr.LowerCaseFilterFactory" />
-      </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.WhitespaceTokenizerFactory" />
         <filter class="solr.ISOLatin1AccentFilterFactory" />
         <filter class="solr.LowerCaseFilterFactory" />
         <filter class="solr.PorterStemFilterFactory" />
       </analyzer>
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory" />
+        <filter class="solr.ISOLatin1AccentFilterFactory" />
+        <filter class="solr.LowerCaseFilterFactory" />
+      </analyzer>
     </fieldType>
     ...
     <field name="BlaWS" type="text_ws" indexed="true"
            stored="true" required="false" multiValued="false"
            termVectors="false" termPositions="false"
-           termOffsets="false"/>
+           termOffsets="false"
+           />
     ...
 
 You can specify a default core with ``default-core-name``:
@@ -1232,7 +1259,7 @@ You can specify a default core with ``default-core-name``:
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... cores =
     ...     core1
@@ -1275,7 +1302,7 @@ The parameter should thus end up in ``solr.xml``:
     <?xml...
     <solr persistent="true">
     ...
-      <cores adminPath="/admin/cores" defaultCoreName="core1">
+      <cores adminPath="/admin/cores" defaultCoreName="core1"...
         <core name="core1" instanceDir="core1" />
         <core name="core2" instanceDir="core2" />
       </cores>
@@ -1294,7 +1321,7 @@ and make sure regeneration happens when it should.
     ...
     ... [solr-mc]
     ... recipe = collective.recipe.solrinstance:mc
-    ... solr-version = 3
+    ... solr-version = 4
     ... solr-location = {0}
     ... cores =
     ...     core1
