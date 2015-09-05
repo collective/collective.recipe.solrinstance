@@ -5,6 +5,9 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Add option ``global-extra-libs``.
+  [do3cc]
+
 - Allow to pass on additional arguments on ./bin/{__buildout_section_name__} start
   For example, ./bin/solr-instance start -Dhttp.port=9999
   [do3cc]
@@ -18,6 +21,7 @@ Change History
 
 - Removed solr 3 support
   [do3cc]
+
 
 6.0.0b3 (2015-04-22)
 ====================
