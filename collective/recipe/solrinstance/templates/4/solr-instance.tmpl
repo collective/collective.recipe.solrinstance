@@ -73,6 +73,12 @@ def stop():
 
         os.unlink(PID_FILE)
         print("Solr stopped successfully.")
+    except OSError, e:
+        if e.errno == 3:
+            # errno 3: No such process
+            os.unlink(PID_FILE)
+        else:
+            raise
     except (IOError, OSError):
         print("Error occured: Solr probably not stopped ...")
 
