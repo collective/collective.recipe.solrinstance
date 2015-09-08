@@ -382,12 +382,23 @@ class MultiCoreSolrRecipe(object):
         """Parsed the java opts from `options`. """
         _start = ['java', '-jar']
         _jar = 'start.jar'
+        _default_options = [('-Dlog4j.configuration',
+                             'file://{0}/log4j.properties'
+                             .format(self.options['jetty-destination']))]
         if not self.options['java_opts']:
             cmd_opts = _start
         else:
             _opts = self.options['java_opts'].splitlines()
             cmd_opts = _start + _opts
+        for key, value in _default_options:
+            if filter(lambda entry: entry.startswith(key), cmd_opts):
+                continue
+            if value:
+                cmd_opts.append('='.join([key, value]))
+            else:
+                cmd_opts.append(key)
         cmd_opts.append(_jar)
+
         return cmd_opts
 
     def _split_index_line(self, line):
@@ -574,7 +585,6 @@ class MultiCoreSolrRecipe(object):
         make_dirs(self.options['datadir'])
         make_dirs(self.options['pidpath'])
         make_dirs(os.path.join(self.options['location'], 'lib', 'ext'))
-
 
         # Copy the instance files
         self.copy_solr(

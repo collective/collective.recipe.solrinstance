@@ -85,7 +85,7 @@ Check if the run script is here and the template substitution worked:
     ...
     SOLR_DIR = r'.../parts/solr'
     ...
-    START_CMD = ['java', '-jar', 'start.jar']
+    START_CMD = ['java', '-jar', ... 'start.jar']
     UPDATE_URL = r'http://127.0.0.1:1234/solr/update'
     ...
 
@@ -1008,7 +1008,7 @@ with java_opts:
     import signal
     import sys, os
     ...
-    START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', 'start.jar']
+    START_CMD = ['java', '-jar', '-Xms512M', '-Xmx1024M', '-Dlog4j.configuration... 'start.jar']
     ...
 
 Testing multicore
