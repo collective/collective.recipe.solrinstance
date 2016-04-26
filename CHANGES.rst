@@ -11,6 +11,8 @@ Change History
 - Update request handler in ``solrconfig.xml`` to avoid deprecation warnings
   for SOLR 4.  [mgrbyte]
 
+- Fix schema and stop words template location.
+  [gforcada]
 
 5.3.2 (2014-08-27)
 ==================
