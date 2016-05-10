@@ -2,7 +2,7 @@
 Change History
 **************
 
-5.3.3 (unreleased)
+5.3.3 (2016-05-10)
 ==================
 
 - Added ``requestParsers-enableRemoteStreaming`` to allow configuring remote
