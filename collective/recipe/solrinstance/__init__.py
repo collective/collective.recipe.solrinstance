@@ -465,10 +465,8 @@ class MultiCoreSolrRecipe(object):
                 if key == 'copyfield':
                     entry[key] = [{'source': entry['name'], 'dest':val}
                                   for val in value]
-                elif key in ('name', 'extras', 'default'):
+                elif key in ('name', 'extras', 'default', 'type'):
                     entry[key] = value
-                elif key == 'type':
-                    entry[key] = value.lower()
                 elif key in ('omitnorms',
                              'storeOffsetsWithPositions') and not value:
                     # don't override omitNorms default value
