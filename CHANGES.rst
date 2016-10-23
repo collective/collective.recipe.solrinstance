@@ -5,6 +5,9 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Allow for case sensitive field type names, fix testing
+  [tschorr]
+
 - Add option ``global-extra-libs``.
   [do3cc]
 

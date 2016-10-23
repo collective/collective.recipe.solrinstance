@@ -30,6 +30,7 @@ extracted in the parts directory:
     ...     name:Foo bar type:text
     ...     name:Baz type:text
     ...     name:Everything type:text
+    ...     name:camelCaseType type:alphaOnlySort stored:false
     ... tokenizer =
     ...     text solr.KeywordTokenizerFactory
     ... filter =
@@ -86,6 +87,7 @@ Check if the run script is here and the template substitution worked:
     SOLR_DIR = r'.../parts/solr'
     ...
     START_CMD = ['java', '-jar', ... 'start.jar']
+    ...
     UPDATE_URL = r'http://127.0.0.1:1234/solr/update'
     ...
 
@@ -121,6 +123,7 @@ And make sure the substitution worked for all files.
     >>> cat(sample_buildout, 'parts', 'solr', 'solr', 'collection1', 'conf', 'schema.xml')
     <?xml version="1.0" encoding="UTF-8" ?>
     ...
+
     <filter class="Baz" foo="bar" juca="bala"/>
     ...
     <charFilter class="solr.HTMLStripCharFilterFactory" />
@@ -128,6 +131,8 @@ And make sure the substitution worked for all files.
     <filter class="solr.ISOLatin1AccentFilterFactory" />
     ...
     <tokenizer class="solr.KeywordTokenizerFactory" />
+    ...
+    <fieldType name="alphaOnlySort" class="solr.TextField" sortMissingLast="true" omitNorms="true">
     ...
     <field name="uniqueID" type="string" indexed="true"
            stored="true" required="true" multiValued="false"
@@ -156,6 +161,11 @@ And make sure the substitution worked for all files.
            />
     <field name="Everything" type="text" indexed="true"
            stored="true" required="false" multiValued="false"
+           termVectors="false" termPositions="false"
+           termOffsets="false"
+           />
+    <field name="camelCaseType" type="alphaOnlySort" indexed="true"
+           stored="false" required="false" multiValued="false"
            termVectors="false" termPositions="false"
            termOffsets="false"
            />
