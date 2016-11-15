@@ -24,8 +24,10 @@ https://github.com/collective/collective.recipe.solrinstance
 Notes
 =====
 
-- This version of the recipe supports Solr 4.x and 5.x.
+- This version of the recipe supports Solr 4.x and 5.0.x and 5.1.x.
   Please use a release from the 2.x series if you are using Solr 1.4.
+  Please use a release from the 5.x series if you are using Solr 3.5.
+  Solr 5.2 and higher are not supported yet.
 
 - This version supports Genshi_ templates **only**. Please use a release
   less than 5.x if you require Cheetah_ templating and do not require
@@ -215,7 +217,7 @@ directoryFactory
 defaultHandlerComponents
     Additional components that will be added to the default request handler.
     This is a list of component names - note that the actual components need
-    to be defined in the configuration separately (either by default or using 
+    to be defined in the configuration separately (either by default or using
     additional-solrconfig).
 
 additional-solrconfig
@@ -469,7 +471,7 @@ Multi-core
 
 The following options only apply if ``collective.recipe.solrinstance:mc`` is
 specified. They are optional if the normal recipe is being used.
-All options defined in the solr-instance section will we inherited to cores.
+All options defined in the solr-instance section will be inherited to cores.
 A core could override a previous defined option.
 
 cores
