@@ -1040,6 +1040,8 @@ Testing multicore recipe without cores:
     ... port = 1234
     ... max-num-results = 99
     ... section-name = SOLR
+    ... unique-key =
+    ... index =
     ... java_opts =
     ...     -Xms512M
     ...     -Xmx1024M
@@ -1050,11 +1052,12 @@ Ok, let's run the buildout:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr-mc.
-    While:
-      Installing solr-mc.
-    Error: Missing option: solr-mc:cores
+    solr-mc: No cores option defined. Using collection1.
+    ...
+    collection1: Generated file 'solrconfig.xml'.
+    ...
 
-Testing multicore recipe with wrong cores:
+Testing multicore recipe without cores:
 
     >>> write(sample_buildout, 'buildout.cfg',
     ... """
@@ -1070,6 +1073,8 @@ Testing multicore recipe with wrong cores:
     ... port = 1234
     ... max-num-results = 99
     ... section-name = SOLR
+    ... unique-key =
+    ... index =
     ... java_opts =
     ...     -Xms512M
     ...     -Xmx1024M
@@ -1078,12 +1083,12 @@ Testing multicore recipe with wrong cores:
 Ok, let's run the buildout:
 
     >>> print(system(buildout))
+    Uninstalling solr-mc.
     Installing solr-mc.
-    While:
-      Installing solr-mc.
-    Error: Attribute `cores` is not correctly defined. Define as a whitespace
-    or line separated list like `cores = X1 X2 X3`
-
+    solr-mc: No cores option defined. Using collection1.
+    ...
+    collection1: Generated file 'solrconfig.xml'.
+    ...
 
 Note that you can specify the ``cores`` option as either newline separated or
 other whitespace separated.
@@ -1167,6 +1172,7 @@ Test our first core:
 Ok, let's run the buildout:
 
     >>> print(system(buildout))
+    Uninstalling solr-mc.
     Installing solr-mc.
     solr-mc: Generated file 'jetty.xml'.
     solr-mc: Generated file 'log4j.properties'.

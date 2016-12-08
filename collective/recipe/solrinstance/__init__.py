@@ -17,6 +17,8 @@ DEFAULT_DOWNLOAD_URLS = {
     4: 'http://archive.apache.org/dist/lucene/solr/4.10.4/solr-4.10.4.tgz',
 }
 
+STANDARD_CORE_NAME = 'collection1'
+
 ZOPE_CONF = """
 <product-config {section-name:s}>
     address {host:s}:{port:s}
@@ -421,7 +423,7 @@ class MultiCoreSolrRecipe(object):
         indexAttrs = set(INDEX_ATTRIBUTES.keys())
         indeces = []
         names = []
-        for line in options['index'].strip().splitlines():
+        for line in options.get('index', '').strip().splitlines():
             if line.strip().startswith('#'):
                 continue  # Allow comments
             entry = {}
@@ -555,7 +557,7 @@ class MultiCoreSolrRecipe(object):
     @property
     def cores(self):
         cores = []
-        for core in self.options['cores'].split():
+        for core in self.options.get('cores', '').split():
             if core in cores:
                 raise zc.buildout.UserError(
                     'Core {0} was already defined.'.format(repr(core)))
@@ -563,10 +565,9 @@ class MultiCoreSolrRecipe(object):
             cores.append(core.strip())
 
         if not cores:
-            raise zc.buildout.UserError(
-                'Attribute `cores` is not correctly defined. Define as a '
-                'whitespace or line separated list like `cores = X1 X2 X3`'
-            )
+            cores = [STANDARD_CORE_NAME]
+            self.logger.info('No cores option defined. Using %s.',
+                             STANDARD_CORE_NAME)
 
         return cores
 
@@ -809,7 +810,7 @@ class SingleCoreSolrRecipe(MultiCoreSolrRecipe):
     """Builds a single core solr setup - DEPRECATED"""
 
     # This collection1 demo core is used by solr 4 only.
-    cores = ['collection1', ]
+    cores = [STANDARD_CORE_NAME, ]
 
     def install(self):
         if self.solr_version < 4:

@@ -5,6 +5,11 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- When the ``cores`` option is not used, use ``collection1`` as core name.
+  This eases migration from previous versions of this recipe.
+  `Issue #43 <https://github.com/collective/collective.recipe.solrinstance/issues/43>`_.
+  [maurits]
+
 - Allow for case sensitive field type names, fix testing
   [tschorr]
 
