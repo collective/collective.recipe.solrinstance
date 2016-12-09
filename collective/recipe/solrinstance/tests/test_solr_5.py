@@ -28,10 +28,13 @@ class Solr5TestCase(Solr4xTestCase):
             self.assertNotIn('apache-', c['config'])
 
     def test_singlecore_install(self):
+        # We refused single core for Solr 5 for a while,
+        # but we now just do a multicore setup with one core.
         output = self._basic_singlecore_install()
-        self.assertIn('Error: Solr 5 no longer supports deprecated single '
-                      'core setups. Please use a multicore setup with one '
-                      'core.', output)
+        self.assertIn(
+            'solr: No cores option defined. Using collection1.', output)
+        self.assertIn(
+            "collection1: Generated file 'solrconfig.xml'", output)
 
     def test_core_configuration_on_multicore_install(self):
         out = self._basic_multicore_install()

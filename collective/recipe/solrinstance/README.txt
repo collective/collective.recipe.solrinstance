@@ -65,6 +65,7 @@ Ok, let's run the buildout:
 
     >>> print(system(buildout))
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -252,6 +253,7 @@ Files should support Unicode output if present in templates::
 
     >>> print(system(buildout))
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -362,6 +364,7 @@ With the index set up correctly, things work again:
     ... """.format(sample_buildout))
     >>> print(system(buildout))
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -397,6 +400,7 @@ There's no default for the default search field, however:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -441,6 +445,7 @@ You can also define extra field types:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -501,6 +506,7 @@ to be used to generate `schema.xml`:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -545,6 +551,7 @@ variable that can then be conveniently used in the template:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -605,6 +612,7 @@ using defaultHandlerComponents:
     ... """.format(sample_buildout))
     >>> print(system(buildout))
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -650,6 +658,7 @@ Additional solrconfig should also be allowed:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -693,6 +702,7 @@ Additional solrconfig query section should also be allowed:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -735,6 +745,7 @@ solr-cell, ...). You can do this with the `extralibs`-option.
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -776,6 +787,7 @@ Test autoCommit arguments:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -815,6 +827,7 @@ Testing the request parsers default limit:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -852,6 +865,7 @@ Test changing the request parsers limit:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -892,6 +906,7 @@ alternative template to be used to generate `solrconfig.xml`:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -943,6 +958,7 @@ Solr instances to coexist in a single buildout:
     >>> print(system(buildout))
     Uninstalling solr.
     Installing solr-main.
+    solr-main: No cores option defined. Using collection1.
     solr-main: Generated file 'jetty.xml'.
     solr-main: Generated file 'log4j.properties'.
     solr-main: Generated file 'logging.properties'.
@@ -953,6 +969,7 @@ Solr instances to coexist in a single buildout:
     collection1: Generated file 'stopwords.txt'.
     collection1: Generated file 'synonyms.txt'.
     Installing solr-functest.
+    solr-functest: No cores option defined. Using collection1.
     solr-functest: Generated file 'jetty.xml'.
     solr-functest: Generated file 'log4j.properties'.
     solr-functest: Generated file 'logging.properties'.
@@ -998,6 +1015,7 @@ Ok, let's run the buildout:
     Uninstalling solr-functest.
     Uninstalling solr-main.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.
@@ -1429,6 +1447,7 @@ Ok, let's run the buildout:
     >>> print(system(buildout))
     Uninstalling solr-mc.
     Installing solr.
+    solr: No cores option defined. Using collection1.
     solr: Generated file 'jetty.xml'.
     solr: Generated file 'log4j.properties'.
     solr: Generated file 'logging.properties'.

@@ -215,7 +215,7 @@ directoryFactory
 defaultHandlerComponents
     Additional components that will be added to the default request handler.
     This is a list of component names - note that the actual components need
-    to be defined in the configuration separately (either by default or using 
+    to be defined in the configuration separately (either by default or using
     additional-solrconfig).
 
 additional-solrconfig
