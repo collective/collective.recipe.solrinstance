@@ -17,6 +17,8 @@ DEFAULT_DOWNLOAD_URLS = {
     4: 'http://archive.apache.org/dist/lucene/solr/4.10.4/solr-4.10.4.tgz',
 }
 
+STANDARD_CORE_NAME = 'collection1'
+
 ZOPE_CONF = """
 <product-config {section-name:s}>
     address {host:s}:{port:s}
@@ -421,7 +423,7 @@ class MultiCoreSolrRecipe(object):
         indexAttrs = set(INDEX_ATTRIBUTES.keys())
         indeces = []
         names = []
-        for line in options['index'].strip().splitlines():
+        for line in options.get('index', '').strip().splitlines():
             if line.strip().startswith('#'):
                 continue  # Allow comments
             entry = {}
@@ -554,8 +556,10 @@ class MultiCoreSolrRecipe(object):
 
     @property
     def cores(self):
+        if hasattr(self, '_cores'):
+            return self._cores
         cores = []
-        for core in self.options['cores'].split():
+        for core in self.options.get('cores', '').split():
             if core in cores:
                 raise zc.buildout.UserError(
                     'Core {0} was already defined.'.format(repr(core)))
@@ -563,11 +567,11 @@ class MultiCoreSolrRecipe(object):
             cores.append(core.strip())
 
         if not cores:
-            raise zc.buildout.UserError(
-                'Attribute `cores` is not correctly defined. Define as a '
-                'whitespace or line separated list like `cores = X1 X2 X3`'
-            )
+            cores = [STANDARD_CORE_NAME]
+            self.logger.info('No cores option defined. Using %s.',
+                             STANDARD_CORE_NAME)
 
+        self._cores = cores
         return cores
 
     def install_base(self):
@@ -806,21 +810,17 @@ class MultiCoreSolrRecipe(object):
 
 
 class SingleCoreSolrRecipe(MultiCoreSolrRecipe):
-    """Builds a single core solr setup - DEPRECATED"""
+    """Builds a single core solr setup.
 
-    # This collection1 demo core is used by solr 4 only.
-    cores = ['collection1', ]
+    'collection1' is used as default core name.  But if a 'cores' option
+    is specified anyway, this works fine for multi core.
+    """
 
     def install(self):
         if self.solr_version < 4:
+            self._cores = [STANDARD_CORE_NAME]
             self.install_base()
             self.install_core(self.name, self.options)
             return (self.options['location'], )
 
-        if self.solr_version == 4:
-            return super(SingleCoreSolrRecipe, self).install()
-
-        raise zc.buildout.UserError(
-            'Solr {0} no longer supports deprecated single core setups. '
-            'Please use a multicore setup with one core.'.format(
-                self.solr_version))
+        return super(SingleCoreSolrRecipe, self).install()
