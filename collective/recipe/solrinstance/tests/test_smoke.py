@@ -45,7 +45,6 @@ cores =
         output = self._basic_install(config)
 
         aI = self.assertIn
-        aI('Installing solr.', output)
         aI('Error: Core \'core1\' was already defined.', output)
 
     def test_solr_install_invalid_config_missing_uid_index(self):
