@@ -202,6 +202,13 @@ class MultiCoreSolrRecipe(object):
         # see self.extralibs property
         target.pop('extralibs', None)
 
+        # Copy options from the cores, otherwise a change in a core will not
+        # result in a rebuild of the Solr instance.  Note that when the core
+        # name is the default 'collection1' it may not be in the buildout
+        # sections.  This logic should not break then.
+        for core in self.cores:
+            self.options['core-config-' + core] = str(self.buildout.get(core))
+
         self.validate_options(target)
 
     @property

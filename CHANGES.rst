@@ -5,6 +5,11 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Recreate Solr instance when changing an option in a core.
+  This issue was fixed before, but came back.
+  Fixes `issue #58 <https://github.com/collective/collective.recipe.solrinstance/issues/58>`_.
+  [maurits]
+
 - When the ``cores`` option is not used, use ``collection1`` as core name.
   This eases migration from previous versions of this recipe.
   `Issue #43 <https://github.com/collective/collective.recipe.solrinstance/issues/43>`_.
