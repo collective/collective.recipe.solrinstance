@@ -61,6 +61,9 @@ setup(
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages=['collective', 'collective.recipe'],
     include_package_data=True,
+    package_data={
+        'collective.recipe.solrinstance': ['templates/*', 'templates4/*'],
+    },
     zip_safe=False,
     install_requires=requires,
     extras_require=dict(
