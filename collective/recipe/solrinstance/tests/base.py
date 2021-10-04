@@ -4,7 +4,9 @@ from os.path import join
 from zc.buildout.testing import buildoutSetUp
 from zc.buildout.testing import buildoutTearDown
 from zc.buildout.testing import install_develop
+
 import sys
+
 
 if sys.version_info <= (2, 7):
     import unittest2 as unittest  # for py2.6
@@ -149,18 +151,18 @@ class SolrBaseTestCase(unittest.TestCase):
 
     def setUp(self):
         buildoutSetUp(self)
-        install_develop('Genshi', self)
-        install_develop('collective.recipe.solrinstance', self)
-        install_develop('hexagonit.recipe.download', self)
-        install_develop('zope.exceptions', self)
-        install_develop('zope.interface', self)
-        install_develop('zope.testing', self)
+        install_develop("Genshi", self)
+        install_develop("collective.recipe.solrinstance", self)
+        install_develop("hexagonit.recipe.download", self)
+        install_develop("zope.exceptions", self)
+        install_develop("zope.interface", self)
+        install_develop("zope.testing", self)
 
     def tearDown(self):
         buildoutTearDown(self)
 
     def getpath(self, *args):
-        return join(*([self.globs['sample_buildout']] + list(args)))
+        return join(*([self.globs["sample_buildout"]] + list(args)))
 
     def getfile(self, *args):
         filepath = self.getpath(*args)
@@ -170,32 +172,32 @@ class SolrBaseTestCase(unittest.TestCase):
     def _test_field_types(self, schema_file):
         self.assertIn('analyzer type="index"', schema_file)
         self.assertIn('analyzer type="query"', schema_file)
-        self.assertIn('<charFilter class="solr.HTMLStripCharFilterFactory',
-                      schema_file)
-        self.assertIn('<charFilter class="solr.MappingCharFilterFactory" '
-                      'mapping="my-mapping.txt"', schema_file)
-        self.assertIn('<tokenizer class="solr.WhitespaceTokenizerFactory',
-                      schema_file)
+        self.assertIn('<charFilter class="solr.HTMLStripCharFilterFactory', schema_file)
+        self.assertIn(
+            '<charFilter class="solr.MappingCharFilterFactory" '
+            'mapping="my-mapping.txt"',
+            schema_file,
+        )
+        self.assertIn('<tokenizer class="solr.WhitespaceTokenizerFactory', schema_file)
         self.assertIn('<filter class="Baz"', schema_file)
-        self.assertIn('<filter class="solr.PorterStemFilterFactory',
-                      schema_file)
+        self.assertIn('<filter class="solr.PorterStemFilterFactory', schema_file)
         self.assertIn('dynamicField name="*_public" ', schema_file)
         self.assertIn('dynamicField name="*_restricted" ', schema_file)
 
     def _basic_install(self, config):
-        buildout = join(self.globs['sample_buildout'], 'buildout.cfg')
-        with open(buildout, 'w') as fh:
+        buildout = join(self.globs["sample_buildout"], "buildout.cfg")
+        with open(buildout, "w") as fh:
             fh.write(config)
-        buildout = self.globs['buildout']
-        output = self.globs['system'](buildout)
+        buildout = self.globs["buildout"]
+        output = self.globs["system"](buildout)
         return output
 
     @contextmanager
     def use_core(self, *paths):
         core = {
-            'name': paths[-1],
-            'schema': self.getfile(*(paths + ('conf', 'schema.xml'))),
-            'config': self.getfile(*(paths + ('conf', 'solrconfig.xml')))
+            "name": paths[-1],
+            "schema": self.getfile(*(paths + ("conf", "schema.xml"))),
+            "config": self.getfile(*(paths + ("conf", "solrconfig.xml"))),
         }
 
         yield core
