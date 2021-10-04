@@ -1056,7 +1056,7 @@ Testing multicore recipe without cores:
     ... parts = solr-mc
     ...
     ... [solr-mc]
-    ... recipe = collective.recipe.solrinstance:mc
+    ... recipe = collective.recipe.solrinstance
     ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
@@ -1088,7 +1088,7 @@ Testing multicore recipe without cores:
     ... parts = solr-mc
     ...
     ... [solr-mc]
-    ... recipe = collective.recipe.solrinstance:mc
+    ... recipe = collective.recipe.solrinstance
     ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
@@ -1124,7 +1124,7 @@ Test our first core:
     ... parts = solr-mc
     ...
     ... [solr-mc]
-    ... recipe = collective.recipe.solrinstance:mc
+    ... recipe = collective.recipe.solrinstance
     ... solr-version = 4
     ... solr-location = {0}
     ... host = 127.0.0.1
@@ -1299,7 +1299,7 @@ You can specify a default core with ``default-core-name``:
     ... parts = solr-mc
     ...
     ... [solr-mc]
-    ... recipe = collective.recipe.solrinstance:mc
+    ... recipe = collective.recipe.solrinstance
     ... solr-version = 4
     ... solr-location = {0}
     ... cores =
@@ -1361,7 +1361,7 @@ and make sure regeneration happens when it should.
     ... parts = solr-mc
     ...
     ... [solr-mc]
-    ... recipe = collective.recipe.solrinstance:mc
+    ... recipe = collective.recipe.solrinstance
     ... solr-version = 4
     ... solr-location = {0}
     ... cores =

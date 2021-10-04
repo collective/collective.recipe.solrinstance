@@ -467,8 +467,6 @@ additionalFieldConfig
 Multi-core
 ==========
 
-The following options only apply if ``collective.recipe.solrinstance:mc`` is
-specified. They are optional if the normal recipe is being used.
 All options defined in the solr-instance section will be inherited to cores.
 A core could override a previous defined option.
 
@@ -550,9 +548,7 @@ A simple example how a single Solr configuration could look like this::
 Multi-core Solr
 ===============
 
-To configure Solr for multiple cores, you must use the
-``collective.recipe.solrinstance:mc`` recipe. An example of a multi-core Solr
-configuration could look like the following::
+An example of a multi-core Solr configuration could look like the following::
 
     [buildout]
     parts = solr-download
@@ -564,7 +560,7 @@ configuration could look like the following::
     url = http://mirrorservice.nomedia.no/apache.org//lucene/solr/4.10.0/apache-solr-4.10.0.zip
 
     [solr-mc]
-    recipe = collective.recipe.solrinstance:mc
+    recipe = collective.recipe.solrinstance
     solr-location = ${solr-download:location}
     host = 127.0.0.1
     port = 1234

@@ -18,6 +18,7 @@ requires = [
     "Genshi>=0.7.0",
     "hexagonit.recipe.download",
     "zc.buildout>=2.0.0a1",
+    "zope.deprecation",
 ]
 
 test_requires = requires + [
@@ -72,11 +73,11 @@ setup(
         test=test_requires,
     ),
     test_suite="collective.recipe.solrinstance.tests.test_doctests.test_suite",
-    # TODO: Make multicore the default behavior in next major releases
-    # since its solr default setup since 5.0.0
+    # TODO: Remove the mc entry point in next major releases
+    # since from collective.recip.solrinstance 6 it is identical to the default
     entry_points={
         "zc.buildout": [
-            "default = collective.recipe.solrinstance:SingleCoreSolrRecipe",
+            "default = collective.recipe.solrinstance:SolrRecipe",
             "mc = collective.recipe.solrinstance:MultiCoreSolrRecipe",
         ]
     },

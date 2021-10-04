@@ -19,6 +19,7 @@ def setUp(test):
     install_develop("collective.recipe.solrinstance", test)
     install_develop("genshi", test)
     install_develop("hexagonit.recipe.download", test)
+    install_develop("zope.deprecation", test)
     install_develop("zope.exceptions", test)
     install_develop("zope.interface", test)
     install_develop("zope.testing", test)
