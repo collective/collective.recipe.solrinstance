@@ -5,6 +5,9 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Added support for Python 3.6, Python 3.7 and Python 3.8
+  [ale-rt]
+
 - Recreate Solr instance when changing an option in a core.
   This issue was fixed before, but came back.
   Fixes `issue #58 <https://github.com/collective/collective.recipe.solrinstance/issues/58>`_.

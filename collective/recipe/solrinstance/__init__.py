@@ -444,7 +444,7 @@ class MultiCoreSolrRecipe(object):
             _opts = self.options["java_opts"].splitlines()
             cmd_opts = _start + _opts
         for key, value in _default_options:
-            if filter(lambda entry: entry.startswith(key), cmd_opts):
+            if any(entry.startswith(key) for entry in cmd_opts):
                 continue
             if value:
                 cmd_opts.append("=".join([key, value]))
@@ -603,8 +603,8 @@ class MultiCoreSolrRecipe(object):
 
         if options["default-operator"] not in ALLOWED_OPERATORS:
             raise zc.buildout.UserError(
-                "Only one of {0:s} allowed as default-operator.".format(
-                    ALLOWED_OPERATORS
+                "Only one of {} allowed as default-operator.".format(
+                    str(ALLOWED_OPERATORS)
                 )
             )
 

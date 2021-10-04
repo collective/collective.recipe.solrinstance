@@ -15,18 +15,11 @@ def read(name):
 
 requires = [
     "setuptools",
+    "Genshi>=0.7.0",
     "hexagonit.recipe.download",
+    "zc.buildout>=2.0.0a1",
 ]
-if sys.version_info >= (3,):
-    requires += [
-        "Genshi>=0.7.0",
-        "zc.buildout>=2.0.0a1",
-    ]
-else:
-    requires += [
-        "Genshi",
-        "zc.buildout",
-    ]
+
 test_requires = requires + [
     "zope.exceptions",
     "zope.interface",
@@ -61,6 +54,9 @@ setup(
         "Topic :: Software Development :: Build Tools",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     keywords="solr buildout recipe",
     author="Kai Lautaportti",
