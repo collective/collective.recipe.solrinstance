@@ -269,7 +269,7 @@ class MultiCoreSolrRecipe(object):
                 path, regex = lib.split(':', 1)
             else:
                 path = lib
-                regex = ".*\.jar"
+                regex = r".*\.jar"
             if path.strip():
                 extralibs.append({'path': path, 'regex': regex})
 

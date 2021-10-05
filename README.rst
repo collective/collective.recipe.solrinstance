@@ -12,10 +12,8 @@ search, caching, replication, and a web administration interface
 Git Repository and issue tracker:
 https://github.com/collective/collective.recipe.solrinstance
 
-.. |travisci| image::  https://travis-ci.org/collective/collective.recipe.solrinstance.png
-.. _travisci: https://travis-ci.org/collective/collective.recipe.solrinstance
-
-|travisci|_
+.. image:: https://github.com/collective/collective.recipe.solrinstance/workflows/tests/badge.svg
+    :target: https://github.com/collective/collective.recipe.solrinstance/actions?query=workflow%3Atests
 
 .. _Solr : http://lucene.apache.org/solr/
 .. _Lucene : http://lucene.apache.org/java/docs/index.html
