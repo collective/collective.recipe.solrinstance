@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from collective.recipe.solrinstance.tests.base import BASE_CONF
 from collective.recipe.solrinstance.tests.base import SolrBaseTestCase
-
 import os
 
 
@@ -17,6 +16,10 @@ class SolrSmokeTestCase(SolrBaseTestCase):
     def test_missing_solr_version(self):
         output = self._basic_install(BASE_CONF.format(addon=""))
         self.assertIn("Error: Missing option: solr:solr-version", output)
+
+    def test_mc_deprecation(self):
+        output = self._basic_install(BASE_CONF.format(addon=":mc\n"))
+        self.assertIn("The :mc variant of this recipe is deprecated", output)
 
     def test_unsupported_solr1_install(self):
         config = BASE_CONF.format(addon="\nsolr-version = 1")
@@ -36,7 +39,7 @@ class SolrSmokeTestCase(SolrBaseTestCase):
     def test_duplicate_core_definition_on_multicore_setup(self):
         self.create_sample_download_directories()
         config = BASE_CONF.format(
-            addon=""":mc
+            addon="""
 solr-version = 4
 solr-location = {0}
 cores =

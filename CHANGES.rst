@@ -5,6 +5,10 @@ Change History
 6.0.0b4 (unreleased)
 ====================
 
+- Deprecate the ``:mc`` variant of this recipe.
+  Since we support Solr >=4 the variant is identical to the default one.
+  [ale-rt]
+
 - Added support for Python 3.6, Python 3.7 and Python 3.8
   [ale-rt]
 

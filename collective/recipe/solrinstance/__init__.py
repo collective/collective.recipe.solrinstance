@@ -5,6 +5,7 @@ from genshi.template.base import TemplateSyntaxError
 from genshi.template.eval import UndefinedError
 from hexagonit.recipe.download import Recipe as DownloadRecipe
 from hexagonit.recipe.download import TRUE_VALUES
+from zope.deprecation import deprecate
 
 import glob
 import logging
@@ -109,7 +110,7 @@ def make_dirs(path):
         os.makedirs(path)
 
 
-class MultiCoreSolrRecipe(object):
+class SolrRecipe(object):
     """Generates a Solr setup with multiple cores"""
 
     def __init__(self, buildout, name, options):
@@ -863,18 +864,23 @@ class MultiCoreSolrRecipe(object):
             return self.install()
 
 
-class SingleCoreSolrRecipe(MultiCoreSolrRecipe):
-    """Builds a single core solr setup.
+@deprecate("Please import SolrRecipe")
+class MultiCoreSolrRecipe(SolrRecipe):
+    """BBB"""
 
-    'collection1' is used as default core name.  But if a 'cores' option
-    is specified anyway, this works fine for multi core.
-    """
+    def __init__(self, buildout, name, options):
+        import warnings
+        warnings.simplefilter("module", DeprecationWarning)
+        warnings.warn(
+            "The :mc variant of this recipe is deprecated "
+            "and will be removed in a future release. "
+            "please use the default one. "
+            "It will work with no additional changes.",
+            DeprecationWarning,
+        )
+        return super(self.__class__, self).__init__(buildout, name, options)
 
-    def install(self):
-        if self.solr_version < 4:
-            self._cores = [STANDARD_CORE_NAME]
-            self.install_base()
-            self.install_core(self.name, self.options)
-            return (self.options["location"],)
 
-        return super(SingleCoreSolrRecipe, self).install()
+@deprecate("Please import SolrRecipe")
+class SingleCoreSolrRecipe(SolrRecipe):
+    """BBB"""

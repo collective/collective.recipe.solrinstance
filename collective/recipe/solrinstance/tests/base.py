@@ -69,7 +69,7 @@ MULTICORE_CONF = """\
 parts = solr-mc
 
 [solr-mc]
-recipe = collective.recipe.solrinstance:mc{addon:s}
+recipe = collective.recipe.solrinstance{addon:s}
 host = 127.0.0.1
 port = 1234
 section-name = SOLR
